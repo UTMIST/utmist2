@@ -1,0 +1,79 @@
+.nav{
+    background-color: #1E1E1E;
+    height: 54px;
+    position: sticky;
+    text-align: right;
+    /*filter: drop-shadow(0rem 0.25rem 0.25rem #000000);*/
+}
+.navbar div li{
+display: inline-block;
+    margin-right: 2.5rem;
+    color:#FFFFFF ;
+    font-size: 0.9375rem;
+
+}
+li{
+    color:#FFFFFF ;
+    font-size: 0.9375rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+ul.navbar{padding: 1.5rem;
+    padding-top: 1rem;
+    padding-right: 0;
+}
+@media (min-width: 760px) {
+    .hamburger{
+      display: none;
+    }
+    ul.Horizontal-list{
+        display: none;
+    }
+}
+@media (max-width: 760px) {
+    .navItems{
+        display: none;
+    }
+    ul.Horizontal-list{
+        display: none;
+    }
+}
+.hamburger{
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+}
+.position-fixed {
+    position: fixed;
+    right: 0;
+    top: 54px;
+}
+
+.w-65-percent {
+    width: 12rem;
+}
+@media (min-width: 760px) {
+    .hidden-sm {
+        display: none;
+    }
+}
+
+.
+
+
+.h-screen {
+    height:21rem;
+}
+
+.p-10 {
+    padding: 2.5rem; /* Assuming the base font size is 16px */
+    background-color: #1E1E1E;
+}
+
+/*.ease-in {*/
+/*    transition-timing-function: cubic-bezier(0.42, 0, 1, 1);*/
+/*}*/
+
+/*.duration-500 {*/
+/*    transition-duration: 0.5s;*/
+/*}*/
