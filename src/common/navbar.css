@@ -3,12 +3,21 @@
     height: 54px;
     position: sticky;
     text-align: right;
-    /*filter: drop-shadow(0rem 0.25rem 0.25rem #000000);*/
+}
+.placement{
+    display: flex;
+    justify-content: space-between;
+}
+.logo{
+    width: 130px;
+    height: 46px;
+    margin-left: 38px;
+    padding-top: 7px;
 }
 .navbar div li{
 display: inline-block;
     margin-right: 2.5rem;
-    color:#FFFFFF ;
+    color:#FFFFFF;
     font-size: 0.9375rem;
 
 }
@@ -22,15 +31,21 @@ ul.navbar{padding: 1.5rem;
     padding-top: 1rem;
     padding-right: 0;
 }
-@media (min-width: 760px) {
+@media (min-width: 1000px) {
     .hamburger{
       display: none;
     }
     ul.Horizontal-list{
         display: none;
     }
+    .logo{
+        width: 130px;
+        height: 46px;
+        margin-left: 38px;
+        padding-top: 7px;
+    }
 }
-@media (max-width: 760px) {
+@media (max-width: 1000px) {
     .navItems{
         display: none;
     }
@@ -38,10 +53,21 @@ ul.navbar{padding: 1.5rem;
         display: none;
     }
 }
+@media (max-width: 600px){
+    .logo{
+        width: 81px;
+        height: 41px;
+        margin-left: 19px;
+        padding-top: 14px;
+    }
+}
 .hamburger{
     position: fixed;
-    right: 1rem;
-    top: 1rem;
+    width: 22px;
+    height: 19px;
+    top: 16px;
+    right: 38px;
+
 }
 .position-fixed {
     position: fixed;
