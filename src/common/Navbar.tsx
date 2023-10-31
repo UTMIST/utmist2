@@ -77,7 +77,7 @@ export default function Navbar() {
           </ul>
       </div>
     </div>
-      <div className={menuOpen?"position-fixed w-65-percent hidden-sm h-screen p-10":" "}>
+      <div className={menuOpen?"hidden-sm drop-down":" "}>
         <div className="Horizontal-list">
           <ul className={menuOpen?" ":"Horizontal-list"}>
             <li>
