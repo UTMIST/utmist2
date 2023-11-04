@@ -13,11 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { getContentData } from "../common/general_parser";
 import Navbar from '@/common/Navbar'
 import Banner from '@/common/banner'
+import { ProjectMetaData } from "@/schemas/ProjectMetaData";
+import { ImpactMetaData } from "@/schemas/ImpactMetaData";
+import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 
 export default function HomePage() {
+
+  getContentData<ProjectMetaData>("projects").then((res) => {
+    console.log(res)
+  })
+  getContentData<ImpactMetaData>("impact").then((res) => {
+    console.log(res)
+    console.log(res[0].tableExample)
+  })
+  getContentData<WWeDoMetaData>("what-we-do").then((res) => {
+    console.log(res)
+  })
+
   return (
     <main>
       <Banner/>
