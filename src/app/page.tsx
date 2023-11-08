@@ -20,6 +20,7 @@ export default function HomePage() {
   return (
     <main className="">
       <br />
+        <br/>
       this is the HomePage <br />
       banner component can go here
     </main>

@@ -14,107 +14,83 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Roboto_Mono } from 'next/font/google'
+import { useState } from "react";
 import Link from "next/link";
-import "./navbar.css";
-import {useState} from "react";
 import Image from "next/image";
-import logo from "./UTMIST Logo.png"
-import Hamburger from "./Hamburger.png"
-const roboto = Roboto_Mono({ subsets: ['latin'] })
+import logo from "public/assets/UTMIST logo.png";
+import Hamburger from "public/assets/Hamburger.png";
+
 export default function Navbar() {
-  const [menuOpen, setMenuOpen]= useState(false)
-  const handleNav = ()=> {setMenuOpen(!menuOpen)}
+  const [menuOpen, setMenuOpen] = useState(false);
+  const handleNav = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
-      <main className={roboto.className}>
-    <nav className="nav">
-      <div className="placement">
-
-        <div>
-      <Link href="/">
-        <Image src={logo} alt="logo" className="logo" priority>
-        </Image>
-      </Link>
-        </div>
-      <div className ={roboto.className}>
-          <ul className="navbar">
-          <div className="navItems">
-            <li>
-              <Link href="/about">
-                <p>About Us</p>
+      <main>
+        <nav className="fixed font-roboto-mono bg-[#1E1E1E] w-full">
+          <div className="flex justify-between items-center px-4">
+              <Link href="/">
+                <Image src={logo} alt="logo" className="mt-2 cursor-pointer" />
               </Link>
-            </li>
-            <li >
-              <Link href="/team">
-                <p>Team</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/whatWeDo">
-                <p>What We Do</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/impactAndAlumni">
-                <p>Impact & Alumni</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/sponsorUs">
-                <p>Sponsor Us</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/joinUs">
-                <p>Join Us</p>
-              </Link>
-            </li>
+            <div className="hidden lg:flex">
+              <ul>
+                <Link href="/about">
+                <li className="inline-block ml-10 text-white">
+                 About Us
+                </li></Link>
+                <Link href="/team">
+                <li className="inline-block ml-10 text-white">
+                  Team
+                </li></Link>
+                <Link href="/whatWeDo">
+                <li className="inline-block ml-10 text-white">
+                  What We Do
+                </li></Link>
+                <Link href="/impactAndAlumni">
+                <li className="inline-block ml-10 text-white">
+                 Impact & Alumni
+                </li></Link>
+                <Link href="/sponsorUs">
+                <li className="inline-block ml-10 text-white">
+                  Sponsor Us
+                </li>
+                </Link>
+                <Link href="/joinUs">
+                <li className="inline-block ml-10 text-white">
+                 Join Us
+                </li></Link>
+              </ul>
+            </div>
+                <button onClick={handleNav} className="lg:hidden">
+                  <Image src={Hamburger} alt="hamburger" width={22} height={19}/>
+                </button>
+          
+            <div className={menuOpen ? "fixed top-12 right-0 bg-[#1E1E1E] h-screen w-[45%] text-center lg:hidden" : "hidden"}>
+                <ul>
+                  <li className="text-white">
+                    <Link href="/about">About Us</Link>
+                  </li>
+                  <li className="text-white mt-2">
+                    <Link href="/team">Team</Link>
+                  </li>
+                  <li className="text-white mt-2">
+                    <Link href="/whatWeDo">What We Do</Link>
+                  </li>
+                  <li className="text-white mt-2">
+                    <Link href="/impactAndAlumni">Impact & Alumni</Link>
+                  </li>
+                  <li className="text-white mt-2">
+                    <Link href="/sponsorUs">Sponsor Us</Link>
+                  </li>
+                  <li className="text-white mt-2 mb-2">
+                    <Link href="/joinUs">Join Us</Link>
+                  </li>
+                </ul>
+            </div>
           </div>
-            <li><button onClick={handleNav} className="hamburger">
-              <Image src={Hamburger} alt="hamburger" />
-              </button>
-            </li>
-          </ul>
-      </div>
-    </div>
-      <div className={menuOpen?"hidden-sm drop-down":" "}>
-        <div className="Horizontal-list">
-          <ul className={menuOpen?" ":"Horizontal-list"}>
-            <li>
-              <Link href="/about">
-                <p>About Us</p>
-              </Link>
-            </li>
-            <li >
-              <Link href="/team">
-                <p>Team</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/whatWeDo">
-                <p>What We Do</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/impactAndAlumni">
-                <p>Impact & Alumni</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/sponsorUs">
-                <p>Sponsor Us</p>
-              </Link>
-            </li>
-            <li>
-              <Link href="/joinUs">
-                <p>Join Us</p>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
+        </nav>
       </main>
-  )
+  );
 }
+
