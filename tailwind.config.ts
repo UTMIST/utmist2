@@ -1,13 +1,17 @@
 import type { Config } from 'tailwindcss'
-
+// {js,ts,jsx,tsx,mdx}
 const config: Config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/**/*.tsx',
+    './src/pages/**/*.tsx',
+    './src/components/**/*.tsx',
+    './src/app/**/*.tsx',
+    './src/**/*.tsx'
   ],
-  theme: { screens: {
+  theme: {
+    borderRadius: {
+      'md': '15px'
+    },
+    screens: {
       'sm': '390px',
 
       'md': '768px',
@@ -19,7 +23,15 @@ const config: Config = {
       '2xl': '1536px'
     },
     extend: {
+      boxShadow: {
+        'md': '4px 4px 10px rgba(255, 255, 255, 0.25)'
+      },
+      colors: {
+        'utmist-purple': '#8C51FF'
+      },
       backgroundImage: {
+        'banner-small': "url('/assets/BannerSmall.svg')",
+        'banner-large': "url('/assets/Banner.svg')",
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',

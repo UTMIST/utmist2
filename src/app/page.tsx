@@ -15,14 +15,12 @@
  */
 
 import Navbar from '@/common/Navbar'
+import Banner from '@/common/banner'
 
 export default function HomePage() {
   return (
-    <main className="">
-      <br />
-        <br/>
-      this is the HomePage <br />
-      banner component can go here
+    <main>
+      <Banner/>
     </main>
   )
 }
