@@ -13,16 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { getContentData } from "@/common/general_parser";
+import { ImpactMetaData } from "@/schemas/ImpactMetaData";
+import MissionStatement from "./MissionStatement";
 import Banner from "@/common/banner";
+import { MissionMetaData } from "@/schemas/MissionMetaData";
 
-import MissionStatement, { getStaticProps } from "./MissionStatement";
-
-
-export default function HomePage() {
-  return (
-    <main>
-      <Banner />
-        <MissionStatement data={} />
-    </main>
-  );
+// interface ImpactProp {
+//     data: ImpactMetaData[];
+// }
+interface MissionProp {
+    data: MissionMetaData[]
 }
+const HomePage: React.FC<MissionProp> = ({ data }) => {
+    // receive it here
+    return (
+        <>
+            <Banner />
+
+            <MissionStatement data={data} />
+        </>
+    );
+};
+
+export async function getStaticProps() {
+    //const data: ImpactMetaData[] = await getContentData<ImpactMetaData>("impact");
+    // get brief mission data
+    const data : MissionMetaData[] = await getContentData<MissionMetaData>("mission");
+    // get other data that'll need to be in the HomePage
+
+    return {
+        props: {
+            data,
+            // send it here
+        },
+    };
+}
+
+export default HomePage;

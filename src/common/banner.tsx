@@ -4,7 +4,7 @@ import LinkButton from "./LinkButton";
 
 export default function Banner() {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <div className="relative bg-cover bg-banner-small lg:bg-banner-large w-screen h-screen">
         <div className="font-roboto-mono text-white text-center flex flex-col justify-center h-screen">
           <div className="w-[86vw] text-[6vh] ml-[7.6vw] sm:mb-[5.1vh] lg:ml-[8.3vw] lg:mb-[5.1vh] lg:text-[5.4vh] lg:w-[39.9vw]">
