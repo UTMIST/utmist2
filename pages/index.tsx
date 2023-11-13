@@ -15,10 +15,14 @@
  */
 import Banner from "@/common/banner";
 
+import MissionStatement, { getStaticProps } from "./MissionStatement";
+
+
 export default function HomePage() {
   return (
     <main>
       <Banner />
+        <MissionStatement data={} />
     </main>
   );
 }
