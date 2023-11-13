@@ -31,7 +31,7 @@ const MissionStatement: React.FC<WhatWeDoProps> = ({ data }) => {
                             </div>
                         </div>
                         <div className='ml-[38vw] pb-10 md:ml-[45vw]'>
-                            <Image src={logo} alt="logo" width={138} height={131}></Image>
+                            <Image src={data.imgPath} alt="logo" width={138} height={131}></Image>
                         </div>
                     </div>
 
