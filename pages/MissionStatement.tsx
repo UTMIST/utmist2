@@ -52,7 +52,7 @@ const MissionStatement: React.FC<MissionProps> = ({ data }) => {
                         </div>
                     </div>
                     <div className="flex justify-center items-center">
-                        <Image src={data[0].imgPath} width={138} height={131} alt={"logo"}></Image></div>
+                        <Image src={data[0].imgPath} width={244} height={238} alt={"logo"}></Image></div>
 
                 </div>
                 <a href={data[0].buttonHref}> <button
