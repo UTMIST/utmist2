@@ -1,10 +1,36 @@
 ---
-title: "project 1"
-# publishDate: "2023-09-28"
-# coverImage: "/imgs/logo.png"
-# externalLink: "https://github.com/UTMIST/utmist2"
-# tableexample:
-#   - e1: "entry 1"
-#     e2: "entry 2"
+title: "project example"
+publishDate: "2023-11-20"
+description: "this is a cool project"
+images:
+  - "/imgs/projects/project1/project1v1.svg"
+team:
+  - image: "/team/john_doe.jpg" # this can just be deleted if we want to use default image (TBD)
+    socials:
+      - name: "LinkedIn"
+        url: "https://linkedin.com/in/example"
+      - name: "Twitter"
+        url: "https://twitter.com/example"
 ---
-project 1 content :O
+content: |
+  # example
+
+  welcome **markdown example**. this is a test to check if the markdown can render
+
+  ## list
+
+  - hi
+  - hello
+  - hey
+
+  ## team
+
+  ![team](/team/teammember1.svg)  
+  [team - LinkedIn](https://linkedin.com/in/example)  
+  [team - Twitter](https://twitter.com/example)
+
+  ## images
+
+  ![img 1](/imgs/projects/project1/project1v1.svg)  
+
+  [![markdown video](http://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ "markdown video")
