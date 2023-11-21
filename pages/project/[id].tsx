@@ -10,7 +10,6 @@ type ContentData<T> = T & { content: string; slug: string };
 
 const whatWeDo = ({ found }: { found: ContentData<ProjectMetaData> }) => {
   const markdownContent = marked.marked(found.content || '');
-  console.log('reached')
 
   return (
     <>
@@ -36,7 +35,6 @@ export async function getStaticPaths() {
   }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-    console.log("reached2")
     const params: ParsedUrlQuery = context.params!;
   const data: ContentData<ProjectMetaData>[] = await getContentData<ProjectMetaData>(
     "projects"
