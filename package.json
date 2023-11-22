@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
-    "marked": "^10.0.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-icons": "^4.11.0"
+    "react-icons": "^4.11.0",
+    "react-markdown": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "latest",

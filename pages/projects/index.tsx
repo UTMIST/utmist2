@@ -2,18 +2,20 @@
 
 import { getContentData } from "@/common/general_parser";
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
-var marked = require('marked');
+import ReactMarkdown from "react-markdown"
 type ContentData<T> = T & { content: string; slug: string };
 
 interface ProjectsProp {
   data: ContentData<ProjectMetaData>[];
 }
 
-const whatWeDo: React.FC<ProjectsProp> = ({ data }) => {
-  const infoCards = data.map((item) => {
-    const markdownContent = marked.marked(item.content || '');
+const allProjects: React.FC<ProjectsProp> = ({ data }) => {
+
+  const infoCards = data.map((item, ind) => {
     return (
-        <div dangerouslySetInnerHTML={{ __html: markdownContent }} />
+    <div key={ind}>
+      <ReactMarkdown>{item.content}</ReactMarkdown>
+    </div>
     );
   });
 
@@ -29,6 +31,8 @@ export async function getStaticProps() {
     "projects"
   );
 
+  console.log(data)
+
   return {
     props: {
       data,
@@ -36,4 +40,4 @@ export async function getStaticProps() {
   };
 }
 
-export default whatWeDo;
+export default allProjects;

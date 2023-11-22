@@ -1,25 +1,21 @@
 "use client";
 
 import { getContentData } from "@/common/general_parser";
-import { useRouter } from 'next/router'
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
 import { GetStaticPropsContext } from "next";
 import { ParsedUrlQuery } from "querystring";
-var marked = require('marked');
+import ReactMarkdown from "react-markdown"
 type ContentData<T> = T & { content: string; slug: string };
 
-const whatWeDo = ({ found }: { found: ContentData<ProjectMetaData> }) => {
-  const markdownContent = marked.marked(found.content || '');
-
+const individualProject = ({ found }: { found: ContentData<ProjectMetaData> }) => {
   return (
-    <>
-        <div dangerouslySetInnerHTML={{ __html: markdownContent }} />
-    </>
+    <div key={"individual-project"}>
+      <ReactMarkdown>{found.content}</ReactMarkdown>
+    </div>
   );
 };
 
 export async function getStaticPaths() {
-
   const data: ContentData<ProjectMetaData>[] = await getContentData<ProjectMetaData>(
     "projects"
   );
@@ -50,4 +46,4 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   };
 }
 
-export default whatWeDo;
+export default individualProject;
