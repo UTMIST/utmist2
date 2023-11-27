@@ -18,6 +18,7 @@ import { ImpactMetaData } from "@/schemas/ImpactMetaData";
 import MissionStatement from "./MissionStatement";
 import Banner from "@/common/banner";
 import { MissionMetaData } from "@/schemas/MissionMetaData";
+import WwdHomepage from "./whatWeDo/WwdHomepage";
 
 // interface ImpactProp {
 //     data: ImpactMetaData[];
