@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 import { getContentData } from "@/common/general_parser";
-import { ImpactMetaData } from "@/schemas/ImpactMetaData";
-import MissionStatement from "./MissionStatement";
+import MissionStatement from "./home/MissionStatement";
 import Banner from "@/common/banner";
 import { MissionMetaData } from "@/schemas/MissionMetaData";
-import WwdHomepage from "./whatWeDo/WwdHomepage";
+import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
+import WwdHomepage from "./home/WwdHomepage";
 
 // interface ImpactProp {
 //     data: ImpactMetaData[];
 // }
 interface MissionProp {
-    data: MissionMetaData[]
+    data: MissionMetaData[], 
+    wwdData: WWeDoMetaData[]
 }
-const HomePage: React.FC<MissionProp> = ({ data }) => {
+const HomePage: React.FC<MissionProp> = ({wwdData, data }) => {
     // receive it here
     return (
         <>
             <Banner />
-
+    
             <MissionStatement data={data} />
+            <WwdHomepage data={wwdData}></WwdHomepage>
         </>
     );
 };
@@ -42,11 +44,12 @@ export async function getStaticProps() {
     // get brief mission data
     const data : MissionMetaData[] = await getContentData<MissionMetaData>("mission");
     // get other data that'll need to be in the HomePage
+    const wwdData : WWeDoMetaData[] = await getContentData<WWeDoMetaData>("what-we-do");
 
     return {
         props: {
             data,
-            // send it here
+            wwdData
         },
     };
 }

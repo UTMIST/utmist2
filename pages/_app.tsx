@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import Navbar from "@/common/Navbar";
 import Head from "next/head";
 import { AppProps } from "next/app";
-import WwdHomepage from "./whatWeDo/WwdHomepage";
-import SmallCard from "./whatWeDo/SmallCard";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
