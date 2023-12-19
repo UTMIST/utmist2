@@ -12,6 +12,7 @@ export interface TeamMember {
 
 export interface ProjectMetaData extends BaseMetaData {
   title: string;
+  status: string; // project status
   publishDate: string; // YYYY-MM-DD
   team: TeamMember[]; // team members
   description: string;

@@ -51,6 +51,9 @@ export default function Navbar() {
                 <li className="inline-block ml-10 text-white">
                  Impact & Alumni
                 </li></Link>
+                <li className="inline-block ml-10 text-white">
+                  <Link href="/projects">Projects</Link>
+                </li>
                 <Link href="/sponsorUs">
                 <li className="inline-block ml-10 text-white">
                   Sponsor Us
@@ -76,6 +79,9 @@ export default function Navbar() {
                   </li>
                   <li className="text-white mt-2">
                     <Link href="/whatWeDo">What We Do</Link>
+                  </li>
+                  <li className="text-white mt-2">
+                    <Link href="/projects">Projects</Link>
                   </li>
                   <li className="text-white mt-2">
                     <Link href="/impactAndAlumni">Impact & Alumni</Link>

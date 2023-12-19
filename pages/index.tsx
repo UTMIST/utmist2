@@ -25,9 +25,9 @@ import WwdHomepage from "./home/WwdHomepage";
 // }
 interface MissionProp {
     data: MissionMetaData[], 
-    wwdData: WWeDoMetaData[]
+    wwdData: WWeDoMetaData[],
 }
-const HomePage: React.FC<MissionProp> = ({wwdData, data }) => {
+const HomePage: React.FC<MissionProp> = ({wwdData, data}) => {
     // receive it here
     return (
         <>
