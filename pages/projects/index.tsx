@@ -155,7 +155,7 @@ const AllProjects: React.FC<ProjectsProp> = ({ data }) => {
                         </li>
                         <li>
                             <button
-                                className={isProjectFilterOpen?"flex items-center justify-center rounded-md bg-utmist-pink shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]":"flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"}
+                                className="flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"
                                 onClick={resetFilters}
                             >
                                 <p className="text-white font-roboto-mono">Reset Filters</p>
