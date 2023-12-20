@@ -19,15 +19,15 @@ import Banner from "@/common/banner";
 import { MissionMetaData } from "@/schemas/MissionMetaData";
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 import WwdHomepage from "./home/WwdHomepage";
+import { AlumniMetaData } from "@/schemas/AlumniMetaData";
+import AlumniSpotlight from "./home/AlumniSpotlight";
 
-// interface ImpactProp {
-//     data: ImpactMetaData[];
-// }
-interface MissionProp {
+interface HomeProp {
     data: MissionMetaData[], 
-    wwdData: WWeDoMetaData[]
+    wwdData: WWeDoMetaData[],
+    alumniData: AlumniMetaData[]
 }
-const HomePage: React.FC<MissionProp> = ({wwdData, data }) => {
+const HomePage: React.FC<HomeProp> = ({wwdData, data, alumniData }) => {
     // receive it here
     return (
         <>
@@ -35,6 +35,7 @@ const HomePage: React.FC<MissionProp> = ({wwdData, data }) => {
     
             <MissionStatement data={data} />
             <WwdHomepage data={wwdData} />
+            <AlumniSpotlight data={alumniData} />
         </>
     );
 };
@@ -45,11 +46,13 @@ export async function getStaticProps() {
     const data : MissionMetaData[] = await getContentData<MissionMetaData>("mission");
     // get other data that'll need to be in the HomePage
     const wwdData : WWeDoMetaData[] = await getContentData<WWeDoMetaData>("what-we-do");
+    const alumniData : AlumniMetaData[] = await getContentData<AlumniMetaData>("alumni");
 
     return {
         props: {
             data,
-            wwdData
+            wwdData,
+            alumniData
         },
     };
 }
