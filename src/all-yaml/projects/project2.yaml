@@ -1,7 +1,8 @@
 ---
 title: "project example 2"
 status: "Not Hiring"
-publishDate: "2023-11-20"
+type: "Applied"
+publishDate: "2019-11-20"
 description: "this is a very cool project"
 images:
   - "/imgs/projects/project1/project1v1.svg"
