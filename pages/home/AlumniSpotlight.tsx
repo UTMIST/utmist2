@@ -23,7 +23,7 @@ const AlumniSpotlight: React.FC<AlumniProps> = ({data}) => {
                             <div className="w-[55vw] text-[2.8vh] ml-[24.6vw] mb-[7.5vh]">
                                 {data[0].story}
                             </div>
-                            <div  className="font-bold w-[55vw] text-[2.4vh] ml-[24.6vw] mb-[7.5vh]"><a href={data[0].linkedIn}>Alumni Story Link/linkedIn</a></div>
+                            <div  className="font-bold underline w-[55vw] text-[2.4vh] ml-[24.6vw] mb-[7.5vh]"><a href={data[0].linkedIn}>Alumni Story Link/linkedIn</a></div>
                         </div>
                         <div className='ml-[25vw] pb-10 md:ml-[40vw]'>
                             <Image src={data[0].imgPath} alt="logo" width={238} height={231}></Image>
