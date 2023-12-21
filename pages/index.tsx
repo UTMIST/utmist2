@@ -19,22 +19,28 @@ import Banner from "@/common/banner";
 import { MissionMetaData } from "@/schemas/MissionMetaData";
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 import WwdHomepage from "./home/WwdHomepage";
+import individualProject from "./project/[id]";
+import IndividualProject from "./project/[id]";
+import { ProjectMetaData } from "@/schemas/ProjectMetaData";
 
+type ContentData<T> = T & { content: string; slug: string };
 // interface ImpactProp {
 //     data: ImpactMetaData[];
 // }
 interface MissionProp {
     data: MissionMetaData[], 
-    wwdData: WWeDoMetaData[]
+    wwdData: WWeDoMetaData[], 
+    projData: ContentData<ProjectMetaData>
 }
-const HomePage: React.FC<MissionProp> = ({wwdData, data }) => {
+const HomePage: React.FC<MissionProp> = ({wwdData, data, projData,}) => {
     // receive it here
     return (
         <>
-            <Banner />
+            {/* <Banner /> */}
     
-            <MissionStatement data={data} />
-            <WwdHomepage data={wwdData} />
+            {/* <MissionStatement data={data} />
+            <WwdHomepage data={wwdData} /> */}
+            <IndividualProject found={projData}></IndividualProject>
         </>
     );
 };
@@ -46,10 +52,14 @@ export async function getStaticProps() {
     // get other data that'll need to be in the HomePage
     const wwdData : WWeDoMetaData[] = await getContentData<WWeDoMetaData>("what-we-do");
 
+    const projData : ContentData<ProjectMetaData>[] = await getContentData<ProjectMetaData>("projects");
+    let prop = projData[0];
+
     return {
         props: {
             data,
-            wwdData
+            wwdData,
+            prop
         },
     };
 }

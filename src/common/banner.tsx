@@ -14,10 +14,13 @@ export default function Banner() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
             egestas, lorem id dapibus accumsan.
           </div>
+          <div className="px-[15vw] lg:px-[17.7vw]">
           <LinkButton
             redirectPath="/whatWeDo"
             buttonText="Join Us"
           ></LinkButton>
+          </div>
+
         </div>
       </div>
     </div>

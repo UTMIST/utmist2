@@ -1,13 +1,14 @@
 import { BaseMetaData } from "./BaseMetaData";
 
-export interface SocialInfo {
-  name: string;
-  url: string;
-}
-
 export interface TeamMember {
+  name: string;
   image?: string;
-  socials: SocialInfo[];
+  socials: {
+    LinkedIn: string;
+    GitHub: string;
+    Twitter: string;
+  };
+  role: string;
 }
 
 export interface ProjectMetaData extends BaseMetaData {
