@@ -23,6 +23,7 @@ const IndividualProject = ({ found }: { found: ContentData<ProjectMetaData> }) =
     role: "Director"
   }
 
+  console.log(found);
   const numRows = Math.ceil((found.team.length / 6))
   const teamMemberData = [];
   for (let i = 0; i < numRows; i++) {
@@ -46,7 +47,7 @@ const IndividualProject = ({ found }: { found: ContentData<ProjectMetaData> }) =
     <div className="relative w-screen h-auto bg-dark-grey">
       <div className=" w-screen h-[40vh] bg-cover bg-wwd-banner mb-[5vh]"></div>
       <div className=" absolute left-[16.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-        <div>Project Title</div>
+        <div>{found.title}</div>
         <div className="bg-[#00349F] w-[13.1vw] h-[6px]"></div>
       </div>
       <div className="px-[10vw] flex justify-end mb-[5vh]">

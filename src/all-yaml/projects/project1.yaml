@@ -1,16 +1,17 @@
 ---
+title: "Coolest project ever"
 publishDate: "2023-11-20"
 description: "this is a cool project"
 images:
   - "/imgs/projects/project1/project1v1.svg"
 team:
   - name: "John Doe"
-   image: "/team/john_doe.jpg" # this can just be deleted if we want to use default image (TBD)
-   socials:
-     LinkedIn: "https://linkedin.com/in/example"
-     Twitter: "https://twitter.com/example"
-     GitHub: "https://github.com/example"
-   role: "Director"
+    image: "/team/john_doe.jpg" # this can just be deleted if we want to use default image (TBD)
+    socials:
+      LinkedIn: "https://linkedin.com/in/example"
+      Twitter: "https://twitter.com/example"
+      GitHub: "https://github.com/example"
+    role: "Director"
 ---
 content: |
   # example
