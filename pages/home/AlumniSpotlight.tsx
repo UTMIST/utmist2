@@ -1,3 +1,4 @@
+import { getContentData } from "@/common/general_parser";
 import { AlumniMetaData } from "@/schemas/AlumniMetaData";
 import Image from "next/image";
 
