@@ -1,4 +1,4 @@
-"use client";
+//"use client";
 import LinkButton from "@/common/LinkButton";
 import { getContentData } from "@/common/general_parser";
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
@@ -73,7 +73,7 @@ const AllProjects: React.FC<ProjectsProp> = ({ data }) => {
         })
         .map((item, ind) => {
             return (
-                <Link href="#" key={ind}>
+                <Link href={`/project/${item.slug}`} key={ind}>
                     <br></br>
                     <br></br>
                     <div className="rounded-md overflow-hidden bg-black shadow-lg w-362">
