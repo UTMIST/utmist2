@@ -7,12 +7,13 @@ description: "this is a cool project"
 images:
   - "/imgs/projects/project1/project1v1.svg"
 team:
-  - image: "/team/john_doe.jpg" # this can just be deleted if we want to use default image (TBD)
+  - name: "John Doe"
+    image: "/team/john_doe.jpg" # this can just be deleted if we want to use default image (TBD)
     socials:
-      - name: "LinkedIn"
-        url: "https://linkedin.com/in/example"
-      - name: "Twitter"
-        url: "https://twitter.com/example"
+      LinkedIn: "https://linkedin.com/in/example"
+      Twitter: "https://twitter.com/example"
+      GitHub: "https://github.com/example"
+    role: "Director"
 ---
 content: |
   # example
