@@ -1,6 +1,7 @@
 "use client";
 
 import LinkButton from "@/common/LinkButton";
+import LinkButton from "@/common/LinkButton";
 import { getContentData } from "@/common/general_parser";
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
 import { GetStaticPropsContext } from "next";
@@ -119,4 +120,4 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     };
 }
 
-export default individualProject;
+export default IndividualProject;

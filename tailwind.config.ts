@@ -36,6 +36,8 @@ const config: Config = {
         "banner-small": "url('/assets/BannerSmall.svg')",
         "banner-large": "url('/assets/Banner.svg')",
         "wwd-banner": "url('/assets/Rectangle45.svg')",
+        "github": "url('/assets/GithubIcon.svg')",
+        "linkedin": "url('/assets/LinkedinIcon.svg')",
         "mission":"url('/assets/mission_bg.png')",
         rect1: "url('/assets/Rectangle1.svg')",
         rect2: "url('/assets/Rectangle2.svg')",
