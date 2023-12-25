@@ -1,7 +1,6 @@
 "use client";
 
 import LinkButton from "@/common/LinkButton";
-import LinkButton from "@/common/LinkButton";
 import { getContentData } from "@/common/general_parser";
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
 import { GetStaticPropsContext } from "next";
@@ -10,7 +9,7 @@ import TeamMember from "@/components/project/TeamMember";
 import ReactMarkdown from "react-markdown";
 type ContentData<T> = T & { content: string; slug: string };
 
-const individualProject = ({ found }: { found: ContentData<ProjectMetaData> }) => {
+const IndividualProject = ({ found }: { found: ContentData<ProjectMetaData> }) => {
     // mock data for testing purposes
     const propData = {
         name: 'John Doe',
