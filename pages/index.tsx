@@ -21,7 +21,6 @@ import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 import WwdHomepage from "./home/WwdHomepage";
 import { AlumniMetaData } from "@/schemas/AlumniMetaData";
 import AlumniSpotlight from "./home/AlumniSpotlight";
-import individualProject from "./project/[id]";
 import IndividualProject from "./project/[id]";
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
 
@@ -34,9 +33,9 @@ const HomePage: React.FC<HomeProp> = ({wwdData, data, alumniData }) => {
     // receive it here
     return (
         <>
-            {/* <Banner /> */}
+            <Banner />
     
-            {/* <MissionStatement data={data} /> */}
+            <MissionStatement data={data} />
             <WwdHomepage data={wwdData} />
             <AlumniSpotlight data={alumniData} />
         </>
@@ -50,10 +49,6 @@ export async function getStaticProps() {
     // get other data that'll need to be in the HomePage
     const wwdData : WWeDoMetaData[] = await getContentData<WWeDoMetaData>("what-we-do");
     const alumniData : AlumniMetaData[] = await getContentData<AlumniMetaData>("alumni");
-
-    // const projData : ContentData<ProjectMetaData>[] = await getContentData<ProjectMetaData>("projects");
-    // let prop = projData[0];
-    // console.log("WHAT WE DO DATA IS "+ `${wwdData[0]}`);
 
     return {
         props: {

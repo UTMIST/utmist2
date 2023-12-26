@@ -11,30 +11,19 @@ import React from "react";
 type ContentData<T> = T & { content: string; slug: string };
 
 const IndividualProject = ({ found }: { found: ContentData<ProjectMetaData> }) => {
-    // mock data for testing purposes
-    const propData = {
-        name: 'John Doe',
-        image: "/assets/LinkedinIcon.svg",
-        socials: {
-            LinkedIn: "https://linkedin.com/in/example",
-            GitHub: "https://github.com/example",
-            Twitter: "https://twitter.com/example"
-        },
-        role: "Director"
-    }
 
     console.log(found);
     const numRows = Math.ceil((found.team.length / 6))
     const teamMemberData = [];
     for (let i = 0; i < numRows; i++) {
         const row = found.team.slice(6 * i, 6 * (i + 1));
-        const rowElements = row.map((rowItem) => {
+        const rowElements = row.map((rowItem, i) => {
             return (
-                <TeamMember data={rowItem}></TeamMember>
+                <TeamMember key={rowItem.name} data={rowItem}></TeamMember>
             )
         })
         teamMemberData.push(
-            <div className="flex justify-evenly">
+            <div key={i} className="flex justify-evenly">
                 {rowElements}
             </div>
         )

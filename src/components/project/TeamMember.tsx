@@ -1,6 +1,7 @@
 
 
 import { TeamMember } from "@/schemas/ProjectMetaData";
+import Link from "next/link";
 
 export default function TeamMember(props: { data: TeamMember }) {
 
@@ -18,12 +19,12 @@ export default function TeamMember(props: { data: TeamMember }) {
                 <div className="w-fit">
                     <div className="flex flex-row justify-center mb-[1.5vh]">
                         {props.data.socials.LinkedIn != "" ? (
-                            <a className="bg-linkedin w-[16px] h-[14px] mr-[0.25vw]" href={props.data.socials.LinkedIn} target="_blank"></a>
+                            <Link className="bg-linkedin w-[16px] h-[14px] mr-[0.25vw]" href={props.data.socials.LinkedIn} target="_blank"></Link>
 
                         ) : null}
                         {props.data.socials.GitHub != "" ? (
 
-                            <a className="bg-github w-[17px] h-[15px] ml-[0.25vw]" href={props.data.socials.GitHub} target="_blank"></a>
+                            <Link className="bg-github w-[17px] h-[15px] ml-[0.25vw]" href={props.data.socials.GitHub} target="_blank"></Link>
 
                         ) : null}
                     </div>
