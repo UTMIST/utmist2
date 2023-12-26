@@ -15,7 +15,7 @@ team:
       GitHub: "https://github.com/example"
     role: "Director"
 ---
-content: |
+
   # example
 
   welcome **markdown example**. this is a test to check if the markdown can render
@@ -33,7 +33,5 @@ content: |
   [team - Twitter](https://twitter.com/example)
 
   ## images
-
-  ![img 1](/imgs/projects/project1/project1v1.svg)  
-
-  [![markdown video](http://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ "markdown video")
+  ###### ![img 1](/imgs/projects/project1/project1v1.svg)  
+  ###### [![markdown video](http://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ "markdown video")
