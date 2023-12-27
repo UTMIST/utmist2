@@ -12,7 +12,7 @@ type ContentData<T> = T & { content: string; slug: string };
 
 const IndividualProject = ({ found }: { found: ContentData<ProjectMetaData> }) => {
 
-    console.log(found);
+    // logic to determine the number of rows needed to display team members
     const numRows = Math.ceil((found.team.length / 6))
     const teamMemberData = [];
     for (let i = 0; i < numRows; i++) {
