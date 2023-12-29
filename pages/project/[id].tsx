@@ -29,7 +29,7 @@ const IndividualProject = ({ found }: { found: ContentData<ProjectMetaData> }) =
         )
     }
 
-
+    // creating custom components to style markdown content from yaml file
     const H1Component = (props: { className?: string, children?: React.ReactNode }) => (
         <div className={`px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[2vh]`}>
             {props.children}
