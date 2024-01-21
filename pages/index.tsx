@@ -21,8 +21,6 @@ import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 import WwdHomepage from "./home/WwdHomepage";
 import { AlumniMetaData } from "@/schemas/AlumniMetaData";
 import AlumniSpotlight from "./home/AlumniSpotlight";
-import IndividualProject from "./project/[id]";
-import { ProjectMetaData } from "@/schemas/ProjectMetaData";
 import Impact from "@pages/home/Impact";
 import {ImpactMetaData} from "@/schemas/ImpactMetaData";
 
