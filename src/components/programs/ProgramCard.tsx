@@ -22,7 +22,7 @@ export default function ProgramCard(props: { data: ProgramMetaData }) {
         )
     });
 
-    const timelineRows = props.data.timeline.map((item) => {
+    const timelineRows = props.data.timeline.map((item, index) => {
         const date = item.date;
         const topic = item.topic;
         const content = item.content;
@@ -38,7 +38,7 @@ export default function ProgramCard(props: { data: ProgramMetaData }) {
         });
 
         return (
-            <tr>
+            <tr key={index}>
                 <td >
                     {date}
                     <div className="w-[5vw] inline opacity-0">Spacer</div>
