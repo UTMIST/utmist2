@@ -39,7 +39,7 @@ const WwdHomepage: React.FC<WWdHomepageProps> = ({data}) => {
             <div className="lg:text-[2.2vh] sm:text-[2.7vh]">Lorem ipsum dolor sit amet</div>
           </div>
           {isMobile ? <LinkButtonSmall buttonText="Find out more" redirectPath="#"></LinkButtonSmall>
-          : <LinkButton buttonText="Find out more" redirectPath="#"></LinkButton>}
+          : <LinkButton buttonText="Find out more" redirectPath="/event"></LinkButton>}
           
         </div>
         <div className="grid lg:grid-cols-4 sm:grid-cols-2 lg:gap-[1vh] sm:gap-x-[0.5vh] sm:gap-y-[1vw]">
