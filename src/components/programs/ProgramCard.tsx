@@ -27,9 +27,9 @@ export default function ProgramCard(props: { data: ProgramMetaData }) {
         const topic = item.topic;
         const content = item.content;
 
-        const contentLinks = content.map((contentItem) => {
+        const contentLinks = content.map((contentItem, key) => {
             return (
-                <Link href={contentItem.link}>
+                <Link key={key} href={contentItem.link}>
                     <p className="text-[14px]">
                         {contentItem.type}
                     </p>

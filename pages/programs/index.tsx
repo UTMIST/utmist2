@@ -41,9 +41,9 @@ export default function Program({ data }: {data: ProgramMetaData[]}) {
         else {
             return true;
         }
-    }).map((programData) => {
+    }).map((programData, key) => {
         return (
-            <ProgramCard data={programData}/>
+            <ProgramCard key={key} data={programData}/>
         )
     });
 
