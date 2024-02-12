@@ -26,12 +26,4 @@ timeline:
     content:
       - type: "slides"
         link: "https://google.com"
-# team:
-#   - name: "John Doe"
-#     image: "/team/john_doe.jpg" # this can just be deleted if we want to use default image (TBD)
-#     socials:
-#       LinkedIn: "https://linkedin.com/in/example"
-#       Twitter: "https://twitter.com/example"
-#       GitHub: "https://github.com/example"
-#     role: "Director"
 ---

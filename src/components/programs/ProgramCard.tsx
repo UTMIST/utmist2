@@ -4,24 +4,6 @@ import Link from "next/link";
 
 export default function ProgramCard(props: { data: ProgramMetaData }) {
 
-    const dateComponents = props.data.timeline.map((item) => {
-        const date = item.date;
-        return (
-            <div className="text-[14px]">
-                {date}
-            </div>
-        )
-    });
-
-    const topicComponents = props.data.timeline.map((item) => {
-        const topic = item.topic;
-        return (
-            <div className="text-[14px]">
-                {topic}
-            </div>
-        )
-    });
-
     const timelineRows = props.data.timeline.map((item, index) => {
         const date = item.date;
         const topic = item.topic;
