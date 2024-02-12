@@ -10,7 +10,7 @@ interface ImpactProps{
 const Impact: React.FC<ImpactProps> = ({data}) => {
     return <>
         <div className="bg-dark-grey pb-14">
-            <div className="lg:text-[4.9vh] sm:text-[4.6vh] text-white font-roboto-mono pl-20 pt-10">Impact</div>
+            <div className="lg:text-[4.9vh] sm:text-[4.6vh] text-white font-roboto-mono pl-10 pt-10 md:pl-20">Impact</div>
             <div className="flex flex-col items-center">
                 <div className="flex items-end p-10">
                     <div className="bg-utmist-purple h-[7vh] w-[42vw] border-r-4 border-white"></div>
