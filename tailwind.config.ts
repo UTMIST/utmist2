@@ -30,7 +30,8 @@ const config: Config = {
         "utmist-purple": "#8C51FF",
         "dark-grey": "rgba(0, 0, 0, 0.83)",
         "utmist-pink": "#CC6DE5",
-        "dropdown": "#001128"
+        "dropdown": "#001128",
+        "utmist-black": "#121212"
       },
       backgroundImage: {
         "banner-small": "url('/assets/BannerSmall.svg')",

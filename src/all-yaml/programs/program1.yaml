@@ -1,0 +1,37 @@
+---
+title: "Program Example"
+year: "2022-2023"
+description:
+  overview: "this is UTMIST's coolest program ever! Students from all academic backgrounds are welcome to join."
+  instructor: "John Doe"
+  location: "Bahen Centre for Information Technology"
+timeline:
+  - date: "2023/09/21"
+    topic: "Week 1: Introduction"
+    content:
+      - type: "slides"
+        link: "https://google.com"
+  - date: "2023/09/28"
+    topic: "Week 2: What is Machine Learning?"
+    content:
+      - type: "slides"
+        link: "https://google.com"
+  - date: "2023/10/05"
+    topic: "Week 3: Introduction to Computer Vision"
+    content:
+      - type: "slides"
+        link: "https://google.com"
+  - date: "2023/10/12"
+    topic: "Week 4: Introduction to Natural Language Processing"
+    content:
+      - type: "slides"
+        link: "https://google.com"
+# team:
+#   - name: "John Doe"
+#     image: "/team/john_doe.jpg" # this can just be deleted if we want to use default image (TBD)
+#     socials:
+#       LinkedIn: "https://linkedin.com/in/example"
+#       Twitter: "https://twitter.com/example"
+#       GitHub: "https://github.com/example"
+#     role: "Director"
+---
