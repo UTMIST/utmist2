@@ -23,6 +23,7 @@ import { AlumniMetaData } from "@/schemas/AlumniMetaData";
 import AlumniSpotlight from "./home/AlumniSpotlight";
 import Impact from "@pages/home/Impact";
 import {ImpactMetaData} from "@/schemas/ImpactMetaData";
+import NewsletterHomepage from "./home/NewsletterHomepage";
 
 interface HomeProp {
     data: MissionMetaData[], 
@@ -39,7 +40,9 @@ const HomePage: React.FC<HomeProp> = ({wwdData, data, alumniData,impactData}) =>
             <MissionStatement data={data} />
             <WwdHomepage data={wwdData} />
             <AlumniSpotlight data={alumniData} />
+
             <Impact data={impactData}/>
+            <NewsletterHomepage></NewsletterHomepage>
         </>
     );
 };
