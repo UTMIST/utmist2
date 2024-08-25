@@ -9,7 +9,7 @@ export interface TeamMember {
         Twitter: string;
     };
     role: string;
-    year: string; // Added year to filter team members by year
+    year: string[]; // Added year to filter team members by year
 }
 
 export interface TeamMetaData extends BaseMetaData {
