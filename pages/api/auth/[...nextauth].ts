@@ -4,7 +4,7 @@ import { FirestoreAdapter } from "@next-auth/firebase-adapter";
 import { cert } from 'firebase-admin/app';
 import { initializeApp, getApps } from 'firebase-admin/app';
 
-// Firebase Admin SDK configuration
+// Firebase Admin SDK configuration A
 const firebaseAdminConfig = {
   credential: cert({
     projectId: process.env.FIREBASE_PROJECT_ID!,
