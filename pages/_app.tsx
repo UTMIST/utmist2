@@ -6,13 +6,17 @@ import { AppProps } from "next/app";
 import Footer from "@/common/Footer";;
 import { SessionProvider } from "next-auth/react";
 import '@/styles/globals.css';
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  const router = useRouter();
+  const isDashboard = router.pathname === '/dashboard';
+
   return (
     <SessionProvider session={session}>
-      <Navbar />
+      {!isDashboard && <Navbar />}
       <Component {...pageProps} />
-      <Footer />
+      {!isDashboard && <Footer />}
     </SessionProvider>
   );
 }
