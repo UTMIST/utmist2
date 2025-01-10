@@ -5,7 +5,7 @@ import { initializeApp, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { CustomFirestoreAdapter } from '@/lib/customFirestoreAdapter';
 
-// Firebase Admin SDK configuration
+// Firebase Admin SDK configuration 
 const firebaseAdminConfig = {
   credential: cert({
     projectId: process.env.FIREBASE_PROJECT_ID!,
@@ -13,8 +13,6 @@ const firebaseAdminConfig = {
     privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
   }),
 };
-
-// force vercel
 
 if (!getApps().length) {
   initializeApp(firebaseAdminConfig);
@@ -27,11 +25,10 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
-          redirect_uri: 'https://utmist2.vercel.app/api/auth/callback/google'
-        }
-      }
+          redirect_uri: 'https://utmist2.vercel.app/api/auth/callback/google',
+        },
+      },
     }),
-    
   ],
   secret: process.env.NEXTAUTH_SECRET!,
   adapter: CustomFirestoreAdapter(firebaseAdminConfig),
@@ -69,7 +66,10 @@ export default NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }) {
-      return `${baseUrl}/dashboard`;
+      if (url.startsWith('http')) {
+        return url;
+      }
+      return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
     },
   },
 });

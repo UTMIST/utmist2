@@ -38,10 +38,9 @@ export default function Navbar() {
   };
 
   const handleSignIn = () => {
-    const currentUrl = window.location.origin + '/dashboard';
+    const returnTo = window.location.origin + '/dashboard';
     signIn('google', { 
-      callbackUrl: currentUrl,
-      redirect_uri: 'https://utmist2.vercel.app/api/auth/callback/google'
+      callbackUrl: returnTo,
     });
   };
 
