@@ -14,6 +14,8 @@ const firebaseAdminConfig = {
   }),
 };
 
+// force vercel
+
 if (!getApps().length) {
   initializeApp(firebaseAdminConfig);
 }
