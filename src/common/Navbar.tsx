@@ -38,9 +38,8 @@ export default function Navbar() {
   };
 
   const handleSignIn = () => {
-    const returnTo = window.location.origin + '/dashboard';
     signIn('google', { 
-      callbackUrl: returnTo,
+      callbackUrl: window.location.origin + '/dashboard'
     });
   };
 
