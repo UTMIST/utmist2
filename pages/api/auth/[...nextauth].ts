@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { cert } from 'firebase-admin/app';
 import { initializeApp, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
@@ -20,25 +21,33 @@ if (!getApps().length) {
 
 export default NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          redirect_uri: 'https://utmist2.vercel.app/api/auth/callback/google',
-        },
-      },
-    }),
+    process.env.VERCEL_ENV === "preview"
+      ? CredentialsProvider({
+          name: "Preview Account",
+          credentials: {
+            username: { label: "Username", type: "text", placeholder: "preview" },
+            password: { label: "Password", type: "password" }
+          },
+          async authorize() {
+            return {
+              id: "preview-user",
+              name: "Preview User",
+              email: "preview@example.com",
+              image: "https://i.pravatar.cc/150?u=preview@example.com",
+            }
+          },
+        })
+      : GoogleProvider({
+          clientId: process.env.GOOGLE_CLIENT_ID!,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
   ],
-  secret: process.env.NEXTAUTH_SECRET!,
-  adapter: CustomFirestoreAdapter(firebaseAdminConfig),
-  pages: {
-    // signIn: '/auth/signin', // Optional: Define if you have a custom sign-in page
-    // error: '/auth/error',   // Optional: Define if you have a custom error page
-    // signOut: '/auth/signout', // Optional: Define if you have a custom sign-out page
-  },
   callbacks: {
     async signIn({ user, account }) {
+      if (process.env.VERCEL_ENV === "preview") {
+        return true;
+      }
+
       try {
         const adminAuth = getAuth();
         
@@ -61,15 +70,15 @@ export default NextAuth({
     },
     async session({ session, user }) {
       if (session?.user) {
-        session.user.id = user.id;
+        if (process.env.VERCEL_ENV === "preview") {
+          session.user.id = 'preview-user';
+        } else {
+          session.user.id = user.id;
+        }
       }
       return session;
     },
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith('http')) {
-        return url;
-      }
-      return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
-    },
   },
+  secret: process.env.NEXTAUTH_SECRET!,
+  adapter: process.env.VERCEL_ENV === "preview" ? undefined : CustomFirestoreAdapter(firebaseAdminConfig),
 });
