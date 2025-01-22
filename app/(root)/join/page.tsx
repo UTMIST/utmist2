@@ -1,25 +1,25 @@
-import FAQ from "@/components/joinUs/FAQ";
+"use client";
 
 const joinUsData = [
   {
     title: "Join our Discord",
-    imgPath: "/assets/Rectangle1.svg",
-    buttonHref: "https://discord.gg/utm",
+    imgPath: "Rectangle3.svg",
+    buttonHref: "#",
   },
   {
     title: "Sign up for our newsletter",
-    imgPath: "/assets/Rectangle2.svg",
-    buttonHref: "https://utmnewsletter.com",
+    imgPath: "Rectangle1.svg",
+    buttonHref: "#",
   },
   {
     title: "Attend an event",
-    imgPath: "/assets/Rectangle3.svg",
-    buttonHref: "/events",
+    imgPath: "Rectangle4.svg",
+    buttonHref: "#",
   },
   {
     title: "View our projects",
-    imgPath: "/assets/Rectangle4.svg",
-    buttonHref: "/projects",
+    imgPath: "Rectangle2.svg",
+    buttonHref: "#",
   },
 ];
 
@@ -28,19 +28,99 @@ const InfoCard: React.FC<{
   imgPath: string;
   buttonHref: string;
 }> = ({ title, imgPath, buttonHref }) => (
-  <div className="text-center shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform">
-    <img src={imgPath} alt={title} className="w-full h-40 object-cover" />
-    <h3 className="mt-2 text-lg font-semibold text-white">{title}</h3>
-    <a
-      href={buttonHref}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-500 underline"
-    >
-      Learn More
-    </a>
-  </div>
+  <a
+    href={buttonHref}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="block text-center shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform"
+  >
+    <div className="bg-[#121212]">
+      <img
+        src={imgPath}
+        alt={title}
+        className="w-full h-48 object-cover rounded-lg"
+      />
+      <h3 className="bg-[#121212] text-[1.5vh] pt-1 pb-1 pr-3 pl-3 text-white">
+        {title}
+      </h3>
+    </div>
+  </a>
 );
+
+const FAQSection: React.FC = () => {
+  const faqs = [
+    {
+      question: "How do I become a member?",
+      answer:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    },
+    {
+      question: "How do I become a member?",
+      answer:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    },
+    {
+      question: "How do I become a member?",
+      answer:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    },
+    {
+      question: "How do I become a member?",
+      answer:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    },
+    {
+      question: "How do I become a member?",
+      answer:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    },
+  ];
+
+  return (
+    <div className="mt-16 flex flex-col items-start pl-[16.7vw] pr-[16.7vw] pb-16">
+      <h2 className="text-[2.3vh] font-roboto-mono">
+        Frequently Asked Questions
+      </h2>
+      <div className="bg-[#00349F] w-[6vw] h-[6px]"></div>
+      <div className="mt-8 w-full">
+        {faqs.map((faq, index) => (
+          <div
+            key={index}
+            className="border border-white border-[1px] mb-4 overflow-hidden font-roboto-mono hover:bg-gray-800 transition-colors"
+            style={{ width: "100%" }}
+          >
+            <button
+              className="w-full text-left px-6 py-3 bg-transparent text-white flex justify-between items-center transition-colors font-roboto-mono"
+              onClick={(e) => {
+                const content = e.currentTarget.nextElementSibling;
+                const icon = e.currentTarget.querySelector(".icon");
+                if (content) {
+                  content.classList.toggle("hidden");
+                  if (icon) {
+                    icon.textContent = content.classList.contains("hidden")
+                      ? "\u25BC"
+                      : "\u25B2";
+                  }
+                  if (!content.classList.contains("hidden")) {
+                    e.currentTarget.classList.add("bg-purple-600");
+                  } else {
+                    e.currentTarget.classList.remove("bg-purple-600");
+                  }
+                }
+              }}
+            >
+              <span>{faq.question}</span>
+              <span className="text-xl font-roboto-mono icon">&#9660;</span>
+            </button>
+            <div className="hidden px-6 py-4 bg-blue-900 text-white text-[1.6vh] font-roboto-mono">
+              {faq.answer}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const JoinUs: React.FC = () => (
   <div className="bg-dark-grey text-white min-h-screen">
@@ -52,15 +132,16 @@ const JoinUs: React.FC = () => (
     </div>
 
     {/* Info Cards Section */}
-    <div className="mt-[5vh] flex flex-col items-center">
-      <h2 className="text-[3vh] font-bold">
+    <div className="mt-[5vh] flex flex-col items-start pl-[16.7vw] pr-[16.7vw]">
+      <h2 className="text-[2.3vh] font-roboto-mono mt-5">
         Get in Touch/Become A Member/Connect with us
       </h2>
-      <p className="w-[60vw] text-center mt-4">
+      <div className="bg-[#00349F] w-[6vw] h-[6px]"></div>
+      <p className="text-[1.6vh] mt-6 font-roboto-mono">
         UTMIST is committed to being an accessible school club. Membership is
         open to any UofT student regardless of faculty or campus affiliation.
       </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+      <div className="font-roboto-mono grid grid-cols-1 w-[67vw] sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 items-center">
         {joinUsData.map((item) => (
           <InfoCard
             key={item.title}
@@ -73,25 +154,29 @@ const JoinUs: React.FC = () => (
     </div>
 
     {/* Team Section */}
-    <div className="mt-16 px-4 text-center">
-      <h2 className="text-[3vh] font-bold">Join the Team</h2>
-      <div className="mt-4">
-        <h3 className="font-semibold">Leadership Positions</h3>
-        <p>We currently don’t have executive openings. Check back later!</p>
-        <h3 className="mt-4 font-semibold">Regular Team Positions</h3>
-        <p>We currently don’t have executive openings. Check back later!</p>
+    <div className="mt-[5vh] flex flex-col items-start pl-[16.7vw] pr-[16.7vw]">
+      <h2 className="text-[2.3vh] font-roboto-mono">Join the Team</h2>
+      <div className="bg-[#00349F] w-[6vw] h-[6px]"></div>
+      <div className="mt-8 font-roboto-mono space-y-4">
+        <div>
+          <h3 className="text-[1.8vh] font-medium">Leadership Positions</h3>
+          <p className="text-[1.6vh] font-roboto-mono">
+            We currently don’t have executive openings. Check back later!
+          </p>
+        </div>
+        <div>
+          <h3 className="text-[1.8vh] font-medium mt-8">
+            Regular Team Positions
+          </h3>
+          <p className="text-[1.6vh] font-roboto-mono">
+            We currently don’t have executive openings. Check back later!
+          </p>
+        </div>
       </div>
     </div>
 
     {/* FAQ Section */}
-    <div className="mt-16 px-4">
-      <h2 className="text-[3vh] font-bold text-center">
-        Frequently Asked Questions
-      </h2>
-      <div className="mt-4 max-w-3xl mx-auto">
-        <FAQ />
-      </div>
-    </div>
+    <FAQSection />
   </div>
 );
 
