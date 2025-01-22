@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 const joinUsData = [
   {
     title: "Join our Discord",
@@ -35,14 +37,8 @@ const InfoCard: React.FC<{
     className="block text-center shadow-lg rounded-lg overflow-hidden hover:scale-105 transition-transform"
   >
     <div className="bg-[#121212]">
-      <img
-        src={imgPath}
-        alt={title}
-        className="w-full h-48 object-cover rounded-lg"
-      />
-      <h3 className="bg-[#121212] text-[1.5vh] pt-1 pb-1 pr-3 pl-3 text-white">
-        {title}
-      </h3>
+      <img src={imgPath} alt={title} className="w-full h-48 object-cover rounded-lg" />
+      <h3 className="bg-[#121212] text-[1.5vh] pt-1 pb-1 pr-3 pl-3 text-white">{title}</h3>
     </div>
   </a>
 );
@@ -76,43 +72,35 @@ const FAQSection: React.FC = () => {
     },
   ];
 
+  const [openIndex, setOpenIndex] = React.useState<number | null>(null);
+
   return (
     <div className="mt-16 flex flex-col items-start pl-[16.7vw] pr-[16.7vw] pb-16">
-      <h2 className="text-[2.3vh] font-roboto-mono">
-        Frequently Asked Questions
-      </h2>
+      <h2 className="text-[2.3vh] font-roboto-mono">Frequently Asked Questions</h2>
       <div className="bg-[#00349F] w-[6vw] h-[6px]"></div>
       <div className="mt-8 w-full">
         {faqs.map((faq, index) => (
           <div
             key={index}
-            className="border border-white border-[1px] mb-4 overflow-hidden font-roboto-mono hover:bg-gray-800 transition-colors"
+            className={`border border-white border-[1px] mb-4 overflow-hidden font-roboto-mono transition-colors ${
+              openIndex === index ? "bg-[#8434c9]" : "hover:bg-gray-800"
+            }`}
             style={{ width: "100%" }}
           >
             <button
               className="w-full text-left px-6 py-3 bg-transparent text-white flex justify-between items-center transition-colors font-roboto-mono"
-              onClick={(e) => {
-                const content = e.currentTarget.nextElementSibling;
-                const icon = e.currentTarget.querySelector(".icon");
-                if (content) {
-                  content.classList.toggle("hidden");
-                  if (icon) {
-                    icon.textContent = content.classList.contains("hidden")
-                      ? "\u25BC"
-                      : "\u25B2";
-                  }
-                  if (!content.classList.contains("hidden")) {
-                    e.currentTarget.classList.add("bg-purple-600");
-                  } else {
-                    e.currentTarget.classList.remove("bg-purple-600");
-                  }
-                }
-              }}
+              onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
               <span>{faq.question}</span>
-              <span className="text-xl font-roboto-mono icon">&#9660;</span>
+              <span className="text-xl font-roboto-mono icon">
+                {openIndex === index ? "▲" : "▼"}
+              </span>
             </button>
-            <div className="hidden px-6 py-4 bg-blue-900 text-white text-[1.6vh] font-roboto-mono">
+            <div
+              className={`${
+                openIndex === index ? "block" : "hidden"
+              } px-6 py-4 bg-[#092242] text-white text-[1.6vh] font-roboto-mono`}
+            >
               {faq.answer}
             </div>
           </div>
@@ -155,22 +143,18 @@ const JoinUs: React.FC = () => (
 
     {/* Team Section */}
     <div className="mt-[5vh] flex flex-col items-start pl-[16.7vw] pr-[16.7vw]">
-      <h2 className="text-[2.3vh] font-roboto-mono">Join the Team</h2>
+      <h2 className="text-[2.3vh] font-roboto-mono">
+        Join the Team
+      </h2>
       <div className="bg-[#00349F] w-[6vw] h-[6px]"></div>
       <div className="mt-8 font-roboto-mono space-y-4">
         <div>
           <h3 className="text-[1.8vh] font-medium">Leadership Positions</h3>
-          <p className="text-[1.6vh] font-roboto-mono">
-            We currently don’t have executive openings. Check back later!
-          </p>
+          <p className="text-[1.6vh] font-roboto-mono">We currently don’t have executive openings. Check back later!</p>
         </div>
         <div>
-          <h3 className="text-[1.8vh] font-medium mt-8">
-            Regular Team Positions
-          </h3>
-          <p className="text-[1.6vh] font-roboto-mono">
-            We currently don’t have executive openings. Check back later!
-          </p>
+          <h3 className="text-[1.8vh] font-medium mt-8">Regular Team Positions</h3>
+          <p className="text-[1.6vh] font-roboto-mono">We currently don’t have executive openings. Check back later!</p>
         </div>
       </div>
     </div>
