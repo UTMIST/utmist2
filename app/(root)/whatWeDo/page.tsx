@@ -3,12 +3,39 @@
 import InfoCard from "@src/components/whatWeDo/InfoCard";
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 
-interface WhatWeDoProps {
-    data: WWeDoMetaData[];
-}
+const sampleWWeDoData: WWeDoMetaData[] = [
+    {
+        slug: "research",
+        title: "Research Projects",
+        imgPath: "https://placeholder.pics/svg/200",
+        buttonHref: "/projects",
+        publishDate: new Date().toISOString()
+    },
+    {
+        slug: "demistify",
+        title: "deMISTify Newsletter",
+        imgPath: "https://placeholder.pics/svg/200",
+        buttonHref: "/demistify",
+        publishDate: new Date().toISOString()
+    },
+    {
+        slug: "workshops",
+        title: "Workshops & Events",
+        imgPath: "https://placeholder.pics/svg/200",
+        buttonHref: "/events",
+        publishDate: new Date().toISOString()
+    },
+    {
+        slug: "mentorship",
+        title: "Mentorship Program",
+        imgPath: "https://placeholder.pics/svg/200",
+        buttonHref: "/mentorship",
+        publishDate: new Date().toISOString()
+    }
+];
 
-const whatWeDo: React.FC<WhatWeDoProps> = ({ data }) => {
-    const infoCards = data.map((item) => {
+const WhatWeDo = () => {
+    const infoCards = sampleWWeDoData.map((item) => {
         return (
             <div key={item.slug} className="mb-[14.9vh]">
                 <InfoCard
@@ -36,4 +63,4 @@ const whatWeDo: React.FC<WhatWeDoProps> = ({ data }) => {
     );
 };
 
-export default whatWeDo;
+export default WhatWeDo;

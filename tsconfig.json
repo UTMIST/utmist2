@@ -24,7 +24,8 @@
       "@pages/*": ["./pages/*"],
       "@app/*": ["./app/*"],
       "@root/*": ["./app/(root)/*"],
-	  "@assets/*": ["./public/assets/*"]
+      "@schema/*": ["./app/schema/*"],
+	    "@assets/*": ["./public/assets/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

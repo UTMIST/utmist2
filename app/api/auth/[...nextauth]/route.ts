@@ -8,7 +8,7 @@ import { CustomFirestoreAdapter } from '@app/firebase/customFirestoreAdapter';
 
 const firebaseAdminConfig = {
   credential: cert({
-    projectId: process.env.FIREBASE_PROJECT_ID!,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
     privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
   }),
@@ -66,10 +66,16 @@ const handler = NextAuth({
     },
     async session({ session, token }) {
       if (session?.user) {
-        session.user.id = token.sub!;
+        session.user.id = token?.sub ?? 'unknown';
       }
       return session;
     },
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
+    }
   },
   secret: process.env.NEXTAUTH_SECRET!,
   adapter: process.env.VERCEL_ENV === "preview" ? undefined : CustomFirestoreAdapter(firebaseAdminConfig),
