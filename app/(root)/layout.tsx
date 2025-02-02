@@ -1,7 +1,7 @@
 import '@app/globals.css';
 import { ReactNode } from 'react';
-import Navbar from "@/common/Navbar";
-import Footer from "@/common/Footer";
+import Navbar from "@app/common/Navbar";
+import Footer from "@app/common/Footer";
 import { Providers } from '../providers';
 import { FirebaseProvider } from '../firebase/firebase-provider';
 

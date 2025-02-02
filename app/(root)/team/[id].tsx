@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { getContentData } from "@/common/general_parser";
 import { TeamMetaData } from "@/schemas/TeamMetaData";
 // import { TeamMetaData } from "@/schemas/TeamMetaData";
 import { GetStaticPropsContext } from "next";
@@ -84,32 +83,5 @@ const IndividualTeam = ({ found }: { found: ContentData<TeamMetaData>  }) => {
     </>
   );
 };
-
-export async function getStaticPaths() {
-  const data: ContentData<TeamMetaData>[] = await getContentData<TeamMetaData>("teams");
-
-  const paths = data.map((item) => {
-    return { params: { id: item.slug } };
-  });
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
-
-export async function getStaticProps(context: GetStaticPropsContext) {
-  const params: ParsedUrlQuery = context.params!;
-  const data: ContentData<TeamMetaData>[] = await getContentData<TeamMetaData>("teams");
-  const teamId = params.id as string;
-
-  const found = data.find((item) => item.slug === teamId) || null;
-
-  return {
-    props: {
-      found,
-    },
-  };
-}
 
 export default IndividualTeam;

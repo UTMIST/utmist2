@@ -1,4 +1,3 @@
-import { getContentData } from "@/common/general_parser";
 import { DemistifyData } from "@/schemas/DemistifyData";
 import Image from "next/image";
 import Link from "next/link";
@@ -124,17 +123,5 @@ const AllIssues: React.FC<DemistifyProp> = ({ data }) => {
          </div>
      </>
  }
-
- export async function getStaticProps() {
-    const data: DemistifyData[] = await getContentData<DemistifyData>(
-        "demistify"
-    );
-  
-    return {
-      props: {
-        data,
-      },
-    };
-  }
   
   export default AllIssues;

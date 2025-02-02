@@ -4,7 +4,7 @@ const config: Config = {
   content: [
     "./src/components/**/*.tsx",
     "./src/styles/**/*.tsx",
-    "./pages/**/*.tsx",
+    "./app/**/*.tsx",
     "./src/**/*.tsx",
   ],
   theme: {

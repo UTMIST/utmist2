@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import MissionStatement from "@src/components/home/MissionStatement";
-import Banner from "@/common/banner";
+import Banner from "@app/common/banner";
 import { MissionMetaData } from "@/schemas/MissionMetaData";
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 import WwdHomepage from "@root/home/WwdHomepage";

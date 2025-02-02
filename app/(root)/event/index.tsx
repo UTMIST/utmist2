@@ -1,14 +1,11 @@
 import {EventMetaData} from "@/schemas/EventMetaData";
-import {getContentData} from "@/common/general_parser";
 import React from "react";
 import Link from "next/link";
-import LinkButton from "@/common/LinkButton";
+import LinkButton from "@app/common/LinkButton";
 
 interface EventsProp {
     data: EventMetaData[];
 }
-
-
 
 const Events: React.FC<EventsProp> = ({ data }) => {
     return <>
@@ -53,15 +50,3 @@ const Events: React.FC<EventsProp> = ({ data }) => {
 }
 
 export default Events;
-
-export async function getStaticProps() {
-    const data: EventMetaData[] = await getContentData<EventMetaData>(
-        "event"
-    );
-
-    return {
-        props: {
-            data,
-        },
-    };
-}

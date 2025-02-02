@@ -1,6 +1,5 @@
 //"use client";
-import LinkButton from "@/common/LinkButton";
-import { getContentData } from "@/common/general_parser";
+import LinkButton from "@app/common/LinkButton";
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
 import Image from "next/image";
 import Link from "next/link";
@@ -176,17 +175,5 @@ const AllProjects: React.FC<ProjectsProp> = ({ data }) => {
 
   );
 };
-
-export async function getStaticProps() {
-  const data: ProjectMetaData[] = await getContentData<ProjectMetaData>(
-      "projects"
-  );
-
-  return {
-    props: {
-      data,
-    },
-  };
-}
 
 export default AllProjects;

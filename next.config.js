@@ -8,9 +8,14 @@ module.exports = {
     return config;
   },
   images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     domains: [
       'lh3.googleusercontent.com',
       'i.pravatar.cc',
+      'utmist-local.firebasestorage.app',
+      'placeholder.pics',
     ],
   },
 };

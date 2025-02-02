@@ -4,9 +4,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { cert } from 'firebase-admin/app';
 import { initializeApp, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import { CustomFirestoreAdapter } from '@/lib/customFirestoreAdapter';
+import { CustomFirestoreAdapter } from '@app/firebase/customFirestoreAdapter';
 
-// Firebase Admin SDK configuration 
 const firebaseAdminConfig = {
   credential: cert({
     projectId: process.env.FIREBASE_PROJECT_ID!,
@@ -19,7 +18,7 @@ if (!getApps().length) {
   initializeApp(firebaseAdminConfig);
 }
 
-export default NextAuth({
+const handler = NextAuth({
   providers: [
     process.env.VERCEL_ENV === "preview"
       ? CredentialsProvider({
@@ -47,10 +46,8 @@ export default NextAuth({
       if (process.env.VERCEL_ENV === "preview") {
         return true;
       }
-
       try {
         const adminAuth = getAuth();
-        
         try {
           await adminAuth.getUserByEmail(user.email!);
         } catch (error) {
@@ -61,20 +58,15 @@ export default NextAuth({
             emailVerified: true,
           });
         }
-        
         return true;
       } catch (error) {
         console.error("Error in signIn callback:", error);
         return false;
       }
     },
-    async session({ session, user }) {
+    async session({ session, token }) {
       if (session?.user) {
-        if (process.env.VERCEL_ENV === "preview") {
-          session.user.id = 'preview-user';
-        } else {
-          session.user.id = user.id;
-        }
+        session.user.id = token.sub!;
       }
       return session;
     },
@@ -82,3 +74,5 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET!,
   adapter: process.env.VERCEL_ENV === "preview" ? undefined : CustomFirestoreAdapter(firebaseAdminConfig),
 });
+
+export { handler as GET, handler as POST }; 

@@ -1,7 +1,6 @@
 "use client";
 
-import InfoCard from "../../src/components/whatWeDo/InfoCard";
-import { getContentData } from "@/common/general_parser";
+import InfoCard from "@src/components/whatWeDo/InfoCard";
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 
 interface WhatWeDoProps {
@@ -36,17 +35,5 @@ const whatWeDo: React.FC<WhatWeDoProps> = ({ data }) => {
         </>
     );
 };
-
-export async function getStaticProps() {
-    const data: WWeDoMetaData[] = await getContentData<WWeDoMetaData>(
-        "what-we-do"
-    );
-
-    return {
-        props: {
-            data,
-        },
-    };
-}
 
 export default whatWeDo;

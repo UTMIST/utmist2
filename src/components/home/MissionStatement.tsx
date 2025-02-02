@@ -1,8 +1,8 @@
 import Image from "next/image";
 import logo from "public/assets/mission-img.svg";
-import {getContentData} from "../../common/general_parser"
+import {getContentData} from "../../../app/common/general_parser"
 import {WWeDoMetaData} from "../../schemas/WWeDoMetaData"
-import LinkButton from "../../common/LinkButton";
+import LinkButton from "../../../app/common/LinkButton";
 import { MissionMetaData } from "@/schemas/MissionMetaData";
 //import {useEffect, useState } from "react";
 interface MissionProps {

@@ -1,4 +1,3 @@
-import { getContentData } from "@/common/general_parser";
 import { AlumniMetaData } from "@/schemas/AlumniMetaData";
 import Image from "next/image";
 
@@ -59,17 +58,6 @@ const AlumniSpotlight: React.FC<AlumniProps> = ({data}) => {
 
 
     </div>
-}
-export async function getStaticProps() {
-    const data: AlumniMetaData[] = await getContentData<AlumniMetaData>(
-        "alumni"
-    );
-
-    return {
-        props: {
-            data,
-        },
-    };
 }
 
 export default AlumniSpotlight;

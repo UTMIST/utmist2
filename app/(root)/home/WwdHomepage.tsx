@@ -1,8 +1,8 @@
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 import React, { useEffect, useState } from "react";
 import SmallCard from "@/components/home/SmallCard";
-import LinkButton from "@/common/LinkButton";
-import LinkButtonSmall from "@/common/LinkButtonSmall";
+import LinkButton from "@app/common/LinkButton";
+import LinkButtonSmall from "@app/common/LinkButtonSmall";
 
 interface WWdHomepageProps {
   data: WWeDoMetaData[];

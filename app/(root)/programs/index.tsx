@@ -3,9 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import DropDown from "public/assets/Vector 4.svg";
 import Image from "next/image";
-import { getContentData } from "@/common/general_parser";
 import ProgramCard from "@/components/programs/ProgramCard";
-
 
 export default function Program({ data }: {data: ProgramMetaData[]}) {
     const [isYearFilterOpen, setIsYearFilterOpen] = useState(false);
@@ -87,15 +85,3 @@ export default function Program({ data }: {data: ProgramMetaData[]}) {
         </>
     )
 }
-
-export async function getStaticProps() {
-    const data: ProgramMetaData[] = await getContentData<ProgramMetaData>(
-        "programs"
-    );
-  
-    return {
-      props: {
-        data,
-      },
-    };
-  }

@@ -1,11 +1,12 @@
 'use client';
 
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { createContext, useContext, ReactNode } from 'react';
 import { firebaseConfig } from './firebase-config';
-const app = initializeApp(firebaseConfig);
+
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 

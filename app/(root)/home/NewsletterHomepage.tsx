@@ -1,5 +1,5 @@
-import LinkButton from "@/common/LinkButton";
-import LinkButtonSmall from "@/common/LinkButtonSmall"
+import LinkButton from "@app/common/LinkButton";
+import LinkButtonSmall from "@app/common/LinkButtonSmall"
 import Image from 'next/image'
 
 export default function NewsletterHomepage() {

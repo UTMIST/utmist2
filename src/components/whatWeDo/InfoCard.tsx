@@ -1,6 +1,6 @@
 "use client";
 
-import LinkButton from "@/common/LinkButton";
+import LinkButton from "@app/common/LinkButton";
 
 export default function InfoCard(props: {
   title: string;

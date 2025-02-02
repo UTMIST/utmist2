@@ -20,7 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@src/*": ["./src/*"],
       "@pages/*": ["./pages/*"],
+      "@app/*": ["./app/*"],
+      "@root/*": ["./app/(root)/*"],
 	  "@assets/*": ["./public/assets/*"]
     }
   },

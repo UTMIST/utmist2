@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
-import { BaseMetaData } from "../schemas/BaseMetaData";
+import { BaseMetaData } from "../../src/schemas/BaseMetaData";
 
 type ContentData<T> = T & { content: string; slug: string };
 

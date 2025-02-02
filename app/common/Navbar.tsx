@@ -43,6 +43,7 @@ export default function Navbar() {
     });
   };
 
+
   return (
     <>
       <nav className="fixed font-roboto-mono bg-[#1E1E1E] z-10 w-full h-14 flex items-center">
