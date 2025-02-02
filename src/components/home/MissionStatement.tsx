@@ -18,7 +18,7 @@ const MissionStatement: React.FC<MissionProps> = ({ data }) => {
                         <div className="font-roboto-mono text-left text-white flex flex-col">
                             <div
                                 className="w-screen text-[4vh] ml-[24.6vw] mt-[7.9vh] sm:mb-[5.1vh] lg:ml-[5.7vw] lg:mt-[16.3vh] lg:mb-[5.1vh] lg:text-[5.4vh] lg:w-screen">
-                                BRIEF MISSION STATEMENT
+                                About Us
                             </div>
                             <div className="w-[55vw] text-[2.8vh] ml-[24.6vw] mb-[7.5vh]">
                                 {data[0].contents}

@@ -1,4 +1,4 @@
-//"use client";
+"use client";
 import LinkButton from "@/common/LinkButton";
 import { getContentData } from "@/common/general_parser";
 import { ProjectMetaData } from "@/schemas/ProjectMetaData";
@@ -90,7 +90,7 @@ const AllProjects: React.FC<ProjectsProp> = ({ data }) => {
             );
         });
 
-  return (
+    return (
             <div className="bg-dark-grey overflow-x-hidden">
                 <div className=" w-screen h-[53vh] bg-cover bg-wwd-banner"></div>
                 <div className=" absolute left-[16.7vw] top-[18vh] text-white text-[5.2vh] font-roboto-mono">
@@ -163,12 +163,7 @@ const AllProjects: React.FC<ProjectsProp> = ({ data }) => {
                         </li>
                     </ul>
                 </div>
-
-
-
-
-
-
+                
                 <div className={filteredInfoCards.length==0?"flex justify-center m-10 h-[26vh]":"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-10"}>
                     {filteredInfoCards.length==0? <p className="text-white font-roboto-mono">No projects found for the selected criteria.</p>:filteredInfoCards}
                 </div>

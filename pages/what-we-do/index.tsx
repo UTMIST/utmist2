@@ -5,8 +5,10 @@ import { getContentData } from "@/common/general_parser";
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 
 interface WhatWeDoProps {
-    data: WWeDoMetaData[];
+    data: ContentData<WWeDoMetaData>[];
 }
+
+type ContentData<T> = T & { content: string };
 
 const whatWeDo: React.FC<WhatWeDoProps> = ({ data }) => {
     const infoCards = data.map((item) => {
@@ -16,6 +18,7 @@ const whatWeDo: React.FC<WhatWeDoProps> = ({ data }) => {
                     title={item.title}
                     imgPath={item.imgPath}
                     buttonHref={item.buttonHref}
+                    content={item.content}
                 ></InfoCard>
             </div>
         );
@@ -38,10 +41,15 @@ const whatWeDo: React.FC<WhatWeDoProps> = ({ data }) => {
 };
 
 export async function getStaticProps() {
-    const data: WWeDoMetaData[] = await getContentData<WWeDoMetaData>(
+    const unsorted_data: ContentData<WWeDoMetaData>[] = await getContentData<WWeDoMetaData>(
         "what-we-do"
     );
 
+    const validData = unsorted_data.filter(item => typeof item.order === 'number');
+    const data = validData.sort((a, b) => a.order - b.order);
+    //const sortedData: ContentData<WWeDoMetaData>[] = data.sort((a, b) => a.order - b.order);
+
+    console.log("Data f2tched:", data);
     return {
         props: {
             data,

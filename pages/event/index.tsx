@@ -8,8 +8,6 @@ interface EventsProp {
     data: EventMetaData[];
 }
 
-
-
 const Events: React.FC<EventsProp> = ({ data }) => {
     return <>
         <div className="bg-dark-grey overflow-x-hidden">

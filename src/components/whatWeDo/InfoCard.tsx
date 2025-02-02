@@ -1,11 +1,11 @@
-"use client";
-
 import LinkButton from "@/common/LinkButton";
+import ReactMarkdown from "react-markdown";
 
 export default function InfoCard(props: {
   title: string;
   imgPath: string;
   buttonHref: string;
+  content: string;
 }) {
   return (
     <div className="flex w-[78.8vw] h-[53vh] bg-[#121212] rounded-md shadow-md">
@@ -19,13 +19,12 @@ export default function InfoCard(props: {
       <div className="font-semibold text-[2.3vh] mb-[1vh]">{props.title}</div>
         <div className="bg-[#00349F] w-[8.1vw] h-[5px] mb-[4vh]"></div>
         <div className="text-[1.75vh]  mb-[4.6vh]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.<br></br> <br></br>Duis aute irure
-          dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-          nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
-          in culpa qui officia deserunt mollit anim id est laborum.
+          {props.content.split('\n').map((line, index) => (
+            <span key={index}>
+              {line}
+              <br />
+            </span>
+          ))}
         </div>
         <div className="w-[100%] flex justify-end text-[2.06vh]">
           <LinkButton redirectPath={props.buttonHref} buttonText="Find out more"></LinkButton>

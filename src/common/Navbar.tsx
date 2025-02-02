@@ -41,19 +41,16 @@ export default function Navbar() {
               <Link href="/team">
                 <li className="inline-block ml-10 text-white">Team</li>
               </Link>
-              <Link href="/whatWeDo">
+              <Link href="/what-we-do">
                 <li className="inline-block ml-10 text-white">What We Do</li>
               </Link>
-              <Link href="/impactAndAlumni">
+              <Link href="/impact-and-alumni">
                 <li className="inline-block ml-10 text-white">Impact & Alumni</li>
               </Link>
-              <Link href="/projects">
-                <li className="inline-block ml-10 text-white">Projects</li>
-              </Link>
-              <Link href="/sponsorUs">
+              <Link href="/sponsor-us">
                 <li className="inline-block ml-10 text-white">Sponsor Us</li>
               </Link>
-              <Link href="/joinUs">
+              <Link href="/join-us">
                 <li className="inline-block ml-10 text-white">Join Us</li>
               </Link>
               <Link href="/calendar">

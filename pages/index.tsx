@@ -31,6 +31,7 @@ interface HomeProp {
     alumniData: AlumniMetaData[],
     impactData: ImpactMetaData[]
 }
+
 const HomePage: React.FC<HomeProp> = ({wwdData, data, alumniData,impactData}) => {
     // receive it here
     return (
