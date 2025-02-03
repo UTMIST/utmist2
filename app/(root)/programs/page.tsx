@@ -1,3 +1,5 @@
+"use client";
+
 import { ProgramMetaData } from "@/schemas/ProgramMetaData";
 import Link from "next/link";
 import { useState } from "react";
@@ -5,12 +7,102 @@ import DropDown from "public/assets/Vector 4.svg";
 import Image from "next/image";
 import ProgramCard from "@/components/programs/ProgramCard";
 
-export default function Program({ data }: {data: ProgramMetaData[]}) {
+const sampleProgramData: ProgramMetaData[] = [
+    {
+        title: "Machine Learning Fundamentals",
+        year: "2023-2024",
+        slug: "machine-learning-fundamentals",
+        publishDate: "2023-09-15",
+        description: {
+            overview: "A comprehensive introduction to machine learning concepts, algorithms, and practical applications. Students will learn supervised and unsupervised learning techniques through hands-on projects.",
+            instructor: "Dr. Sarah Chen",
+            location: "Bahen Centre for Information Technology, Room 2270"
+        },
+        timeline: [
+            {
+                date: "2023/09/15",
+                topic: "Introduction to ML & Python Libraries",
+                content: [
+                    {
+                        type: "slides",
+                        link: "https://utmist.com/slides/ml-fundamentals-1.pdf"
+                    },
+                    {
+                        type: "recording",
+                        link: "https://utmist.com/recordings/ml-fundamentals-1.mp4"
+                    }
+                ]
+            },
+            {
+                date: "2023/09/22",
+                topic: "Linear Regression & Gradient Descent",
+                content: [
+                    {
+                        type: "slides",
+                        link: "https://utmist.com/slides/ml-fundamentals-2.pdf"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        title: "Deep Learning Workshop Series",
+        year: "2023-2024",
+        slug: "deep-learning-workshop-series",
+        publishDate: "2023-09-15",
+        description: {
+            overview: "Advanced workshop series covering neural networks, CNNs, RNNs, and transformers. Participants will implement state-of-the-art architectures using PyTorch.",
+            instructor: "Prof. Michael Zhang",
+            location: "Online (Zoom)"
+        },
+        timeline: [
+            {
+                date: "2023/10/01",
+                topic: "Neural Networks Basics",
+                content: [
+                    {
+                        type: "slides",
+                        link: "https://utmist.com/slides/dl-workshop-1.pdf"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        title: "Natural Language Processing Bootcamp",
+        year: "2022-2023",
+        slug: "natural-language-processing-bootcamp",
+        publishDate: "2023-09-15",
+        description: {
+            overview: "Intensive bootcamp covering text processing, word embeddings, and modern NLP architectures. Students will build practical applications like chatbots and text classifiers.",
+            instructor: "Dr. Emily Rodriguez",
+            location: "Myhal Centre, Room 150"
+        },
+        timeline: [
+            {
+                date: "2022/11/10",
+                topic: "Text Processing & Word Embeddings",
+                content: [
+                    {
+                        type: "slides",
+                        link: "https://utmist.com/slides/nlp-bootcamp-1.pdf"
+                    },
+                    {
+                        type: "recording",
+                        link: "https://utmist.com/recordings/nlp-bootcamp-1.mp4"
+                    }
+                ]
+            }
+        ]
+    }
+];
+
+export default function Program({ }) {
     const [isYearFilterOpen, setIsYearFilterOpen] = useState(false);
     const [selectedYear, setSelectedYear] = useState<string>("");
 
     // Assuming that the 1st item in the data array is the most recent one
-    const recentYear = data[0].year.substring(5);
+    const recentYear = sampleProgramData[0].year.substring(5);
     let yearAsNumber = Number(recentYear);
     let yearFilter: any[] | ((prevState: string[]) => string[]) = [];
 
@@ -32,7 +124,7 @@ export default function Program({ data }: {data: ProgramMetaData[]}) {
 
     }
 
-    const programCards = data.filter((programData) => {
+    const programCards = sampleProgramData.filter((programData) => {
         if (selectedYear.length > 0) {
             return programData.year === selectedYear;
         }

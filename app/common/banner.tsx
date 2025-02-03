@@ -16,7 +16,7 @@ export default function Banner() {
               </div>
               <div className="px-[15vw] lg:px-[17.7vw]">
               <LinkButton
-                redirectPath="/whatWeDo"
+                redirectPath="/wwd"
                 buttonText="Join Us"
               ></LinkButton>
               </div>

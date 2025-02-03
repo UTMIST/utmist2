@@ -1,6 +1,4 @@
-
-
-import { TeamMember } from "@/schemas/ProjectMetaData";
+import type { TeamMember } from "@/schemas/ProjectMetaData";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,7 +32,13 @@ export default function TeamMember(props: { data: TeamMember }) {
                         className={memberPhotoClassName}
                     ></div> */}
                     <div className="w-[158px] h-[151px] mb-[1.5vh] bg-[#C5C5C5] rounded-[50%] overflow-hidden">
-                        <img src={memberPhotoClassName} alt="Team member image" className="w-full h-full object-cover" />
+                        <Image 
+                            src={memberPhotoClassName} 
+                            alt="Team member image" 
+                            className="w-full h-full object-cover"
+                            width={158}
+                            height={151}
+                        />
                     </div>
                     <div className="flex flex-row justify-center text-white font-roboto-mono text-[16px]">
                         {props.data.name}

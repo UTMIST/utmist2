@@ -1,3 +1,5 @@
+"use client";
+
 import { DemistifyData } from "@/schemas/DemistifyData";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,14 +10,57 @@ interface DemistifyProp {
   data: DemistifyData[];
 }
 
-const AllIssues: React.FC<DemistifyProp> = ({ data }) => {
+const sampleDemistifyData: DemistifyData[] = [
+  {
+    slug: "issue-5",
+    publishDate: "2024-02-01",
+    issueNumber: "Issue #5",
+    imgPath: "/assets/demistify/issue5.jpg",
+    buttonHref: "utorontomist.medium.com/issue-5",
+    description: "Exploring the Latest Advances in Natural Language Processing and Their Impact on AI Development"
+  },
+  {
+    slug: "issue-4",
+    publishDate: "2023-12-15",
+    issueNumber: "Issue #4",
+    imgPath: "/assets/demistify/issue4.jpg",
+    buttonHref: "utorontomist.medium.com/issue-4",
+    description: "Deep Learning in Computer Vision: Breaking Down Complex Visual Tasks"
+  },
+  {
+    slug: "issue-3",
+    publishDate: "2023-10-30",
+    issueNumber: "Issue #3",
+    imgPath: "/assets/demistify/issue3.jpg",
+    buttonHref: "utorontomist.medium.com/issue-3",
+    description: "Reinforcement Learning: From Game Playing to Real-World Applications"
+  },
+  {
+    slug: "issue-2",
+    publishDate: "2023-09-15",
+    issueNumber: "Issue #2",
+    imgPath: "/assets/demistify/issue2.jpg",
+    buttonHref: "utorontomist.medium.com/issue-2",
+    description: "The Ethics of AI: Addressing Bias and Fairness in Machine Learning Systems"
+  },
+  {
+    slug: "issue-1",
+    publishDate: "2023-08-01",
+    issueNumber: "Issue #1",
+    imgPath: "/assets/demistify/issue1.jpg",
+    buttonHref: "utorontomist.medium.com/issue-1",
+    description: "Introduction to Machine Learning: Understanding the Basics of AI"
+  }
+];
+
+const Demistify: React.FC = ({ }) => {
     const [isYearFilterOpen, setIsYearFilterOpen] = useState(false);
     const [yearFilter, setYearFilter] = useState<string[]>([]);
     const [selectedYear,setSelectedYear]= useState<string[]>([]);
 
     const yearFilterToggle = () => {
         // Assuming that the 1st item in the data array is the most recent one
-        const recentYear = data[0].publishDate.substring(0, 4);
+        const recentYear = sampleDemistifyData[0].publishDate.substring(0, 4);
         let yearAsNumber = Number(recentYear);
         let updatedYearFilter: any[] | ((prevState: string[]) => string[]) = [];
 
@@ -34,7 +79,7 @@ const AllIssues: React.FC<DemistifyProp> = ({ data }) => {
         setSelectedYear([year.slice(4),year.slice(-4)])
     }
 
-    const filteredInfoCards = data
+    const filteredInfoCards = sampleDemistifyData
         .filter((item) => {
             // Filter based on selectedYear
             if (selectedYear.length > 0) {
@@ -91,7 +136,7 @@ const AllIssues: React.FC<DemistifyProp> = ({ data }) => {
                     </ul>
                 </div>
              <div className="grid grid-cols-1 md:grid-cols-1 gap-4 p-10">
-                 {data.map((item, ind) => {
+                 {sampleDemistifyData.map((item, ind) => {
                      return (
                          <div className="rounded-md overflow-hidden bg-black shadow-lg w-full flex flex-col" key={ind}>
                              <div>
@@ -124,4 +169,4 @@ const AllIssues: React.FC<DemistifyProp> = ({ data }) => {
      </>
  }
   
-  export default AllIssues;
+export default Demistify;

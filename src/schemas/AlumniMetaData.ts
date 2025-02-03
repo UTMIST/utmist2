@@ -5,4 +5,5 @@ export interface AlumniMetaData extends BaseMetaData {
     story: string;
     imgPath: string;
     linkedIn: string;
+    description: string;
 }

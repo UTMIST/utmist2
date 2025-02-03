@@ -13,6 +13,11 @@ export const db = getFirestore(app);
 export const FirebaseContext = createContext({ auth, db });
 
 export function FirebaseProvider({ children }: { children: ReactNode }) {
+//   console.log("[FirebaseProvider] Config:", {
+//     apiKey: process.env.FIREBASE_API_KEY,
+//     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+//   });
+
   return (
     <FirebaseContext.Provider value={{ auth, db }}>
       {children}
