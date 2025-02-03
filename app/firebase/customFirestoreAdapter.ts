@@ -1,5 +1,5 @@
 import { FirestoreAdapter } from "@next-auth/firebase-adapter";
-import type { Adapter } from "next-auth/adapters";
+import type { Adapter, AdapterUser, AdapterAccount } from "next-auth/adapters";
 import { cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
@@ -9,7 +9,7 @@ export function CustomFirestoreAdapter(config: any): Adapter {
 
   return {
     ...baseAdapter,
-    createUser: async (data) => {
+    createUser: async (data: Omit<AdapterUser, "id">) => {
       if (!baseAdapter?.createUser) {
         throw new Error('??? createUser method is undefined');
       }
@@ -28,7 +28,7 @@ export function CustomFirestoreAdapter(config: any): Adapter {
 
       return user;
     },
-    linkAccount: async (data) => { // needed otherwise users cant login twice
+    linkAccount: async (data: AdapterAccount) => { // needed otherwise users cant login twice
       if (!baseAdapter?.linkAccount) {
         throw new Error('??? linkAccount method is undefined');
       }

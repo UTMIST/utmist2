@@ -28,7 +28,12 @@ export default function NewsletterHomepage() {
                 </form>
                 <LinkButtonSmall buttonText="Subscribe" redirectPath="/" />
                 <div className="w-[249px] h-[182px]">
-                    <img src="/assets/newsletterPageImage.svg"/>
+                    <Image 
+                        src="/assets/newsletterPageImage.svg" 
+                        width={249} 
+                        height={182} 
+                        alt="newsletter subscription image"
+                    />
                 </div>
             </div>
 

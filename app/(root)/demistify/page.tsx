@@ -1,3 +1,5 @@
+"use client";
+
 import { DemistifyData } from "@/schemas/DemistifyData";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +10,7 @@ interface DemistifyProp {
   data: DemistifyData[];
 }
 
-const AllIssues: React.FC<DemistifyProp> = ({ data }) => {
+const Demistify: React.FC<DemistifyProp> = ({ data }) => {
     const [isYearFilterOpen, setIsYearFilterOpen] = useState(false);
     const [yearFilter, setYearFilter] = useState<string[]>([]);
     const [selectedYear,setSelectedYear]= useState<string[]>([]);
@@ -124,4 +126,4 @@ const AllIssues: React.FC<DemistifyProp> = ({ data }) => {
      </>
  }
   
-  export default AllIssues;
+export default Demistify;
