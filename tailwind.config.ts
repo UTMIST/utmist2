@@ -1,11 +1,14 @@
 import type { Config } from "tailwindcss";
-// {js,ts,jsx,tsx,mdx}
+
 const config: Config = {
   content: [
     "./src/components/**/*.tsx",
     "./src/styles/**/*.tsx",
     "./app/**/*.tsx",
     "./src/**/*.tsx",
+    // Exclude AI2 directories
+    "!./app/common/ai2/**/*.{ts,tsx}",
+    "!./app/(ai2)/**/*.{ts,tsx}",
   ],
   theme: {
     borderRadius: {
@@ -58,4 +61,5 @@ const config: Config = {
   },
   plugins: [],
 };
+
 export default config;

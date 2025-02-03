@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+'use client'
 import Link from "next/link";
 import Image from "next/image";
 import logo from "public/assets/UTMIST circular logo.svg";
