@@ -1,11 +1,18 @@
 import type { Config } from "tailwindcss";
+import fireCMSConfig from "@firecms/ui/tailwind.config.js";
 
 const config: Config = {
+  presets: [fireCMSConfig],
   content: [
     "./src/components/**/*.tsx",
     "./src/styles/**/*.tsx",
     "./app/**/*.tsx",
     "./src/**/*.tsx",
+
+    "./app/(cms)/index.html",
+    "./app/(cms)/src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}",
+  
     // Exclude AI2 directories
     "!./app/common/ai2/**/*.{ts,tsx}",
     "!./app/(ai2)/**/*.{ts,tsx}",
