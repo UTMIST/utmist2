@@ -27,7 +27,7 @@
       "@ai2/*": ["./app/common/ai2/*"],
       "@ai2components/*": ["./app/common/ai2/*"],
       "@/lib/*": ["./app/common/ai2/lib/*"],
-	    "@assets/*": ["./public/assets/*"]
+	    "@assets/*": ["./public/assets/*"],
       "@schema/*": ["./app/schema/*"],
     }
   },

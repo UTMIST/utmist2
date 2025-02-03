@@ -102,7 +102,7 @@ export const TournamentPanel = () => {
               className="w-full"
             />
             <p className="text-sm text-gray-500">
-              Upload your team's writeup as a Markdown (.md) file
+              Upload your team&#39;s writeup as a Markdown (.md) file
             </p>
             {writeupFile && (
               <p className="text-sm text-green-600">
