@@ -16,6 +16,8 @@ const config: Config = {
     "./node_modules/@firecms/core/dist/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@firecms/ui/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@firecms/core/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/ui/dist/**/*.js",
+    "./node_modules/@firecms/core/dist/**/*.js",
 
     // Exclude AI2 directories
     "!./app/common/ai2/**/*.{ts,tsx}",
@@ -75,10 +77,11 @@ const config: Config = {
   safelist: [
     {
       pattern: /bg-surface-(50|900)/,
+      variants: ["dark"]
     },
     {
-      pattern: /font-(headers|mono)/,
-    },
+      pattern: /font-(headers|mono)/
+    }
   ]
 };
 
