@@ -55,7 +55,7 @@ function CMSPage() {
         // const idTokenResult = await user?.firebaseUser?.getIdTokenResult();
         // const userIsAdmin = idTokenResult?.claims.admin || user?.email?.endsWith("@firecms.co");
 
-        // auth is limited to 2 people
+        // auth is limited to 2 people 
         console.log(user?.email);
         if (user?.email != null && (user?.email == "ajwmagnuson@gmail.com" || user?.email == "zainhmoustafa@gmail.com")) {
             return true;
