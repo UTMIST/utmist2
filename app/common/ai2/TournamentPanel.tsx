@@ -99,7 +99,13 @@ export const TournamentPanel = () => {
               type="file"
               accept=".md"
               onChange={handleWriteupUpload}
-              className="w-full"
+              className="w-full text-sm text-foreground file:mr-4 file:py-2 file:px-4 
+                file:rounded-md file:border-0 file:text-sm file:font-semibold
+                file:bg-secondary file:text-secondary-foreground
+                hover:file:bg-secondary/90
+                dark:file:bg-gray-800 dark:file:text-gray-300
+                dark:hover:file:bg-gray-700
+                file:cursor-pointer cursor-pointer"
             />
             <p className="text-sm text-gray-500">
               Upload your team&#39;s writeup as a Markdown (.md) file

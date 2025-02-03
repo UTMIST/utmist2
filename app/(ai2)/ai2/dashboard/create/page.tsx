@@ -14,7 +14,7 @@ const DashboardCreatePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-hackathon-background">
+    <div className="min-h-screen bg-background dark:bg-gray-900 transition-colors duration-200">
       <Header />
       <div className="pt-16 p-4 flex flex-col items-center justify-center">
         <TeamCreate onTeamCreated={handleTeamCreated} />
