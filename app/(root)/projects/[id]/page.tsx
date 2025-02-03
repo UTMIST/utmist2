@@ -17,7 +17,6 @@ const IndividualProject = () => {
     const { db } = useFirebase();
     const params = useParams();
     const id = params.id as string;
-    console.log("[ProjectPage] Init");
 
     useEffect(() => {
         let isMounted = true;

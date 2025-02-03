@@ -1,14 +1,17 @@
 import Image from "next/image";
-import logo from "public/assets/mission-img.svg";
-import {getContentData} from "../../../app/common/general_parser"
-import {WWeDoMetaData} from "../../schemas/WWeDoMetaData"
-import LinkButton from "../../../app/common/LinkButton";
 import { MissionMetaData } from "@/schemas/MissionMetaData";
-//import {useEffect, useState } from "react";
-interface MissionProps {
-    data: MissionMetaData[];
-}
-const MissionStatement: React.FC<MissionProps> = ({ data }) => {
+
+const missionData: MissionMetaData[] = [
+    {
+        contents: "UTMIST is dedicated to fostering a vibrant community of students passionate about machine intelligence and its applications. We aim to bridge the gap between theoretical knowledge and practical implementation through workshops, projects, and industry connections.",
+        imgPath: "/images/mission-logo.png",
+        buttonHref: "/about",
+        slug: "mission-1",
+        publishDate: "2023-09-15",
+    }
+];
+
+const MissionStatement: React.FC = ({ }) => {
     return (<div className="overflow-x-hidden">
         <div className="relative bg-cover bg-mission w-screen h-[120vh]  lg:h-[90vh]">
             {/*    Mobile screens*/}
@@ -21,11 +24,11 @@ const MissionStatement: React.FC<MissionProps> = ({ data }) => {
                                 BRIEF MISSION STATEMENT
                             </div>
                             <div className="w-[55vw] text-[2.8vh] ml-[24.6vw] mb-[7.5vh]">
-                                {data[0].contents}
+                                {missionData[0].contents}
                             </div>
                         </div>
                         <div className='ml-[38vw] pb-10 md:ml-[45vw]'>
-                            <Image src={data[0].imgPath} alt="logo" width={138} height={131}></Image>
+                            <Image src={missionData[0].imgPath} alt="logo" width={138} height={131}></Image>
                         </div>
                     </div>
 
@@ -46,15 +49,15 @@ const MissionStatement: React.FC<MissionProps> = ({ data }) => {
                             </div>
                             <div
                                 className="w-[55vw] text-[2.8vh] ml-[24.6vw] mb-[7.5vh] lg:w-[45vw] lg:text-[2.4vh] lg:ml-[5.7vw] lg:mb-[8vh]">
-                                {data[0].contents}
+                                {missionData[0].contents}
                             </div>
                         </div>
                     </div>
                     <div className="flex justify-center items-center">
-                        <Image src={data[0].imgPath} width={244} height={238} alt={"logo"}></Image></div>
+                        <Image src={missionData[0].imgPath} width={244} height={238} alt={"logo"}></Image></div>
 
                 </div>
-                <a href={data[0].buttonHref}> <button
+                <a href={missionData[0].buttonHref}> <button
                     className="rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] ml-[3vw] lg:w-[19.7vw] lg:h-[5.6vh] lg:ml-[65vw] text-white">
                     Find out more
                 </button></a>

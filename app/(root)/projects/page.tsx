@@ -1,5 +1,4 @@
 "use client";
-import LinkButton from "@app/common/LinkButton";
 import { Project } from "@schema/project";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +8,6 @@ import { useFirebase } from "@app/firebase/useFirebase";
 import { collection, getDocs } from "firebase/firestore";
 
 export default function ProjectsPage() {
-    console.log("[ProjectsPage] Init");
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -19,11 +17,9 @@ export default function ProjectsPage() {
     const [selectedYear, setSelectedYear] = useState<string[]>([]);
     const [selectedProjectType, setSelectedProjectType] = useState("");
     const { db } = useFirebase();
-    console.log("[ProjectsPage] Firebase db instance:", db ? "exists" : "null");
 
     useEffect(() => {
         let isMounted = true;
-        console.log("[ProjectsPage] Effect running, db:", db);
 
         if (!db) {
             console.warn("[ProjectsPage] Database not initialized");
@@ -34,31 +30,23 @@ export default function ProjectsPage() {
 
         const fetchProjects = async () => {
             try {
-                console.log("[ProjectsPage] Starting fetch...");
                 const projectsRef = collection(db, "projects");
-                console.log("[ProjectsPage] Got collection ref");
                 
                 const querySnapshot = await getDocs(projectsRef);
-                console.log("[ProjectsPage] Got snapshot, size:", querySnapshot.size);
                 
                 if (!isMounted) {
-                    console.log("[ProjectsPage] Component unmounted, cancelling");
                     return;
                 }
 
                 const projectsData = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
+                    slug: doc.id,
                     ...doc.data(),
                 })) as Project[];
                 
-                console.log("[ProjectsPage] Mapped data:", projectsData.length, "projects");
-                
                 const visibleProjects = projectsData.filter(project => project.slug !== null);
-                console.log("[ProjectsPage] Visible projects:", visibleProjects.length);
 
                 if (isMounted) {
                     setProjects(visibleProjects);
-                    // Initialize year filter based on project dates
                     if (visibleProjects.length > 0) {
                         const years = visibleProjects.map(p => p.startDate.substring(0, 4));
                         const uniqueYears = Array.from(new Set(years)).sort().reverse();
@@ -112,6 +100,7 @@ export default function ProjectsPage() {
         setSelectedYear([]);
         setSelectedProjectType("");
     };
+
 
     const filteredProjects = projects
         .filter((project) => {

@@ -9,29 +9,33 @@ const sampleWWeDoData: WWeDoMetaData[] = [
         title: "Research Projects",
         imgPath: "https://placeholder.pics/svg/200",
         buttonHref: "/projects",
-        publishDate: new Date().toISOString()
+        publishDate: new Date().toISOString(),
+        description: "Our mission is to advance AI education"
     },
     {
         slug: "demistify",
         title: "deMISTify Newsletter",
         imgPath: "https://placeholder.pics/svg/200",
         buttonHref: "/demistify",
-        publishDate: new Date().toISOString()
+        publishDate: new Date().toISOString(),
+        description: "Our mission is to advance AI education"
     },
     {
         slug: "workshops",
         title: "Workshops & Events",
         imgPath: "https://placeholder.pics/svg/200",
         buttonHref: "/events",
-        publishDate: new Date().toISOString()
-    },
-    {
-        slug: "mentorship",
-        title: "Mentorship Program",
-        imgPath: "https://placeholder.pics/svg/200",
-        buttonHref: "/mentorship",
-        publishDate: new Date().toISOString()
+        publishDate: new Date().toISOString(),
+        description: "Our mission is to advance AI education"
     }
+    // {
+    //     slug: "mentorship",
+    //     title: "Mentorship Program",
+    //     imgPath: "https://placeholder.pics/svg/200",
+    //     buttonHref: "/mentorship",
+    //     publishDate: new Date().toISOString(),
+    //     description: "Our mission is to advance AI education"
+    // }
 ];
 
 const WhatWeDo = () => {
