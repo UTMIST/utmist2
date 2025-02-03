@@ -18,6 +18,10 @@ const config: Config = {
     "./node_modules/@firecms/core/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@firecms/ui/dist/**/*.js",
     "./node_modules/@firecms/core/dist/**/*.js",
+    
+    "./node_modules/@firecms/**/*.css",
+    "./node_modules/@firecms/ui/dist/**/*.css",
+    "./node_modules/@firecms/core/dist/**/*.css",
 
     // Exclude AI2 directories
     "!./app/common/ai2/**/*.{ts,tsx}",
