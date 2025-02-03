@@ -10,7 +10,7 @@ const DashboardCreatePage = () => {
 
   const handleTeamCreated = (teamName: string) => {
     localStorage.setItem("teamName", teamName);
-    router.push('/ai2/dashboard')};
+    router.push('/ai2/dashboard');
   };
 
   return (

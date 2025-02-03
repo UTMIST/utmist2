@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@ai2/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@ai2components/ui/button"
 import { Input } from "@ai2components/ui/input"
@@ -426,11 +426,15 @@ const SidebarGroup = React.forwardRef<
 })
 SidebarGroup.displayName = "SidebarGroup"
 
+type SidebarGroupLabelProps = Omit<React.ComponentProps<'div'>, 'ref'> & {
+  asChild?: boolean;
+};
+
 const SidebarGroupLabel = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<"div"> & { asChild?: boolean }
+  SidebarGroupLabelProps
 >(({ className, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "div"
+  const Comp = asChild ? Slot : "div";
 
   return (
     <Comp
@@ -447,9 +451,13 @@ const SidebarGroupLabel = React.forwardRef<
 })
 SidebarGroupLabel.displayName = "SidebarGroupLabel"
 
+type SidebarGroupActionProps = Omit<React.ComponentProps<'button'>, 'ref'> & {
+  asChild?: boolean;
+};
+
 const SidebarGroupAction = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & { asChild?: boolean }
+  SidebarGroupActionProps
 >(({ className, asChild = false, ...props }, ref) => {
   const Comp = asChild ? Slot : "button"
 
@@ -533,7 +541,7 @@ const sidebarMenuButtonVariants = cva(
 
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & {
+  Omit<React.ComponentProps<"button">, 'ref'> & {
     asChild?: boolean
     isActive?: boolean
     tooltip?: string | React.ComponentProps<typeof TooltipContent>
@@ -592,7 +600,7 @@ SidebarMenuButton.displayName = "SidebarMenuButton"
 
 const SidebarMenuAction = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & {
+  Omit<React.ComponentProps<"button">, 'ref'> & {
     asChild?: boolean
     showOnHover?: boolean
   }
@@ -705,11 +713,12 @@ SidebarMenuSubItem.displayName = "SidebarMenuSubItem"
 
 const SidebarMenuSubButton = React.forwardRef<
   HTMLAnchorElement,
-  React.ComponentProps<"a"> & {
+  Omit<React.ComponentProps<"a">, 'ref'> & {
     asChild?: boolean
     size?: "sm" | "md"
     isActive?: boolean
   }
+
 >(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
   const Comp = asChild ? Slot : "a"
 
