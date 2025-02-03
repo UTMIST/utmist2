@@ -39,7 +39,7 @@ export default function Navbar() {
 
   const handleSignIn = () => {
     signIn('google', { 
-      callbackUrl: window.location.origin + '/dashboard'
+      callbackUrl: window.location.origin + '/'
     });
   };
 
@@ -89,7 +89,7 @@ export default function Navbar() {
                   />
                   {profileMenuOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                      <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Dashboard
                       </Link>
                       <button
@@ -146,7 +146,7 @@ export default function Navbar() {
               {session ? (
                 <>
                   <li className="text-white mt-2">
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href="/">Dashboard</Link>
                   </li>
                   <li className="text-white mt-2">
                     <button onClick={() => signOut()}>Sign out</button>

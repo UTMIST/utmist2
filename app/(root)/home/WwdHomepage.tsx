@@ -4,12 +4,36 @@ import SmallCard from "@/components/home/SmallCard";
 import LinkButton from "@app/common/LinkButton";
 import LinkButtonSmall from "@app/common/LinkButtonSmall";
 
-interface WWdHomepageProps {
-  data: WWeDoMetaData[];
-}
-const WwdHomepage: React.FC<WWdHomepageProps> = ({data}) => {
+const wwdData: WWeDoMetaData[] = [
+  {
+      title: "Projects",
+      imgPath: "/images/wwd/projects.png",
+      buttonHref: "/projects",
+      description: "Student-led machine learning research and development projects",
+      slug: "projects",
+      publishDate: "2023-09-15"
+  },
+  {
+      title: "Events",
+      imgPath: "/images/wwd/events.png",
+      buttonHref: "/events",
+      description: "Industry networking and social events",
+      slug: "events",
+      publishDate: "2023-09-15"
+  },
+  {
+      title: "Competitions",
+      imgPath: "/images/wwd/competitions.png",
+      buttonHref: "/competitions",
+      description: "ML competitions and hackathons",
+      slug: "competitions",
+      publishDate: "2023-09-15"
+  }
+];
 
-  const smallCards = data.map((item) => {
+const WwdHomepage: React.FC = ({ }) => {
+
+  const smallCards = wwdData.map((item) => {
     return <SmallCard key={item.slug} imgPath={item.imgPath} buttonHref={item.buttonHref} title={item.title}></SmallCard>
   })
 
