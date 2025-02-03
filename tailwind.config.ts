@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
+import fireCMSConfig from "@firecms/ui/tailwind.config.js";
 
 const config: Config = {
+  presets: [fireCMSConfig],
   content: [
     "./src/components/**/*.tsx",
     "./src/styles/**/*.tsx",
