@@ -49,14 +49,14 @@ export const projectsCollection = buildCollection({
         thumbnail: {
             dataType: "string",
             name: "Thumbnail",
-            storage: {
-                storagePath: "project_thumbnails",
-                acceptedFiles: ["image/*"],
-                maxSize: 1024 * 1024,
-                metadata: {
-                    cacheControl: "max-age=1000000"
-                }
-            }
+            // storage: {
+            //     storagePath: "project_thumbnails",
+            //     acceptedFiles: ["image/*"],
+            //     maxSize: 1024 * 1024,
+            //     metadata: {
+            //         cacheControl: "max-age=1000000"
+            //     }
+            // }
         },
         status: {
             dataType: "string",
