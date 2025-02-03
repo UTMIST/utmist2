@@ -1,6 +1,11 @@
-const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+// Get the directory name from the current module's URL
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const config = {
   webpack: (config, { isServer }) => {
     // Add an alias for the public directory
     config.resolve.alias['public'] = path.join(__dirname, 'public');
@@ -19,3 +24,5 @@ module.exports = {
     ],
   },
 };
+
+export default config;

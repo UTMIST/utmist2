@@ -1,6 +1,5 @@
 "use client";
 
-import LinkButton from "@app/common/LinkButton";
 import ReactMarkdown from "react-markdown";
 import React from "react";
 import { useFirebase } from "@app/firebase/useFirebase";

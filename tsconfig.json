@@ -1,21 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es5", // Updated from ESNEXT to es5
+    "useDefineForClassFields": true, // Retained from the first file
+    "lib": ["dom", "dom.iterable", "esnext"], // Merged libraries
     "allowJs": true,
     "skipLibCheck": true,
+    "esModuleInterop": true, // Updated from false to true
+    "allowSyntheticDefaultImports": true, // Retained from the first file
     "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true, // Retained from the first file
     "module": "esnext",
-    "moduleResolution": "bundler",
+    // "moduleResolution": "bundler", // Updated from Node to bundler
+    "moduleResolution": "node", // Updated from Node to bundler
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
+    "noEmit": true,
+    "jsx": "preserve", // Updated from react-jsx to preserve
+    "incremental": true, // Added from the second file
     "plugins": [
       {
-        "name": "next"
+        "name": "next" // Added from the second file
       }
     ],
     "paths": {
@@ -28,10 +32,9 @@
       "@ai2components/*": ["./app/common/ai2/*"],
       "@/lib/*": ["./app/common/ai2/lib/*"],
       "@assets/*": ["./public/assets/*"],
-      "@schema/*": ["./app/schema/*"],
+      "@schema/*": ["./app/schema/*"]
     }
   },
-
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/@types"], // Merged includes
+  "exclude": ["node_modules"] // Retained from the second file
 }

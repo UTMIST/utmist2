@@ -1,5 +1,4 @@
-import { TeamMember } from "@/schemas/TeamMetaData";
-
+// import { TeamMember } from "@/schemas/TeamMetaData";
 export interface Project {
   id: string;
   teamId: string;  // Reference to the team in charge
@@ -13,7 +12,4 @@ export interface Project {
   content: string;      // Markdown content
   type: 'Academic' | 'Applied' | 'Infrastructure';  // Maintaining existing filter functionality
   description: string;  // Detailed description of the project
-  team?: TeamMember[];  // Team members working on the project
-  youtube?: string;     // YouTube video link if available
-  proposal?: string;    // Project proposal link if available
 }

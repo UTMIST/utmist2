@@ -24,3 +24,5 @@ export function FirebaseProvider({ children }: { children: ReactNode }) {
     </FirebaseContext.Provider>
   );
 } 
+
+export default db;

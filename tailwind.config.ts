@@ -1,15 +1,24 @@
+import fireCMSConfig from "@firecms/ui/tailwind.config.js";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./src/components/**/*.tsx",
     "./src/styles/**/*.tsx",
     "./app/**/*.tsx",
     "./src/**/*.tsx",
+
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}",
+
+
     // Exclude AI2 directories
     "!./app/common/ai2/**/*.{ts,tsx}",
     "!./app/(ai2)/**/*.{ts,tsx}",
   ],
+  presets: [fireCMSConfig],
   theme: {
     borderRadius: {
       md: "15px",

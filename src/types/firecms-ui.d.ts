@@ -1,0 +1,1 @@
+// declare module '@firecms/ui/tailwind.config.js'; 
