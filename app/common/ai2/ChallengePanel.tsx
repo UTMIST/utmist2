@@ -43,7 +43,7 @@ export const ChallengePanel = () => {
       opponent: "Team Gamma", 
       code: "DEF456",
       result: "3-2",
-      videoUrl: "/match-replay.mp4",
+      videoUrl: "example_video.mp4",
       entryName: "UltraBot3000",
       opponentEntryName: "MegaBot5000"
     },

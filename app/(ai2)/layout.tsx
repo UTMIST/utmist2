@@ -2,6 +2,8 @@ import { ThemeProvider } from "@ai2/ThemeProvider";
 import "@ai2/styles/globals.css";
 import { Toaster } from "@ai2components/ui/toaster";
 import { Toaster as Sonner } from "@ai2components/ui/sonner";
+import { Providers } from '../providers';
+import { FirebaseProvider } from '../firebase/firebase-provider';
 
 export const metadata = {
   title: 'UTMIST: AI2 Tournament',
@@ -17,16 +19,20 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem={false}
-          storageKey="ai2-theme"
-        >
-          {children}
-          <Toaster />
-          <Sonner />
-        </ThemeProvider>
+        <Providers>
+          <FirebaseProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem={false}
+              storageKey="ai2-theme"
+            >
+              {children}
+              <Toaster />
+              <Sonner />
+            </ThemeProvider>
+          </FirebaseProvider>
+        </Providers>
       </body>
     </html>
   )

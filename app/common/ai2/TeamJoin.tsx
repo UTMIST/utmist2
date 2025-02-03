@@ -27,7 +27,7 @@ export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
   return (
     <Card className="w-[350px] animate-fade-in">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center text-hackathon-text">
+        <CardTitle className="text-2xl font-bold text-center text-hackathon-text dark:text-white">
           Join Team
         </CardTitle>
       </CardHeader>
@@ -40,7 +40,7 @@ export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
               required
-              className="w-full"
+              className="w-full transition-colors duration-200"
             />
           </div>
           <div className="space-y-2">
@@ -50,10 +50,10 @@ export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full"
+              className="w-full transition-colors duration-200"
             />
           </div>
-          <Button type="submit" className="w-full bg-hackathon-primary hover:bg-hackathon-secondary">
+          <Button type="submit" className="w-full bg-hackathon-primary hover:bg-hackathon-secondary text-white">
             Join Team
           </Button>
         </form>
