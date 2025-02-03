@@ -1,15 +1,23 @@
 import type { Config } from "tailwindcss";
+import fireCMSConfig from "@firecms/ui/tailwind.config.js";
 
 const config: Config = {
+  presets: [fireCMSConfig],
   content: [
     "./src/components/**/*.tsx",
     "./src/styles/**/*.tsx",
     "./app/**/*.tsx",
     "./src/**/*.tsx",
+
+    // "./index.html",
+    // "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}",
+
     // Exclude AI2 directories
     "!./app/common/ai2/**/*.{ts,tsx}",
     "!./app/(ai2)/**/*.{ts,tsx}",
   ],
+  darkMode: ["selector", "[data-theme=\"dark\"]"],
   theme: {
     borderRadius: {
       md: "15px",
@@ -34,7 +42,7 @@ const config: Config = {
         "dark-grey": "rgba(0, 0, 0, 0.83)",
         "utmist-pink": "#CC6DE5",
         "dropdown": "#001128",
-        "utmist-black": "#121212"
+        "utmist-black": "#121212",
       },
       backgroundImage: {
         "banner-small": "url('/assets/BannerSmall.svg')",
@@ -54,12 +62,8 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      fontFamily: {
-        "roboto-mono": ['"Roboto Mono"', "monospace"],
-      },
     },
   },
-  plugins: [],
 };
 
 export default config;

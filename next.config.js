@@ -18,4 +18,9 @@ module.exports = {
       'placeholder.pics',
     ],
   },
+  transpilePackages: [
+    '@firecms/core',
+    '@firecms/ui',
+    '@firecms/firebase'
+  ],
 };

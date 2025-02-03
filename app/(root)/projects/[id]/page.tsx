@@ -4,7 +4,7 @@ import LinkButton from "@app/common/LinkButton";
 import ReactMarkdown from "react-markdown";
 import React from "react";
 import { useFirebase } from "@app/firebase/useFirebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { useParams } from "next/navigation";
 import { Project } from "@schema/project";
 import { useEffect, useState } from "react";
@@ -30,19 +30,21 @@ const IndividualProject = () => {
             }
 
             try {
-                console.log("[ProjectPage] Fetching project:", id);
-                const projectRef = doc(db, "projects", id);
-                const projectSnap = await getDoc(projectRef);
+                console.log("[ProjectPage] Fetching project with slug:", id);
+                const projectsRef = collection(db, "projects");
+                const q = query(projectsRef, where("slug", "==", id));
+                const querySnapshot = await getDocs(q);
 
-                if (!projectSnap.exists()) {
-                    setError("Project not found" + id);
+                if (querySnapshot.empty) {
+                    setError("Project not found with slug: " + id);
                     setLoading(false);
                     return;
                 }
 
+                const projectDoc = querySnapshot.docs[0];
                 const projectData = {
-                    id: projectSnap.id,
-                    ...projectSnap.data()
+                    id: projectDoc.id,
+                    ...projectDoc.data()
                 } as Project;
 
                 if (isMounted) {
