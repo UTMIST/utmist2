@@ -12,6 +12,10 @@ const config: Config = {
     // "./index.html",
     // "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/ui/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/core/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/ui/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@firecms/core/**/*.{js,ts,jsx,tsx}",
 
     // Exclude AI2 directories
     "!./app/common/ai2/**/*.{ts,tsx}",
