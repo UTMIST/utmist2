@@ -54,6 +54,8 @@ function CMSPage() {
         // }
         // const idTokenResult = await user?.firebaseUser?.getIdTokenResult();
         // const userIsAdmin = idTokenResult?.claims.admin || user?.email?.endsWith("@firecms.co");
+
+        // auth is limited to 2 people
         if (user?.email != null && (user?.email == "ajwmagnuson@gmail.com" || user?.email == "zainhmoustafa@gmail.com")) {
             return true;
         }
