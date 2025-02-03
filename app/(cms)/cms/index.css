@@ -7,7 +7,21 @@
     --fcms-primary-bg: #0061e610;
     --fcms-secondary: #FF5B79;
 }
-
+@layer components {
+    .font-headers {
+      font-family: var(--font-roboto-mono), "Roboto Mono", monospace;
+    }
+  }
+  
+  @layer utilities {
+    .bg-surface-50 {
+      background-color: #f8fafc;
+    }
+    .bg-surface-900 {
+      background-color: #0f172a;
+    }
+  }
+  
 body {
     @apply w-full min-h-screen bg-surface-50 dark:bg-surface-900 flex flex-col items-center justify-center;
 }

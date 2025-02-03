@@ -12,16 +12,6 @@ const config: Config = {
     // "./index.html",
     // "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/@firecms/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@firecms/ui/dist/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@firecms/core/dist/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@firecms/ui/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@firecms/core/**/*.{js,ts,jsx,tsx}",
-    "./node_modules/@firecms/ui/dist/**/*.js",
-    "./node_modules/@firecms/core/dist/**/*.js",
-    
-    "./node_modules/@firecms/**/*.css",
-    "./node_modules/@firecms/ui/dist/**/*.css",
-    "./node_modules/@firecms/core/dist/**/*.css",
 
     // Exclude AI2 directories
     "!./app/common/ai2/**/*.{ts,tsx}",
@@ -53,10 +43,6 @@ const config: Config = {
         "utmist-pink": "#CC6DE5",
         "dropdown": "#001128",
         "utmist-black": "#121212",
-        surface: {
-          50: "#f8fafc",
-          900: "#0f172a"
-        }
       },
       backgroundImage: {
         "banner-small": "url('/assets/BannerSmall.svg')",
@@ -76,21 +62,8 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      fontFamily: {
-        headers: ['"Rubik"', '"Roboto"', "Helvetica", "Arial", "sans-serif"],
-        "roboto-mono": ['"Roboto Mono"', "monospace"],
-      },
     },
   },
-  safelist: [
-    {
-      pattern: /bg-surface-(50|900)/,
-      variants: ["dark"]
-    },
-    {
-      pattern: /^font-(headers|mono)$/
-    }
-  ]
 };
 
 export default config;

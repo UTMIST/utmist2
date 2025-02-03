@@ -4,6 +4,7 @@ import React, { useCallback, useMemo } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
 import "@firecms/ui/index.css";
+import '@firecms/ui/dist/index.css';
 
 import {
     AppBar,
