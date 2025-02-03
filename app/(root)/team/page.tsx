@@ -8,23 +8,19 @@ import { Team } from "@schema/team";
 export default function TeamPage() {
   const [teams, setTeams] = useState<Team[]>([]);
   const { db } = useFirebase();
-  console.log("[TeamPage] Init");
 
   useEffect(() => {
     if (!db) {
       console.warn("[TeamPage] Database not initialized");
       return;
     }
-    console.log("[TeamPage] useEffect triggered");
     const fetchTeams = async () => {
       try {
-        console.log("[TeamPage] Fetching teams...");
         const querySnapshot = await getDocs(collection(db, "teams"));
         const teamsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as Team[];
-        console.log("[TeamPage] Teams data:", teamsData);
         setTeams(teamsData);
       } catch (error) {
         console.error("Error fetching teams: ", error);
