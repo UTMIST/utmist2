@@ -2,6 +2,7 @@ import {EventMetaData} from "@/schemas/EventMetaData";
 import React from "react";
 import Link from "next/link";
 import LinkButton from "@app/common/LinkButton";
+import Image from "next/image";
 
 interface EventsProp {
     data: EventMetaData[];
@@ -20,7 +21,13 @@ const Events: React.FC<EventsProp> = ({ data }) => {
                     return (
                         <div className="rounded-md overflow-hidden bg-black shadow-lg w-full flex flex-col" key={ind}>
                             <div>
-                                <img className="w-full h-40 object-cover" src={item.images[0]} alt="Card Image" />
+                                <Image 
+                                    className="w-full h-40 object-cover"
+                                    src={item.images[0]}
+                                    alt={`${item.name} event image`}
+                                    width={400}
+                                    height={160}
+                                />
                             </div>
                             <div className="px-6 py-4 flex-grow">
                                 <div className="font-bold text-white font-roboto-mono">{item.name}</div>

@@ -135,10 +135,12 @@ export default function ProjectsPage() {
                     <div className="absolute bg-black text-white py-1 px-3 rounded font-roboto-mono">
                         {project.status}
                     </div>
-                    <img
+                    <Image
                         className="w-full h-315"
                         src={project.thumbnail}
                         alt={project.title}
+                        width={400}
+                        height={315}
                     />
                     <div className="px-6 py-4">
                         <div className="font-bold text-white font-roboto-mono">

@@ -1,3 +1,5 @@
+"use client";
+
 import { ProgramMetaData } from "@/schemas/ProgramMetaData";
 import Link from "next/link";
 import { useState } from "react";

@@ -8,6 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useParams } from "next/navigation";
 import { Project } from "@schema/project";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const IndividualProject = () => {
     const [project, setProject] = useState<Project | null>(null);
@@ -117,7 +118,13 @@ const IndividualProject = () => {
     const ImgComponent = (props: {src?: string, alt?: string}) => {
         return (
             <div className="rounded-md">
-                <img src={props.src} alt={props.alt}/>
+                <Image 
+                    src={props.src || ''} 
+                    alt={props.alt || ''} 
+                    width={800} 
+                    height={600}
+                    className="w-full h-auto"
+                />
             </div>
         );
     }
