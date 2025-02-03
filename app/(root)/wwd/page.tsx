@@ -27,15 +27,15 @@ const sampleWWeDoData: WWeDoMetaData[] = [
         buttonHref: "/events",
         publishDate: new Date().toISOString(),
         description: "Our mission is to advance AI education"
-    },
-    {
-        slug: "mentorship",
-        title: "Mentorship Program",
-        imgPath: "https://placeholder.pics/svg/200",
-        buttonHref: "/mentorship",
-        publishDate: new Date().toISOString(),
-        description: "Our mission is to advance AI education"
     }
+    // {
+    //     slug: "mentorship",
+    //     title: "Mentorship Program",
+    //     imgPath: "https://placeholder.pics/svg/200",
+    //     buttonHref: "/mentorship",
+    //     publishDate: new Date().toISOString(),
+    //     description: "Our mission is to advance AI education"
+    // }
 ];
 
 const WhatWeDo = () => {
