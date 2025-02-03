@@ -52,7 +52,11 @@ const config: Config = {
         "dark-grey": "rgba(0, 0, 0, 0.83)",
         "utmist-pink": "#CC6DE5",
         "dropdown": "#001128",
-        "utmist-black": "#121212"
+        "utmist-black": "#121212",
+        surface: {
+          50: "#f8fafc",
+          900: "#0f172a"
+        }
       },
       backgroundImage: {
         "banner-small": "url('/assets/BannerSmall.svg')",
@@ -84,7 +88,7 @@ const config: Config = {
       variants: ["dark"]
     },
     {
-      pattern: /font-(headers|mono)/
+      pattern: /^font-(headers|mono)$/
     }
   ]
 };
