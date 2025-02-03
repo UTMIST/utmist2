@@ -17,6 +17,7 @@ const config: Config = {
     "!./app/common/ai2/**/*.{ts,tsx}",
     "!./app/(ai2)/**/*.{ts,tsx}",
   ],
+  darkMode: ["selector", "[data-theme=\"dark\"]"],
   theme: {
     borderRadius: {
       md: "15px",
@@ -62,11 +63,19 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontFamily: {
+        headers: ['"Rubik"', '"Roboto"', "Helvetica", "Arial", "sans-serif"],
         "roboto-mono": ['"Roboto Mono"', "monospace"],
       },
     },
   },
-  plugins: [],
+  safelist: [
+    {
+      pattern: /bg-surface-(50|900)/,
+    },
+    {
+      pattern: /font-(headers|mono)/,
+    },
+  ]
 };
 
 export default config;
