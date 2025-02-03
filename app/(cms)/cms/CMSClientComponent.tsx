@@ -54,7 +54,7 @@ function CMSPage() {
         // }
         // const idTokenResult = await user?.firebaseUser?.getIdTokenResult();
         // const userIsAdmin = idTokenResult?.claims.admin || user?.email?.endsWith("@firecms.co");
-        if (user?.email != null && user?.email == "utorontomist@gmail.com") {
+        if (user?.email != null && (user?.email == "ajwmagnuson@gmail.com" || user?.email == "zainhmoustafa@gmail.com")) {
             return true;
         }
         return false;
