@@ -29,3 +29,7 @@ a {
 
     @apply text-primary dark:text-primary
 }
+
+.cms-container {
+  @apply font-headers;
+}

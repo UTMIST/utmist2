@@ -125,38 +125,40 @@ function CMSPage() {
         <Router>
             <SnackbarProvider>
                 <ModeControllerProvider value={modeController}>
-                    <FireCMS
-                        navigationController={navigationController as NavigationController}
-                        authController={authController as AuthController<FirebaseUserWrapper>}
-                        userConfigPersistence={userConfigPersistence as UserConfigurationPersistence}
-                        dataSourceDelegate={firestoreDelegate as DataSourceDelegate}
-                        storageSource={storageSource as StorageSource}
-                    >
-                        {({
-                              context,
-                              loading
-                          }) => {
+                    <div className="cms-container">
+                        <FireCMS
+                            navigationController={navigationController as NavigationController}
+                            authController={authController as AuthController<FirebaseUserWrapper>}
+                            userConfigPersistence={userConfigPersistence as UserConfigurationPersistence}
+                            dataSourceDelegate={firestoreDelegate as DataSourceDelegate}
+                            storageSource={storageSource as StorageSource}
+                        >
+                            {({
+                                  context,
+                                  loading
+                              }) => {
 
-                            if (loading || authLoading) {
-                                return <CircularProgressCenter size={"large"}/>;
-                            }
+                                if (loading || authLoading) {
+                                    return <CircularProgressCenter size={"large"}/>;
+                                }
 
-                            if (!canAccessMainView) {
-                                return <FirebaseLoginView authController={authController}
-                                                          firebaseApp={firebaseApp}
-                                                          signInOptions={signInOptions}
-                                                          notAllowedError={notAllowedError}/>;
-                            }
+                                if (!canAccessMainView) {
+                                    return <FirebaseLoginView authController={authController}
+                                                              firebaseApp={firebaseApp}
+                                                              signInOptions={signInOptions}
+                                                              notAllowedError={notAllowedError}/>;
+                                }
 
-                            return <Scaffold
-                                autoOpenDrawer={false}>
-                                <AppBar title={"Scuffed FireCMS (zain)"}/>
-                                <Drawer/>
-                                <NavigationRoutes/>
-                                <SideDialogs/>
-                            </Scaffold>;
-                        }}
-                    </FireCMS>
+                                return <Scaffold
+                                    autoOpenDrawer={false}>
+                                    <AppBar title={"Scuffed FireCMS (zain)"}/>
+                                    <Drawer/>
+                                    <NavigationRoutes/>
+                                    <SideDialogs/>
+                                </Scaffold>;
+                            }}
+                        </FireCMS>
+                    </div>
                 </ModeControllerProvider>
             </SnackbarProvider>
         </Router>
