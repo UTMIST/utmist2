@@ -5,6 +5,9 @@ import { cert } from 'firebase-admin/app';
 import { initializeApp, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { CustomFirestoreAdapter } from '@app/firebase/customFirestoreAdapter';
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@app/firebase/firebase-provider";
+import { getFirestore } from 'firebase-admin/firestore';
 
 const firebaseAdminConfig = {
   credential: cert({
@@ -67,6 +70,18 @@ const handler = NextAuth({
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token?.sub ?? 'unknown';
+        const adminDb = getFirestore();
+        try {
+          const userQuery = await adminDb.collection('users')
+            .where('email', '==', session.user.email!)
+            .limit(1)
+            .get();
+          const userDoc = userQuery.docs[0];
+          // console.log("[AI2] User doc:", userDoc?.data(), session.user.email);
+          session.user.displayName = userDoc?.data()?.displayName || session.user.name;
+        } catch (error) {
+          console.error("Error fetching user document:", error);
+        }
       }
       return session;
     },

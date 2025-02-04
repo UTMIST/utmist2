@@ -18,30 +18,137 @@ import {
 } from "@ai2components/ui/tooltip";
 import { TeamSettings } from "@ai2components/TeamSettings";
 import { TeamMembers } from "@ai2components/TeamMembers";
+import { signIn, useSession } from "next-auth/react";
+import { useFirebase } from "@app/firebase/useFirebase";
+import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where, deleteDoc } from "firebase/firestore";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@ai2components/ui/dialog";
+import { toast } from "@app/common/ai2/ui/use-toast";
 
 const Dashboard = () => {
   const router = useRouter();
-  const [teamName, setTeamName] = useState<string | null>(null);
+  const { data: session, status } = useSession();
+  const { db } = useFirebase();
+  const [loading, setLoading] = useState(true);
+  const [team, setTeam] = useState<string | null>(null);
+  const [teamId, setTeamId] = useState<string | null>(null);
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
+  const [showDisbandDialog, setShowDisbandDialog] = useState(false);
 
-  // Mock team members - in real app, this would come from your backend
-  const teamMembers = ["Alice", "Bob", "Charlie"];
+  useEffect(() => {
+    const fetchTeam = async () => {
+      console.log("[AI2] Fetching team");
+      if (status === 'authenticated' && session?.user?.email && db) {
+        try {
+          if (!db) {
+            console.error('Firestore database not initialized');
+            return;
+          }
 
-  const handleDisbandTeam = () => {
-    if (window.confirm("Are you sure you want to disband your team? This action cannot be undone.")) {
-      localStorage.removeItem("teamName");
-      router.push("/ai2/dashboard");
-      window.location.reload();
+          const registrationDoc = await getDoc(doc(db, 'AI2Registration', session.user.email));
+          
+          if (registrationDoc.exists()) {
+            const teamId = registrationDoc.data().team || null;
+            console.log("[AI2] Team name:", teamId);
+            setTeamId(teamId);
+            if (teamId) {
+              const teamDoc = await getDoc(doc(db, "AI2Teams", teamId));
+              
+              if (!teamDoc.exists()) {
+                throw new Error('Team does not exist');
+              }
+
+              console.log("[AI2] Team members:", teamDoc.data().members);
+              setTeam(teamDoc.data()?.name || null);
+              setTeamMembers(teamDoc.data().members || []);
+            }
+          } else {
+            console.log("[AI2] Registering user");
+            await setDoc(doc(db, 'AI2Registration', session.user.email), {
+              email: session.user.email,
+              name: session.user.displayName,
+              team: null
+            });
+            setTeam(null);
+          }
+        } catch (error) {
+          console.error('Error fetching team:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else if (status === 'unauthenticated') {
+        setLoading(false);
+      }
+    };
+
+    fetchTeam();
+  }, [status, session, db]);
+
+  const disbandTeam = async () => {
+    setShowDisbandDialog(false);
+    try {
+      if (!db || !session?.user?.email || !team) return;
+
+      const teamsQuery = query(
+        collection(db, 'AI2Teams'),
+        where('name', '==', team)
+      );
+      const querySnapshot = await getDocs(teamsQuery);
+      
+      if (querySnapshot.empty) {
+        throw new Error('Team does not exist');
+      }
+
+      const teamDoc = querySnapshot.docs[0];
+      const teamData = teamDoc.data();
+      
+      // console.log("[AI2] Team captain:", teamData.captain);
+      // console.log("[AI2] Current user email:", session.user.email);
+      if (teamData.captain !== session.user.email) {
+        toast({
+          title: "Disbanding team",
+          description: "Only the team captain can disband the team",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const members = teamData.members || [];
+      
+      const updatePromises = members.map(async (member: any) => 
+        updateDoc(doc(db, 'AI2Registration', member.email), { team: null })
+      );
+
+      await Promise.all([
+        ...updatePromises,
+        deleteDoc(doc(db, 'AI2Teams', teamDoc.id))
+      ]);
+
+      setTeam(null);
+      router.push('/ai2/dashboard');
+    } catch (error) {
+      console.error('Error disbanding team:', error);
+      alert(error instanceof Error ? error.message : 'Failed to disband team');
     }
   };
 
+  if (status === 'loading' || loading) {
+    return <div>Loading...</div>;
+  }
 
-  useEffect(() => {
-    // Access localStorage only after component mounts
-    const storedTeamName = localStorage.getItem("teamName");
-    setTeamName(storedTeamName);
-  }, []);
+  if (status === 'unauthenticated' || !session) {
+    signIn('google', { callbackUrl: window.location.origin + '/ai2/' });
+    return null;
+  }
 
-  if (!teamName) {
+  if (!team) {
     return (
       <div className="min-h-screen bg-background dark:bg-gray-900 transition-colors duration-200">
         <Header />
@@ -49,7 +156,7 @@ const Dashboard = () => {
           <Card className="w-[350px] mx-auto mt-8">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center dark:text-white">
-                Dashboard
+                Hi, {session?.user?.displayName || 'there'}!
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -79,15 +186,18 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="flex flex-col items-center space-y-4 mt-8">
             <h1 className="text-2xl font-bold text-center dark:text-white">
-              Welcome, {teamName}
+              Welcome, {team}
             </h1>
             
-            {/* Team controls */}
             <div className="flex gap-2">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <TeamSettings teamName={teamName} />
+                    <TeamSettings 
+                      teamName={team} 
+                      teamId={teamId}
+                      onSave={(newName) => setTeam(newName)}
+                    />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Edit Team</p>
@@ -97,14 +207,40 @@ const Dashboard = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8"
-                      onClick={handleDisbandTeam}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <Dialog open={showDisbandDialog} onOpenChange={setShowDisbandDialog}>
+                      <DialogTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8"
+                          onClick={() => setShowDisbandDialog(true)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Disband Team?</DialogTitle>
+                          <DialogDescription>
+                            This action is irreversible. All team members will be removed and team data will be permanently deleted.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <Button 
+                            variant="outline"
+                            onClick={() => setShowDisbandDialog(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button 
+                            variant="destructive"
+                            onClick={disbandTeam}
+                          >
+                            Confirm Disband
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Disband Team</p>
@@ -113,8 +249,7 @@ const Dashboard = () => {
               </TooltipProvider>
             </div>
 
-            {/* Team members */}
-            <TeamMembers members={teamMembers} />
+            <TeamMembers members={teamMembers.map(member => ({ displayName: member.displayName }))} />
           </div>
           {/* Panels grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

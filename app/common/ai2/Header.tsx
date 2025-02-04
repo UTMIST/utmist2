@@ -42,6 +42,15 @@ export const Header = () => {
           <Button
             variant="ghost"
             className="flex items-center gap-2"
+            onClick={() => router.push('/ai2/teams')}
+          >
+            Teams
+          </Button>
+
+
+          <Button
+            variant="ghost"
+            className="flex items-center gap-2"
             onClick={() => router.push('/ai2/dashboard')}
           >
             Dashboard
@@ -78,9 +87,9 @@ export const Header = () => {
                     </svg>
                   </Button>
 
-                  <Button variant="ghost">
+                  {/* <Button variant="ghost">
                       <LogOut className="h-5 w-5" />
-                  </Button>
+                  </Button> */}
               </>
           ) : (
               <Button

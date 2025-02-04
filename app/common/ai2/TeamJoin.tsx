@@ -3,25 +3,49 @@ import { Button } from "@ai2components/ui/button";
 import { Input } from "@ai2components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@ai2components/ui/card";
 import { useToast } from "@ai2components/ui/use-toast";
+import { useFirebase } from "@app/firebase/useFirebase";
+import { useSession } from "next-auth/react";
 
 interface TeamJoinProps {
-  onTeamJoined: (teamName: string) => void;
+  onTeamJoined: (teamName: string, password: string) => Promise<void>;
 }
 
 export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
   const [teamName, setTeamName] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
+  const { db } = useFirebase();
+  const { data: session } = useSession();
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual team join logic with backend
-    console.log("Joining team:", teamName);
-    toast({
-      title: "Team Joined Successfully",
-      description: `You have joined team ${teamName}`,
-    });
-    onTeamJoined(teamName);
+    
+    if (!db || !session?.user?.email) {
+      toast({
+        title: "Error",
+        description: "Not authenticated",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await onTeamJoined(teamName, password)
+        .catch(error => {
+          throw error;
+        });
+      
+      toast({
+        title: "Team Joined Successfully",
+        description: `You have joined team ${teamName}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Join Failed",
+        description: error instanceof Error ? error.message : "Could not join team",
+        variant: "destructive"
+      });
+    }
   };
 
   return (

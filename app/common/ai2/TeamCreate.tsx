@@ -3,6 +3,9 @@ import { Button } from "@ai2components/ui/button";
 import { Input } from "@ai2components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@ai2components/ui/card";
 import { useToast } from "@ai2components/ui/use-toast";
+import { doc, setDoc, getDoc, updateDoc, getDocs, where, query, collection } from "firebase/firestore";
+import { useFirebase } from "@app/firebase/useFirebase";
+import { useSession } from "next-auth/react";
 
 interface TeamCreateProps {
   onTeamCreated: (teamName: string) => void;
@@ -12,16 +15,71 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
   const [teamName, setTeamName] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
+  const { db } = useFirebase();
+  const { data: session } = useSession();
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual team creation logic with backend
-    console.log("Creating team:", teamName);
-    toast({
-      title: "Team Created Successfully",
-      description: `You are now the captain of team ${teamName}`,
-    });
-    onTeamCreated(teamName);
+    
+    if (!db || !session?.user?.email) {
+      toast({
+        title: "Error",
+        description: "Not authenticated",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const teamsQuery = query(
+        collection(db, 'AI2Teams'),
+        where('name', '==', teamName)
+      );
+      const querySnapshot = await getDocs(teamsQuery);
+
+      if (!querySnapshot.empty) {
+        toast({
+          title: "Team exists",
+          description: "This team name is already taken",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const teamRef = doc(collection(db, 'AI2Teams'));
+      await setDoc(teamRef, {
+        name: teamName,
+        password: password,
+        createdAt: new Date(),
+        lastSubmitted: null,
+        isBanned: false,
+        members: [{
+          email: session.user.email,
+          displayName: session.user.displayName
+        }],
+        captain: session.user.email,
+        captainDisplayName: session.user.displayName,
+        memberCount: 1
+      });
+
+      await updateDoc(doc(db, 'AI2Registration', session.user.email), {
+        team: teamRef.id
+      });
+
+      toast({
+        title: "Team Created Successfully",
+        description: `You are now the captain of ${teamName}`,
+      });
+      
+      onTeamCreated(teamName);
+    } catch (error) {
+      console.error('Team creation error:', error);
+      toast({
+        title: "Creation failed",
+        description: "Could not create team",
+        variant: "destructive"
+      });
+    }
   };
 
   return (

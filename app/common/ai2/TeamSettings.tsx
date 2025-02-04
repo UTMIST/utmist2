@@ -11,26 +11,105 @@ import { Label } from "@ai2components/ui/label";
 import { Settings2 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@ai2components/ui/use-toast";
+import React from "react";
+import { useFirebase } from "@app/firebase/useFirebase";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 
-export const TeamSettings = ({ teamName }: { teamName: string | null }) => {
+export const TeamSettings: React.ForwardRefExoticComponent<
+  { 
+    teamName: string | null; 
+    teamId: string | null;
+    onSave?: (newName: string) => void;
+  } & React.RefAttributes<HTMLButtonElement>
+> = React.forwardRef(({ teamName, teamId, onSave }, ref) => {
   const { toast } = useToast();
+  const { db } = useFirebase();
+  const router = useRouter();
   const [newTeamName, setNewTeamName] = useState(teamName || "");
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [website, setWebsite] = useState("");
   const [affiliation, setAffiliation] = useState("");
 
-  const handleSaveTeamSettings = () => {
-    toast({
-      title: "Settings saved",
-      description: "Your team settings have been updated successfully.",
-    });
+  const handleSaveTeamSettings = async () => {
+    if (!teamId || !db) {
+      toast({
+        title: "Error",
+        description: "No team found",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const teamRef = doc(db, "AI2Teams", teamId);
+      const teamSnap = await getDoc(teamRef);
+      
+      if (!teamSnap.exists()) {
+        throw new Error("Team does not exist");
+      }
+
+      if (teamSnap.data().password !== currentPassword) {
+        toast({
+          title: "Password mismatch",
+          description: "Current password does not match our records",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const teamData = teamSnap.data();
+      const updateData: any = {};
+
+      if (newTeamName && newTeamName !== teamData.name) {
+        updateData.name = newTeamName;
+      }
+      if (website && website !== teamData.website) {
+        updateData.website = website;
+      }
+      if (affiliation && affiliation !== teamData.affiliation) {
+        updateData.affiliation = affiliation;
+      }
+      if (newPassword) {
+        updateData.password = newPassword;
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        await updateDoc(teamRef, updateData);
+        toast({
+          title: "Settings saved",
+          description: "Your team settings have been updated successfully.",
+        });
+        if (onSave && updateData.name) {
+          onSave(updateData.name);
+        }
+      } else {
+        toast({
+          title: "No changes",
+          description: "No changes were made to the team settings.",
+        });
+      }
+
+    } catch (error) {
+      console.error("Error saving team settings:", error);
+      toast({
+        title: "Error saving settings",
+        description: error instanceof Error ? error.message : "Failed to update team settings",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
+        <Button 
+          ref={ref}
+          variant="ghost" 
+          size="icon" 
+          className="h-8 w-8"
+        >
           <Settings2 className="h-4 w-4" />
         </Button>
       </DialogTrigger>
@@ -91,4 +170,4 @@ export const TeamSettings = ({ teamName }: { teamName: string | null }) => {
       </DialogContent>
     </Dialog>
   );
-};
+});
