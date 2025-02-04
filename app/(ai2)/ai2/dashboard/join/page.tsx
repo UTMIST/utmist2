@@ -74,7 +74,7 @@ const DashboardJoinPage = () => {
         throw new Error('Incorrect team password');
       }
 
-      if (teamData.members.includes(session.user.email)) {
+      if (teamData.members.map((member: { email: string, displayName: string }) => member.email).includes(session.user.email)) {
         throw new Error('You are already a member of this team');
       }
 
