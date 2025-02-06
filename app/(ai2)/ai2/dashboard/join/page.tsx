@@ -8,6 +8,7 @@ import { signIn } from "next-auth/react";
 import { collection, doc, getDoc, query, updateDoc, where, getDocs } from "firebase/firestore";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { useEffect, useState } from "react";
+import { comparePassword, hashPassword } from "@app/common/ai2/utils/auth";
 
 const DashboardJoinPage = () => {
   const router = useRouter();
@@ -70,7 +71,7 @@ const DashboardJoinPage = () => {
         throw new Error('Invalid team data');
       }
 
-      if (teamData.password !== password) {
+      if (!(await comparePassword(password, teamData.password))) {
         throw new Error('Incorrect team password');
       }
 

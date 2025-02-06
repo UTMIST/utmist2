@@ -51,14 +51,18 @@ export const TeamSettings: React.ForwardRefExoticComponent<
         throw new Error("Team does not exist");
       }
 
+      console.log(teamSnap.data().password);
+      console.log(await hashPassword(currentPassword));
+
       if (!(await comparePassword(currentPassword, teamSnap.data().password))) {
       // if (teamSnap.data().password !== await hashPassword(currentPassword)) {
-        toast({
-          title: "Password mismatch",
-          description: "Current password does not match our records",
-          variant: "destructive"
-        });
-        return;
+        // toast({
+        //   title: "Password mismatch",
+        //   description: "Current password does not match our records",
+        //   variant: "destructive"
+        // });
+        throw new Error('Incorrect team password');
+        // return;
       }
 
       const teamData = teamSnap.data();
@@ -74,7 +78,7 @@ export const TeamSettings: React.ForwardRefExoticComponent<
         updateData.affiliation = affiliation;
       }
       if (newPassword) {
-        updateData.password = newPassword;
+        updateData.password = await hashPassword(newPassword);
       }
 
       if (Object.keys(updateData).length > 0) {
