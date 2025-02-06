@@ -52,6 +52,10 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
         password: password,
         createdAt: new Date(),
         lastSubmitted: null,
+        wins: 0,
+        losses: 0,
+        draws: 0,
+        openToChallenge: true,
         isBanned: false,
         members: [{
           email: session.user.email,

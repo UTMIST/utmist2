@@ -162,7 +162,9 @@ export const TeamSettings: React.ForwardRefExoticComponent<
               id="affiliation"
               value={affiliation}
               onChange={(e) => setAffiliation(e.target.value)}
-              placeholder="Your team's affiliation"
+              placeholder="https://github.com/your-team"
+              pattern="^https?://github.com/.*"
+              title="Must be a valid GitHub URL"
             />
           </div>
           <Button onClick={handleSaveTeamSettings}>Submit</Button>

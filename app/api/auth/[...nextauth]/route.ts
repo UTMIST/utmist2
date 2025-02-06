@@ -21,7 +21,7 @@ if (!getApps().length) {
   initializeApp(firebaseAdminConfig);
 }
 
-const handler = NextAuth({
+export const authOptions = {
   providers: [
     process.env.VERCEL_ENV === "preview"
       ? CredentialsProvider({
@@ -70,6 +70,9 @@ const handler = NextAuth({
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token?.sub ?? 'unknown';
+        // const adminAuth = getAuth();
+        // const firebaseUser = await adminAuth.getUserByEmail(session.user.email!);
+        // session.user.id = firebaseUser.uid;
         const adminDb = getFirestore();
         try {
           const userQuery = await adminDb.collection('users')
@@ -94,6 +97,8 @@ const handler = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET!,
   adapter: process.env.VERCEL_ENV === "preview" ? undefined : CustomFirestoreAdapter(firebaseAdminConfig),
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }; 

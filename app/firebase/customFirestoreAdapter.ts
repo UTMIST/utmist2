@@ -1,6 +1,5 @@
 import { FirestoreAdapter } from "@next-auth/firebase-adapter";
 import type { Adapter, AdapterUser, AdapterAccount } from "next-auth/adapters";
-import { cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
 export function CustomFirestoreAdapter(config: any): Adapter {

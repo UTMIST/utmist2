@@ -6,11 +6,16 @@ import { Button } from "@ai2components/ui/button";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@ai2components/ThemeProvider";
 import { siDiscord } from 'simple-icons';
+// import { Notification } from "@app/hooks/useNotifications";
+import { useNotifications } from '@app/context/NotificationsContext';
+
+import { NotificationsPanel } from "@app/components/NotificationsPanel";
 
 export const Header = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { data: session } = useSession();
+  const { notifications, markRead } = useNotifications();
 
   const handleSignIn = () => {
     signIn('google', { 
@@ -20,15 +25,15 @@ export const Header = () => {
 
   return (
     <header className="w-full bg-background border-b border-border px-4 py-2 fixed top-0 left-0 z-50 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="flex items-center justify-between max-w-7xl mx-auto">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
-            className="flex items-center gap-2"
+            size="icon"
+            // onClick={() => router.back()}
             onClick={() => router.push('/')}
           >
-            <ArrowLeft className="h-4 w-4" />
-            Return to UTMIST
+            <ArrowLeft className="h-5 w-5" />
           </Button>
           
           <Button
@@ -58,48 +63,39 @@ export const Header = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button 
-            variant="ghost" 
+          <NotificationsPanel 
+            notifications={notifications}
+            markRead={markRead}
+          />
+          
+          <Button
+            variant="ghost"
             size="icon"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           >
-            {theme === "dark" ? (
+            {theme === 'dark' ? (
               <Sun className="h-5 w-5" />
             ) : (
               <Moon className="h-5 w-5" />
             )}
           </Button>
 
-          
           {session ? (
-              <>
-                  <Button 
-                    variant="ghost"
-                    onClick={() => window.open('https://discord.gg/NRfgu5J33E', '_blank')}
-                  >
-                    <svg
-                      role="img"
-                      viewBox="0 0 24 24"
-                      className="h-5 w-5"
-                      fill="currentColor"
-                    >
-                      <path d={siDiscord.path} />
-                    </svg>
-                  </Button>
-
-                  {/* <Button variant="ghost">
-                      <LogOut className="h-5 w-5" />
-                  </Button> */}
-              </>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => signOut()}
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
           ) : (
-              <Button
-                  variant="ghost"
-                  className="flex items-center gap-2"
-                  onClick={handleSignIn}
-              >
-                  <ArrowLeft className="h-4 w-4" />
-                  Login
-              </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSignIn}
+            >
+              <Settings className="h-5 w-5" />
+            </Button>
           )}
         </div>
       </div>

@@ -31,6 +31,10 @@ import {
   DialogFooter,
 } from "@ai2components/ui/dialog";
 import { toast } from "@app/common/ai2/ui/use-toast";
+import { getAuth, onAuthStateChanged, signInWithCustomToken } from "firebase/auth";
+import { useNotifications } from "@app/context/NotificationsContext";
+
+const auth = getAuth();
 
 const Dashboard = () => {
   const router = useRouter();
@@ -41,6 +45,26 @@ const Dashboard = () => {
   const [teamId, setTeamId] = useState<string | null>(null);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [showDisbandDialog, setShowDisbandDialog] = useState(false);
+  const [isCaptain, setIsCaptain] = useState(false);
+  const { notifications, addNotification, markRead } = useNotifications();
+
+  useEffect(() => {
+    async function firebaseSignIn() {
+      try {
+        const response = await fetch("/api/firebaseToken");
+        if (!response.ok) throw new Error("Failed to fetch custom token");
+        const data = await response.json();
+        await signInWithCustomToken(auth, data.token);
+        console.log("Firebase sign-in successful");
+      } catch (error) {
+        console.error("Error during Firebase sign-in:", error);
+      }
+    }
+
+    if (session) {
+      firebaseSignIn();
+    }
+  }, [session]);
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -52,8 +76,12 @@ const Dashboard = () => {
             return;
           }
 
+          // const token = await auth.currentser?.getIdTokenResult();
+          // console.log("Decoded token:", token, session.user.email);
+          // console.log("Token email:", token?.claims.email);
+          // console.log("[AI2] Fetching registration doc", session.user.email);
           const registrationDoc = await getDoc(doc(db, 'AI2Registration', session.user.email));
-          
+          // console.log("[AI2] Registration doc:", registrationDoc.data());
           if (registrationDoc.exists()) {
             const teamId = registrationDoc.data().team || null;
             console.log("[AI2] Team name:", teamId);
@@ -66,20 +94,23 @@ const Dashboard = () => {
               }
 
               console.log("[AI2] Team members:", teamDoc.data().members);
-              setTeam(teamDoc.data()?.name || null);
-              setTeamMembers(teamDoc.data().members || []);
+              const teamData = teamDoc.data();
+              setTeam(teamData?.name || null);
+              setTeamMembers(teamData.members || []);
+              setIsCaptain(teamData.captain === session?.user?.email);
             }
           } else {
-            console.log("[AI2] Registering user");
+            console.log("[AI2] Registering user", session.user.email);
             await setDoc(doc(db, 'AI2Registration', session.user.email), {
               email: session.user.email,
               name: session.user.displayName,
               team: null
             });
+            // console.log("[AI2] Registered user");
             setTeam(null);
           }
         } catch (error) {
-          console.error('Error fetching team:', error);
+          // console.error('Error fetching team:', error);
         } finally {
           setLoading(false);
         }
@@ -95,6 +126,14 @@ const Dashboard = () => {
     setShowDisbandDialog(false);
     try {
       if (!db || !session?.user?.email || !team) return;
+
+
+      // addNotification({
+      //   title: "Team Disbanded",
+      //   description: "Your team has been successfully disbanded",
+      //   actionText: "Create New",
+      //   onAction: () => router.push('/ai2/dashboard/create')
+      // });
 
       const teamsQuery = query(
         collection(db, 'AI2Teams'),
@@ -133,9 +172,88 @@ const Dashboard = () => {
 
       setTeam(null);
       router.push('/ai2/dashboard');
+      // addNotification({
+      //   title: "Team Disbanded",
+      //   description: "Your team has been successfully disbanded",
+      //   actionText: "Create New",
+      //   onAction: () => router.push('/ai2/dashboard/create')
+      // });
     } catch (error) {
       console.error('Error disbanding team:', error);
-      alert(error instanceof Error ? error.message : 'Failed to disband team');
+      // addNotification({
+      //   title: "Disband Failed",
+      //   description: error instanceof Error ? error.message : "Failed to disband team"
+      // });
+    }
+  };
+
+  const leaveTeam = async () => {
+    try {
+      if (!db || !session?.user?.email || !teamId) return;
+      
+      const teamRef = doc(db, 'AI2Teams', teamId);
+      await updateDoc(teamRef, {
+        members: teamMembers.filter(member => member.email !== session.user?.email)
+      });
+
+      await updateDoc(doc(db, 'AI2Registration', session.user.email), {
+        team: null
+      });
+
+      setTeam(null);
+      router.push('/ai2/dashboard');
+      addNotification({
+        title: "Left Team",
+        description: "You've successfully left the team",
+        actionText: "Join New",
+        onAction: () => router.push('/ai2/dashboard/join')
+      });
+    } catch (error) {
+      console.error('Error leaving team:', error);
+      addNotification({
+        title: "Leave Failed",
+        description: error instanceof Error ? error.message : "Failed to leave team"
+      });
+    }
+  };
+
+  const handleKickMember = async (memberEmail: string) => {
+    if (!db || !teamId || !isCaptain) return;
+
+    try {
+      const teamRef = doc(db, "AI2Teams", teamId);
+      const teamDoc = await getDoc(teamRef);
+      
+      if (teamDoc.data()?.captain !== session?.user?.email) {
+        throw new Error("Only the captain can kick members");
+      }
+
+      if (memberEmail === session?.user?.email) {
+        toast({
+          title: "Kick Failed",
+          description: "You cannot kick yourself",
+          variant: "destructive"
+        });
+        return;
+      }
+      await updateDoc(teamRef, {
+        members: teamMembers.filter(m => m.email !== memberEmail),
+        memberCount: teamMembers.length - 1
+      });
+
+      await updateDoc(doc(db, 'AI2Registration', memberEmail), {
+        team: null
+      });
+
+      setTeamMembers(prev => prev.filter(m => m.email !== memberEmail));
+      toast({ title: "Member kicked successfully" });
+    } catch (error) {
+      console.error('Kick failed:', error);
+      toast({
+        title: "Kick failed",
+        description: error instanceof Error ? error.message : "Could not kick member",
+        variant: "destructive"
+      });
     }
   };
 
@@ -207,49 +325,89 @@ const Dashboard = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Dialog open={showDisbandDialog} onOpenChange={setShowDisbandDialog}>
-                      <DialogTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8"
-                          onClick={() => setShowDisbandDialog(true)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Disband Team?</DialogTitle>
-                          <DialogDescription>
-                            This action is irreversible. All team members will be removed and team data will be permanently deleted.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <DialogFooter>
+                    {isCaptain ? (
+                      <Dialog open={showDisbandDialog} onOpenChange={setShowDisbandDialog}>
+                        <DialogTrigger asChild>
                           <Button 
-                            variant="outline"
-                            onClick={() => setShowDisbandDialog(false)}
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8"
                           >
-                            Cancel
+                            <Trash2 className="h-4 w-4" />
                           </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Disband Team?</DialogTitle>
+                            <DialogDescription>
+                              This action is irreversible. All team members will be removed and team data will be permanently deleted.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button 
+                              variant="outline"
+                              onClick={() => setShowDisbandDialog(false)}
+                            >
+                              Cancel
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={disbandTeam}
+                            >
+                              Confirm Disband
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <Dialog>
+                        <DialogTrigger asChild>
                           <Button 
-                            variant="destructive"
-                            onClick={disbandTeam}
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-8 w-8"
                           >
-                            Confirm Disband
+                            <Trash2 className="h-4 w-4" />
                           </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Leave Team?</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to leave this team?
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            <Button 
+                              variant="outline"
+                              onClick={() => setShowDisbandDialog(false)}
+                            >
+                              Cancel
+                            </Button>
+                            <Button 
+                              variant="destructive"
+                              onClick={leaveTeam}
+                            >
+                              Confirm Leave
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    )}
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Disband Team</p>
+                    <p>{isCaptain ? "Disband Team" : "Leave Team"}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
 
-            <TeamMembers members={teamMembers.map(member => ({ displayName: member.displayName }))} />
+            <TeamMembers 
+              members={teamMembers} 
+              onKick={handleKickMember}
+              isCaptain={isCaptain}
+              session={session}
+            />
           </div>
           {/* Panels grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -266,7 +424,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <ChallengePanel />
-              <ExperimentPanel />
+              {/* <ExperimentPanel /> */}
             </div>
           </div>
         </div>
