@@ -54,7 +54,6 @@ export const ChallengePanel = () => {
       id: doc.id,
       team1: doc.data().team1,
       team2: doc.data().team2,
-      code: doc.data().code,
       status: doc.data().status,
       createdAt: doc.data().createdAt,
       videoUrl: doc.data().videoUrl,
@@ -109,14 +108,14 @@ export const ChallengePanel = () => {
   const handleCreateChallenge = async () => {
     if (!selectedTeam || !db || !teamId) return;
 
-    if (selectedTeam.id === teamId) {
-      toast({
-        title: "Invalid Challenge",
-        description: "You can't challenge your own team here silly goofy goober",
-        variant: "destructive"
-      });
-      return;
-    }
+    // if (selectedTeam.id === teamId) {
+    //   toast({
+    //     title: "Invalid Challenge",
+    //     description: "You can't challenge your own team here silly goofy goober",
+    //     variant: "destructive"
+    //   });
+    //   return;
+    // }
 
     try {
       const existingChallengeQuery = query(
@@ -209,7 +208,7 @@ export const ChallengePanel = () => {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             const challengeData = change.doc.data();
-            if (challengeData.challengerTeam === teamId) return;
+            // if (challengeData.challengerTeam === teamId) return;
             
             // console.log("[AI2] New challenge:", challengeData);
             addNotification({
@@ -330,8 +329,13 @@ export const ChallengePanel = () => {
                     challenge.team1 === teamId ? 
                     filteredTeams.find(t => t.id === challenge.team2)?.name || 'Unknown Team' : 
                     filteredTeams.find(t => t.id === challenge.team1)?.name || 'Unknown Team'
-                  }</p>
-                  <p className="text-sm text-gray-500">Code: {challenge.code}</p>
+                  } <span className={`inline-block px-2 py-0.5 text-xs rounded-full ${
+                    challenge.status === "pending" ? "bg-yellow-100 text-yellow-800" :
+                    challenge.status === "ongoing" ? "bg-blue-100 text-blue-800" :
+                    "bg-green-100 text-green-800"
+                  }`}>
+                    {challenge.status}
+                  </span></p>
                   {challenge.entryName && (
                     <div className="flex gap-2 text-sm text-gray-500">
                       <span>Your Bot: {challenge.entryName}</span>
@@ -340,40 +344,13 @@ export const ChallengePanel = () => {
                       )}
                     </div>
                   )}
-                  <span className={`inline-block px-2 py-0.5 text-xs rounded-full ${
-                    challenge.status === "pending" ? "bg-yellow-100 text-yellow-800" :
-                    challenge.status === "ongoing" ? "bg-blue-100 text-blue-800" :
-                    "bg-green-100 text-green-800"
-                  }`}>
-                    {challenge.status}
-                  </span>
+                  
                   {challenge.result && (
                     <p className="text-sm font-semibold mt-1">Result: {challenge.result}</p>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  {challenge.status === "pending" && (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          <Upload className="h-4 w-4 mr-2" />
-                          Submit
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Submit Challenge Entry</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium">Entry Name</label>
-                            <Input placeholder="Enter your bot's name" />
-                          </div>
-                          <FileSubmission label="Upload your bot (.ipynb)" />
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  )}
+
                   {challenge.videoUrl != "" && challenge.videoUrl != null && (
                     <Button 
                       variant="outline" 

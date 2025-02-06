@@ -7,41 +7,107 @@ import { FileSubmission } from "./FileSubmission";
 import { Button } from "@ai2components/ui/button";
 import { useState, useEffect } from "react";
 import { Badge } from "@ai2components/ui/badge";
+import { Label } from "@ai2components/ui/label";
+import { Textarea } from "@ai2components/ui/textarea";
+import { useFirebase } from "@app/firebase/useFirebase";
+import { useSession } from "next-auth/react";
+import { query, collection, where, orderBy, getDocs, doc, setDoc } from "firebase/firestore";
+import { useToast } from "@ai2components/ui/use-toast";
+import { AI2Submission } from "@app/schema/ai2submissions";
 
-export const TournamentPanel = () => {
-  const [writeupFile, setWriteupFile] = useState<File | null>(null);
-  const [submissionsLeft, setSubmissionsLeft] = useState(5);
-  const [timeUntilReset, setTimeUntilReset] = useState("");
-  
-  const submissions = [
-    { id: 1, filename: "submission1.ipynb", date: "2024-02-20", status: "accepted" },
-    { id: 2, filename: "submission2.ipynb", date: "2024-02-19", status: "validating" },
-  ];
+export const TournamentPanel = ({ teamId }: { teamId: string }) => {
+  const [submissions, setSubmissions] = useState<AI2Submission[]>([]);
+  const [writeupText, setWriteupText] = useState("");
+  const { toast } = useToast();
+  const { db } = useFirebase();
+  const { data: session } = useSession();
 
   useEffect(() => {
-    const updateTimeUntilReset = () => {
-      const now = new Date();
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
+    const fetchSubmissions = async () => {
+      if (!db || !teamId) return;
       
-      const diff = tomorrow.getTime() - now.getTime();
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const submissionsQuery = query(
+        collection(db, 'AI2Submissions'),
+        where('team', '==', teamId),
+        orderBy('createdAt', 'desc')
+      );
       
-      setTimeUntilReset(`${hours}h ${minutes}m`);
+      const snapshot = await getDocs(submissionsQuery);
+      setSubmissions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AI2Submission)));
     };
 
-    updateTimeUntilReset();
-    const interval = setInterval(updateTimeUntilReset, 60000);
-    
-    return () => clearInterval(interval);
-  }, []);
+    fetchSubmissions();
+  }, [db, teamId]);
 
-  const handleWriteupUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.name.endsWith('.md')) {
-      setWriteupFile(file);
+  const handleSubmission = async (file: File) => {
+    if (!db || !session?.user?.email || !teamId) return;
+
+    try {
+      const lastSubmission = submissions[0]?.createdAt;
+      if (lastSubmission) {
+        const lastSubmissionTime = new Date(lastSubmission.seconds * 1000);
+        const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+        if (lastSubmissionTime > tenMinutesAgo) {
+          const remaining = Math.ceil(
+            (lastSubmissionTime.getTime() + 10 * 60 * 1000 - Date.now()) / 1000 / 60
+          );
+          throw new Error(`Please wait ${remaining} minutes before submitting again`);
+        }
+      }
+
+      const docRef = doc(collection(db, 'AI2Submissions'));
+      const submissionId = docRef.id; 
+
+      await setDoc(docRef, {
+        team: teamId,
+        writeup: writeupText,
+        status: 'uploading/verifying',
+        createdAt: new Date(),
+        filename: file.name
+      });
+
+      setSubmissions(prev => [
+        {
+          id: docRef.id,
+          team: teamId,
+          writeup: writeupText,
+          status: 'uploading/verifying',
+          createdAt: { seconds: new Date().getTime() / 1000, nanoseconds: 0 },
+          filename: file.name
+        },
+        ...prev
+      ]);
+
+      const formData = new FormData();
+      formData.append('submission', file);
+      formData.append('submissionId', submissionId);
+      
+      const response = await fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: formData
+      });
+
+      const res = await response.json();
+      console.log('Response:', res);
+
+      if (response.ok) {
+        // await setDoc(docRef, { status: 'pending' }, { merge: true });
+      } else {
+        await setDoc(docRef, { status: 'failed' }, { merge: true });
+        throw new Error('Upload failed');
+      }
+
+      setWriteupText("");
+    } catch (error) {
+      console.error('Submission failed:', error);
+      if (error instanceof Error && error.message.includes('Please wait')) {
+        toast({
+          title: "Cooldown",
+          description: error.message,
+          variant: "destructive"
+        });
+        throw error;
+      }
     }
   };
 
@@ -56,37 +122,12 @@ export const TournamentPanel = () => {
       <CardContent className="space-y-6">
         <div className="flex flex-col space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Daily Submissions Left: {submissionsLeft}/5</span>
-            <span className="text-sm text-muted-foreground">Resets in: {timeUntilReset}</span>
+            <span className="text-sm text-muted-foreground">Daily Submissions Left: 5/5</span>
           </div>
-          <FileSubmission />
         </div>
         
-        <div>
-          <h3 className="font-semibold mb-4">Submission History</h3>
-          <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-            {submissions.map((submission) => (
-              <div
-                key={submission.id}
-                className="flex justify-between items-center p-3 border-b last:border-0 transition-[background-color,border-color] duration-200"
-              >
-                <div>
-                  <p className="font-medium">{submission.filename}</p>
-                  <p className="text-sm text-gray-500">{submission.date}</p>
-                </div>
-                <Badge variant={submission.status === "accepted" ? "default" : "secondary"} className={
-                  submission.status === "accepted" ? "bg-green-100 text-green-800 hover:bg-green-100" : 
-                  "bg-blue-100 text-blue-800 hover:bg-blue-100"
-                }>
-                  {submission.status}
-                </Badge>
-              </div>
-            ))}
-          </ScrollArea>
-        </div>
-        
-        <div className="w-full h-px bg-border my-6 transition-[background-color,border-color] duration-200" />
-        
+        <div className="space-y-4">
+
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold flex items-center gap-2">
@@ -95,28 +136,72 @@ export const TournamentPanel = () => {
             </h3>
           </div>
           <div className="space-y-2">
-            <input
-              type="file"
-              accept=".md"
-              onChange={handleWriteupUpload}
-              className="w-full text-sm text-foreground file:mr-4 file:py-2 file:px-4 
-                file:rounded-md file:border-0 file:text-sm file:font-semibold
-                file:bg-secondary file:text-secondary-foreground
-                hover:file:bg-secondary/90
-                dark:file:bg-gray-800 dark:file:text-gray-300
-                dark:hover:file:bg-gray-700
-                file:cursor-pointer cursor-pointer"
-            />
             <p className="text-sm text-gray-500">
-              Upload your team&#39;s writeup as a Markdown (.md) file
+              Please provide a writeup for the bot you are submitting.
             </p>
-            {writeupFile && (
-              <p className="text-sm text-green-600">
-                Current writeup: {writeupFile.name}
-              </p>
-            )}
           </div>
         </div>
+          <div>
+            {/* <Label>Writeup</Label> */}
+            <Textarea
+              value={writeupText}
+              onChange={(e) => setWriteupText(e.target.value)}
+              placeholder="Describe your submission..."
+              className="min-h-[100px]"
+            />
+          </div>
+
+
+          <div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Submission
+            </h3>
+          </div>
+          {/* <div className="space-y-2">
+            <p className="text-sm text-gray-500">
+              Upload your bot as a .ipynb file
+            </p>
+          </div> */}
+        </div>
+          
+          <FileSubmission 
+            label="Upload your bot (.ipynb)"
+            onSubmit={handleSubmission}
+            requiredWriteup={!!writeupText}
+            text={writeupText}
+          />
+        </div>
+        
+        <div>
+          <h3 className="font-semibold mb-4">Submission History</h3>
+          <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+            {submissions.map((submission) => (
+              <div key={submission.id} className="border-b last:border-0 p-3">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="font-medium">{submission.filename}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(submission.createdAt.seconds * 1000).toLocaleString()}
+                    </p>
+                  </div>
+                  <Badge variant={submission.status === "accepted" ? "default" : "secondary"}>
+                    {submission.status}
+                  </Badge>
+                </div>
+                {submission.writeup && (
+                  <p className="text-sm mt-2 text-muted-foreground">
+                    {submission.writeup}
+                  </p>
+                )}
+              </div>
+            ))}
+          </ScrollArea>
+        </div>
+        
+        {/* <div className="w-full h-px bg-border my-6 transition-[background-color,border-color] duration-200" /> */}
+        
       </CardContent>
     </Card>
   );

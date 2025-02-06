@@ -1,8 +1,8 @@
 'use client';
 
-import { FileSubmission } from "@ai2components/FileSubmission";
+// import { FileSubmission } from "@ai2components/FileSubmission";
 import { ChallengePanel } from "@ai2components/ChallengePanel";
-import { ExperimentPanel } from "@ai2components/ExperimentPanel";
+// import { ExperimentPanel } from "@ai2components/ExperimentPanel";
 import { TournamentPanel } from "@ai2components/TournamentPanel";
 import { Header } from "@ai2/Header";
 import { Button } from "@ai2components/ui/button";
@@ -411,7 +411,7 @@ const Dashboard = () => {
           </div>
           {/* Panels grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <TournamentPanel />
+            <TournamentPanel teamId={teamId || ""} />
             <div className="space-y-8">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -419,7 +419,7 @@ const Dashboard = () => {
                 </div>
                 <div className="relative flex justify-center">
                   <span className="bg-background dark:bg-gray-900 px-3 text-sm text-gray-500 dark:text-gray-400 transition-[background-color,border-color] duration-200">
-                    Challenges & Experiments
+                    Challenges
                   </span>
                 </div>
               </div>

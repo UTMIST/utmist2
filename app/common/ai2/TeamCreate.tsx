@@ -6,6 +6,7 @@ import { useToast } from "@ai2components/ui/use-toast";
 import { doc, setDoc, getDoc, updateDoc, getDocs, where, query, collection } from "firebase/firestore";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { useSession } from "next-auth/react";
+import { hashPassword } from "@app/common/ai2/utils/auth";
 
 interface TeamCreateProps {
   onTeamCreated: (teamName: string) => void;
@@ -49,7 +50,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
       const teamRef = doc(collection(db, 'AI2Teams'));
       await setDoc(teamRef, {
         name: teamName,
-        password: password,
+        password: await hashPassword(password),
         createdAt: new Date(),
         lastSubmitted: null,
         wins: 0,

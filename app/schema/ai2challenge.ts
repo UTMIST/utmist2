@@ -2,9 +2,8 @@ export interface AI2Challenge {
   id: string;
   team1: string;
   team2: string;
-  code: string;
   status: 'pending' | 'ongoing' | 'complete';
-  createdAt: Date;
+  createdAt: { seconds: number; nanoseconds: number };
   videoUrl: string | null;
   result: string | null;
   entryName?: string;

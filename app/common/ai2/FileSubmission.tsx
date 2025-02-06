@@ -5,19 +5,27 @@ import { useToast } from "@ai2components/ui/use-toast";
 
 interface FileSubmissionProps {
   label?: string;
+  onSubmit: (file: File) => Promise<void>;
+  requiredWriteup?: boolean;
+  text?: string;
 }
 
-export const FileSubmission = ({ label = "Upload file (.ipynb or .py)" }: FileSubmissionProps) => {
+export const FileSubmission = ({ 
+  label = "Upload file (.ipynb or .py)",
+  onSubmit,
+  requiredWriteup = false,
+  text = ""
+}: FileSubmissionProps) => {
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.size > 10 * 1024 * 1024) {
+      if (selectedFile.size > 2 * 1024 * 1024) {
         toast({
           title: "File too large",
-          description: "Maximum file size is 10MB",
+          description: "Maximum file size is 2MB",
           variant: "destructive",
         });
         return;
@@ -36,14 +44,33 @@ export const FileSubmission = ({ label = "Upload file (.ipynb or .py)" }: FileSu
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) return;
     
-    // TODO: Implement file submission logic
-    console.log("Submitting file:", file.name);
-    toast({
-      title: "File Submission Attempted",
-      description: "Backend integration pending",
-    });
+    if (!file) {
+      toast({ title: "No file selected", variant: "destructive" });
+      return;
+    }
+
+    if (requiredWriteup && (!text || text.trim().length === 0)) {
+      toast({ 
+        title: "Writeup required",
+        description: "Please fill out the writeup before submitting",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await onSubmit(file);
+      toast({ title: "Submission received!", description: "Your entry is being processed" });
+      setFile(null);
+    } catch (error) {
+      console.error('Submission error:', error);
+      toast({
+        title: "Submission failed",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive"
+      });
+    };
   };
 
   return (

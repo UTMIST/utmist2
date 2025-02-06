@@ -15,6 +15,7 @@ import React from "react";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { hashPassword, comparePassword } from "@app/common/ai2/utils/auth";
 
 export const TeamSettings: React.ForwardRefExoticComponent<
   { 
@@ -50,7 +51,8 @@ export const TeamSettings: React.ForwardRefExoticComponent<
         throw new Error("Team does not exist");
       }
 
-      if (teamSnap.data().password !== currentPassword) {
+      if (!(await comparePassword(currentPassword, teamSnap.data().password))) {
+      // if (teamSnap.data().password !== await hashPassword(currentPassword)) {
         toast({
           title: "Password mismatch",
           description: "Current password does not match our records",
