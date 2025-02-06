@@ -108,14 +108,14 @@ export const ChallengePanel = () => {
   const handleCreateChallenge = async () => {
     if (!selectedTeam || !db || !teamId) return;
 
-    // if (selectedTeam.id === teamId) {
-    //   toast({
-    //     title: "Invalid Challenge",
-    //     description: "You can't challenge your own team here silly goofy goober",
-    //     variant: "destructive"
-    //   });
-    //   return;
-    // }
+    if (selectedTeam.id === teamId) {
+      toast({
+        title: "Invalid Challenge",
+        description: "You can't challenge your own team here silly goofy goober",
+        variant: "destructive"
+      });
+      return;
+    }
 
     try {
       const existingChallengeQuery = query(
@@ -208,7 +208,7 @@ export const ChallengePanel = () => {
         snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
             const challengeData = change.doc.data();
-            // if (challengeData.challengerTeam === teamId) return;
+            if (challengeData.challengerTeam === teamId) return;
             
             // console.log("[AI2] New challenge:", challengeData);
             addNotification({
