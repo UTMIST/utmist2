@@ -22,15 +22,16 @@ export const TeamSettings: React.ForwardRefExoticComponent<
     teamName: string | null; 
     teamId: string | null;
     onSave?: (newName: string) => void;
+    currentJoinCode: string;
+    setJoinCode: (newCode: string) => void;
   } & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ teamName, teamId, onSave }, ref) => {
+> = React.forwardRef(({ teamName, teamId, onSave, currentJoinCode, setJoinCode }, ref) => {
   const { toast } = useToast();
   const { db } = useFirebase();
   const router = useRouter();
   const [newTeamName, setNewTeamName] = useState(teamName || "");
   const [website, setWebsite] = useState("");
   const [affiliation, setAffiliation] = useState("");
-  const [joinCode, setJoinCode] = useState("");
 
   const handleSaveTeamSettings = async () => {
     if (!teamId || !db) {
@@ -137,7 +138,7 @@ export const TeamSettings: React.ForwardRefExoticComponent<
           </div>
           <div className="grid gap-2">
             <Label>Current Join Code</Label>
-            <div className="font-mono p-2 bg-accent rounded">{joinCode}</div>
+            <div className="font-mono p-2 bg-accent rounded">{currentJoinCode}</div>
           </div>
           <div className="grid gap-2">
             <Button 

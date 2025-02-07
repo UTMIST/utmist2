@@ -241,7 +241,6 @@ const Dashboard = () => {
       }
       await updateDoc(teamRef, {
         members: teamMembers.filter(m => m.email !== memberEmail),
-        memberCount: teamMembers.length - 1
       });
 
       await updateDoc(doc(db, 'AI2Registration', memberEmail), {
@@ -318,6 +317,8 @@ const Dashboard = () => {
                       teamName={team} 
                       teamId={teamId}
                       onSave={(newName) => setTeam(newName)}
+                      setJoinCode={(newCode) => setJoinCode(newCode)}
+                      currentJoinCode={joinCode}
                     />
                   </TooltipTrigger>
                   <TooltipContent>
