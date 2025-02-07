@@ -69,12 +69,12 @@ export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
           </div>
           <div className="space-y-2">
             <Input
-              type="password"
-              placeholder="Team Password"
+              type="text"
+              placeholder="Team Join Code"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full transition-colors duration-200"
+              className="w-full transition-colors duration-200 font-mono"
             />
           </div>
           <Button type="submit" className="w-full bg-hackathon-primary hover:bg-hackathon-secondary text-white">

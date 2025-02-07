@@ -15,7 +15,7 @@ import React from "react";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { hashPassword, comparePassword } from "@app/common/ai2/utils/auth";
+import { generateRandomCode } from "@ai2/utils/generateRandomCode";
 
 export const TeamSettings: React.ForwardRefExoticComponent<
   { 
@@ -28,10 +28,9 @@ export const TeamSettings: React.ForwardRefExoticComponent<
   const { db } = useFirebase();
   const router = useRouter();
   const [newTeamName, setNewTeamName] = useState(teamName || "");
-  const [newPassword, setNewPassword] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
   const [website, setWebsite] = useState("");
   const [affiliation, setAffiliation] = useState("");
+  const [joinCode, setJoinCode] = useState("");
 
   const handleSaveTeamSettings = async () => {
     if (!teamId || !db) {
@@ -51,20 +50,6 @@ export const TeamSettings: React.ForwardRefExoticComponent<
         throw new Error("Team does not exist");
       }
 
-      console.log(teamSnap.data().password);
-      console.log(await hashPassword(currentPassword));
-
-      if (!(await comparePassword(currentPassword, teamSnap.data().password))) {
-      // if (teamSnap.data().password !== await hashPassword(currentPassword)) {
-        // toast({
-        //   title: "Password mismatch",
-        //   description: "Current password does not match our records",
-        //   variant: "destructive"
-        // });
-        throw new Error('Incorrect team password');
-        // return;
-      }
-
       const teamData = teamSnap.data();
       const updateData: any = {};
 
@@ -76,9 +61,6 @@ export const TeamSettings: React.ForwardRefExoticComponent<
       }
       if (affiliation && affiliation !== teamData.affiliation) {
         updateData.affiliation = affiliation;
-      }
-      if (newPassword) {
-        updateData.password = await hashPassword(newPassword);
       }
 
       if (Object.keys(updateData).length > 0) {
@@ -134,26 +116,6 @@ export const TeamSettings: React.ForwardRefExoticComponent<
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="newPassword">New Team Password</Label>
-            <Input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Set a new team join password"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="currentPassword">Confirm Current Password</Label>
-            <Input
-              id="currentPassword"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Provide your current team password"
-            />
-          </div>
-          <div className="grid gap-2">
             <Label htmlFor="website">Website</Label>
             <Input
               id="website"
@@ -172,6 +134,24 @@ export const TeamSettings: React.ForwardRefExoticComponent<
               pattern="^https?://github.com/.*"
               title="Must be a valid GitHub URL"
             />
+          </div>
+          <div className="grid gap-2">
+            <Label>Current Join Code</Label>
+            <div className="font-mono p-2 bg-accent rounded">{joinCode}</div>
+          </div>
+          <div className="grid gap-2">
+            <Button 
+              variant="destructive"
+              onClick={async () => {
+                const newCode = generateRandomCode();
+                const teamRef = doc(db, "AI2Teams", teamId!);
+                await updateDoc(teamRef, { joinCode: newCode });
+                setJoinCode(newCode);
+                toast({ title: "Join code regenerated!" });
+              }}
+            >
+              Regenerate Join Code
+            </Button>
           </div>
           <Button onClick={handleSaveTeamSettings}>Submit</Button>
         </div>

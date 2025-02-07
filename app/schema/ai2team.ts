@@ -12,6 +12,6 @@ export interface AI2Team {
   openToChallenge: boolean;
   isBanned: boolean;
   captainDisplayName: string;
-  memberCount: number;
   affiliation: string;
+  members: { email: string; displayName: string }[];
 } 

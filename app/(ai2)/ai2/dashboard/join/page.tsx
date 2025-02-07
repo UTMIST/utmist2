@@ -8,13 +8,13 @@ import { signIn } from "next-auth/react";
 import { collection, doc, getDoc, query, updateDoc, where, getDocs } from "firebase/firestore";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { useEffect, useState } from "react";
-import { comparePassword, hashPassword } from "@app/common/ai2/utils/auth";
 
 const DashboardJoinPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { db } = useFirebase();
   const [loading, setLoading] = useState(true);
+  const [lastAttemptTime, setLastAttemptTime] = useState<number>(0);
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -51,6 +51,11 @@ const DashboardJoinPage = () => {
     if (!db || !session?.user?.email) {
       throw new Error('Not authenticated');
     }
+    const now = Date.now();
+    if (now - lastAttemptTime < 1000) {
+      throw new Error('Please wait 1 second before trying again');
+    }
+    setLastAttemptTime(now);
 
     try {
       const teamsQuery = query(
@@ -71,15 +76,15 @@ const DashboardJoinPage = () => {
         throw new Error('Invalid team data');
       }
 
-      if (!(await comparePassword(password, teamData.password))) {
-        throw new Error('Incorrect team password');
+      if (teamData.joinCode !== password) {
+        throw new Error('Incorrect join code');
       }
 
       if (teamData.members.map((member: { email: string, displayName: string }) => member.email).includes(session.user.email)) {
         throw new Error('You are already a member of this team');
       }
 
-      if (teamData.memberCount >= 4) {
+      if (teamData.members.length >= 4) {
         throw new Error('Team is already full (maximum 4 members)');
       }
 
@@ -88,7 +93,6 @@ const DashboardJoinPage = () => {
           email: session.user.email,
           displayName: session.user.displayName
         }],
-        memberCount: teamData.memberCount + 1
       });
 
       await updateDoc(doc(db, 'AI2Registration', session.user.email), {

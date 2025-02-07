@@ -3,7 +3,6 @@
 import { Header } from "@ai2components/Header";
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
@@ -44,8 +43,8 @@ const TeamsPage = () => {
             id: doc.id,
             lastSubmitted: doc.data().lastSubmitted,
             isBanned: doc.data().isBanned,
-            memberCount: doc.data().memberCount,
-            affiliation: doc.data().affiliation || ''
+            affiliation: doc.data().affiliation || '',
+            members: doc.data().members || []
           }));
           
           setTeams(teamsData);
@@ -77,7 +76,6 @@ const TeamsPage = () => {
     return matchesSearch && matchesFilter;
   });
 
-
   console.log("[AI2] Filtered teams:", filteredTeams);
   return (
     <div className="min-h-screen bg-hackathon-background dark:bg-gray-900 transition-colors duration-200">
@@ -107,7 +105,7 @@ const TeamsPage = () => {
               </Select>
             </div>
           </div>
-
+          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredTeams.map((team) => (
               <Card key={team.name} className="hover:shadow-lg transition-shadow">
@@ -132,14 +130,30 @@ const TeamsPage = () => {
                       variant={team.openToChallenge ? 'default' : 'destructive'}
                       className="text-xs"
                     >
-                      {team.openToChallenge ? 'Open' : 'Closed'}
+                      {team.openToChallenge ? 'Open to Challenge' : 'Not Accepting Challenges'}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm">
                     Captain: {team.captainDisplayName}
                   </p>
+                  <div className="space-y-1">
+                    <h3 className="text-sm">Members:</h3>
+                    <div className="flex flex-wrap gap-1">
+                        {team.members.map((member: any) => (
+                          <Badge 
+                            key={member.email}
+                            variant="outline"
+                            className="text-xs"
+                          >
+                            {member.displayName}
+                          </Badge>
+                        ))}
+                      </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
+
+                  <div className="mt-2"></div>
                   <div className="flex justify-between text-sm">
                     <div className="space-y-1">
                       <p className="text-muted-foreground">Wins: {team.wins}</p>

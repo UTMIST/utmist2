@@ -91,7 +91,7 @@ export const ChallengePanel = () => {
         openToChallenge: doc.data().openToChallenge,
         isBanned: doc.data().isBanned || false,
         captainDisplayName: doc.data().captainDisplayName,
-        memberCount: doc.data().memberCount || 1,
+        members: doc.data().members || [],
         affiliation: doc.data().affiliation || ''
       }));
 

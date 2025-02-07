@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@ai2components/ui/button";
 import { Input } from "@ai2components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@ai2components/ui/card";
@@ -6,7 +6,7 @@ import { useToast } from "@ai2components/ui/use-toast";
 import { doc, setDoc, getDoc, updateDoc, getDocs, where, query, collection } from "firebase/firestore";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { useSession } from "next-auth/react";
-import { hashPassword } from "@app/common/ai2/utils/auth";
+import { generateRandomCode } from "@ai2/utils/generateRandomCode";
 
 interface TeamCreateProps {
   onTeamCreated: (teamName: string) => void;
@@ -14,7 +14,6 @@ interface TeamCreateProps {
 
 export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
   const [teamName, setTeamName] = useState("");
-  const [password, setPassword] = useState("");
   const { toast } = useToast();
   const { db } = useFirebase();
   const { data: session } = useSession();
@@ -50,7 +49,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
       const teamRef = doc(collection(db, 'AI2Teams'));
       await setDoc(teamRef, {
         name: teamName,
-        password: await hashPassword(password),
+        joinCode: generateRandomCode(),
         createdAt: new Date(),
         lastSubmitted: null,
         wins: 0,
@@ -64,7 +63,6 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
         }],
         captain: session.user.email,
         captainDisplayName: session.user.displayName,
-        memberCount: 1
       });
 
       await updateDoc(doc(db, 'AI2Registration', session.user.email), {
@@ -106,16 +104,16 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
               className="w-full transition-colors duration-200"
             />
           </div>
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Input
-              type="password"
-              placeholder="Set Team Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="text"
+              placeholder="Join Code"
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
               required
-              className="w-full transition-colors duration-200"
+              className="w-full transition-colors duration-200 font-mono"
             />
-          </div>
+          </div> */}
           <Button type="submit" className="w-full bg-hackathon-primary hover:bg-hackathon-secondary text-white">
             Create Team
           </Button>

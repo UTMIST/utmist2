@@ -7,7 +7,7 @@ import { TournamentPanel } from "@ai2components/TournamentPanel";
 import { Header } from "@ai2/Header";
 import { Button } from "@ai2components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@ai2components/ui/card";
-import { Trash2 } from "lucide-react";
+import { Trash2, Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
@@ -47,6 +47,8 @@ const Dashboard = () => {
   const [showDisbandDialog, setShowDisbandDialog] = useState(false);
   const [isCaptain, setIsCaptain] = useState(false);
   const { notifications, addNotification, markRead } = useNotifications();
+  const [revealCode, setRevealCode] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
 
   useEffect(() => {
     async function firebaseSignIn() {
@@ -98,6 +100,7 @@ const Dashboard = () => {
               setTeam(teamData?.name || null);
               setTeamMembers(teamData.members || []);
               setIsCaptain(teamData.captain === session?.user?.email);
+              setJoinCode(teamData.joinCode || "");
             }
           } else {
             console.log("[AI2] Registering user", session.user.email);
@@ -408,6 +411,35 @@ const Dashboard = () => {
               isCaptain={isCaptain}
               session={session}
             />
+
+            {/* {isCaptain && ( */}
+            {true && (
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-sm text-muted-foreground">Join Code:</span>
+                <div className="relative flex items-center gap-1">
+                  <div
+                    className={`font-mono cursor-pointer p-1 rounded ${!revealCode ? 'bg-black text-black' : 'bg-transparent'}`}
+                    onClick={() => {
+                      setRevealCode(!revealCode);
+                    }}
+                  >
+                    {revealCode ? joinCode : '••••••'}
+                  </div>
+                  {revealCode ?
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(joinCode);
+                      toast({ title: "Join code copied to clipboard!" });
+                    }}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                  : null}
+                </div>
+              </div>
+            )}
           </div>
           {/* Panels grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
