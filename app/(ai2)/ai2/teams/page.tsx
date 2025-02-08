@@ -121,7 +121,7 @@ const TeamsPage = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-4">
             {filteredTeams.map((team) => (
               <Card key={team.name} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-2">
@@ -141,19 +141,21 @@ const TeamsPage = () => {
                         </a>
                       )}
                     </div>
-                    <Badge 
-                      variant={team.openToChallenge ? 'default' : 'destructive'}
-                      className="text-xs"
-                    >
-                      {team.openToChallenge ? 'Open to Challenge' : 'Not Accepting Challenges'}
-                    </Badge>
+                    {!team.openToChallenge && (
+                      <Badge 
+                        variant="destructive"
+                        className="text-xs"
+                      >
+                        Not Accepting Challenges
+                      </Badge>
+                    )}
                   </div>
                   <p className="text-sm">
                     Captain: {team.captainDisplayName}
                   </p>
                   <div className="space-y-1">
-                    <h3 className="text-sm">Members:</h3>
                     <div className="flex flex-wrap gap-1">
+                    <h3 className="text-sm">Members:</h3>
                         {team.members.map((member: any) => (
                           <Badge 
                             key={member.email}

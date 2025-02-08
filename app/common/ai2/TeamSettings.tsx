@@ -16,6 +16,7 @@ import { useFirebase } from "@app/firebase/useFirebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { generateRandomCode } from "@ai2/utils/generateRandomCode";
+import { Switch } from "@ai2components/ui/switch";
 
 export const TeamSettings: React.ForwardRefExoticComponent<
   { 
@@ -24,14 +25,16 @@ export const TeamSettings: React.ForwardRefExoticComponent<
     onSave?: (newName: string) => void;
     currentJoinCode: string;
     setJoinCode: (newCode: string) => void;
+    currentOpenToChallenge: boolean;
   } & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ teamName, teamId, onSave, currentJoinCode, setJoinCode }, ref) => {
+> = React.forwardRef(({ teamName, teamId, onSave, currentJoinCode, setJoinCode, currentOpenToChallenge }, ref) => {
   const { toast } = useToast();
   const { db } = useFirebase();
   const router = useRouter();
   const [newTeamName, setNewTeamName] = useState(teamName || "");
   const [website, setWebsite] = useState("");
   const [repolink, setRepolink] = useState("");
+  const [openToChallenge, setOpenToChallenge] = useState(currentOpenToChallenge || false);
 
   const handleSaveTeamSettings = async () => {
     if (!teamId || !db) {
@@ -62,6 +65,9 @@ export const TeamSettings: React.ForwardRefExoticComponent<
       }
       if (repolink && repolink !== teamData.repolink) {
         updateData.repolink = repolink;
+      }
+      if (openToChallenge !== teamData.openToChallenge) {
+        updateData.openToChallenge = openToChallenge;
       }
 
       if (Object.keys(updateData).length > 0) {
@@ -139,6 +145,14 @@ export const TeamSettings: React.ForwardRefExoticComponent<
           <div className="grid gap-2">
             <Label>Current Join Code</Label>
             <div className="font-mono p-2 bg-accent rounded">{currentJoinCode}</div>
+          </div>
+          <div className="flex items-center gap-4">
+            <Label htmlFor="openToChallenge">Auto Accepting Challenges</Label>
+            <Switch
+              id="openToChallenge"
+              checked={openToChallenge}
+              onCheckedChange={setOpenToChallenge}
+            />
           </div>
           <div className="grid gap-2">
             <Button 

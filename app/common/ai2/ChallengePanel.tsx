@@ -118,6 +118,21 @@ export const ChallengePanel = () => {
       return;
     }
 
+    const submissionsQuery = query(
+      collection(db, 'AI2Submissions'),
+      where('team', '==', teamId),
+      where('statusCode', '==', 3)
+    );
+    const submissionsSnapshot = await getDocs(submissionsQuery);
+    if (submissionsSnapshot.empty) {
+      toast({
+        title: "No Valid Submission",
+        description: "You must have an accepted submission to challenge others",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       const existingChallengeQuery = query(
         collection(db, 'AI2ChallengeRequests'),
@@ -254,6 +269,21 @@ export const ChallengePanel = () => {
       toast({
         title: "Challenge Failed",
         description: "Challenge already exists",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const submissionsQuery = query(
+      collection(db, 'AI2Submissions'),
+      where('team', '==', teamId),
+      where('statusCode', '==', 3)
+    );
+    const submissionsSnapshot = await getDocs(submissionsQuery);
+    if (submissionsSnapshot.empty) {
+      toast({
+        title: "No Valid Submission",
+        description: "You must have an accepted submission to accept challenges",
         variant: "destructive"
       });
       return;

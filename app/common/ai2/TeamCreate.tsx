@@ -56,7 +56,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
         losses: 0,
         draws: 0,
         elo: 1200,
-        openToChallenge: true,
+        openToChallenge: false,
         isBanned: false,
         members: [{
           email: session.user.email,
@@ -100,6 +100,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
               type="text"
               placeholder="Team Name"
               value={teamName}
+              maxLength={80}
               onChange={(e) => setTeamName(e.target.value)}
               required
               className="w-full transition-colors duration-200"
