@@ -40,7 +40,7 @@ const TeamsPage = () => {
             losses: doc.data().losses,
             draws: doc.data().draws,
             elo: doc.data().elo,
-            openToChallenge: doc.data().openToChallenge,
+            autoAcceptChallenge: doc.data().autoAcceptChallenge,
             id: doc.id,
             lastSubmitted: doc.data().lastSubmitted,
             isBanned: doc.data().isBanned,
@@ -87,7 +87,7 @@ const TeamsPage = () => {
 
   const filteredTeams = teams.filter(team => {
     const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = filterOpen === null ? true : team.openToChallenge === filterOpen;
+    const matchesFilter = filterOpen === null ? true : team.autoAcceptChallenge === filterOpen;
     return matchesSearch && matchesFilter;
   });
 
@@ -141,12 +141,12 @@ const TeamsPage = () => {
                         </a>
                       )}
                     </div>
-                    {!team.openToChallenge && (
+                    {!team.autoAcceptChallenge && (
                       <Badge 
                         variant="destructive"
                         className="text-xs"
                       >
-                        Not Accepting Challenges
+                        Not Auto-Accepting Challenges
                       </Badge>
                     )}
                   </div>

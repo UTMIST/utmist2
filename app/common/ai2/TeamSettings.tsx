@@ -25,16 +25,16 @@ export const TeamSettings: React.ForwardRefExoticComponent<
     onSave?: (newName: string) => void;
     currentJoinCode: string;
     setJoinCode: (newCode: string) => void;
-    currentOpenToChallenge: boolean;
+    currentAutoAcceptChallenge: boolean;
   } & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ teamName, teamId, onSave, currentJoinCode, setJoinCode, currentOpenToChallenge }, ref) => {
+> = React.forwardRef(({ teamName, teamId, onSave, currentJoinCode, setJoinCode, currentAutoAcceptChallenge }, ref) => {
   const { toast } = useToast();
   const { db } = useFirebase();
   const router = useRouter();
   const [newTeamName, setNewTeamName] = useState(teamName || "");
   const [website, setWebsite] = useState("");
   const [repolink, setRepolink] = useState("");
-  const [openToChallenge, setOpenToChallenge] = useState(currentOpenToChallenge || false);
+  const [autoAcceptChallenge, setAutoAcceptChallenge] = useState(currentAutoAcceptChallenge || false);
 
   const handleSaveTeamSettings = async () => {
     if (!teamId || !db) {
@@ -66,8 +66,8 @@ export const TeamSettings: React.ForwardRefExoticComponent<
       if (repolink && repolink !== teamData.repolink) {
         updateData.repolink = repolink;
       }
-      if (openToChallenge !== teamData.openToChallenge) {
-        updateData.openToChallenge = openToChallenge;
+      if (autoAcceptChallenge !== teamData.autoAcceptChallenge) {
+        updateData.autoAcceptChallenge = autoAcceptChallenge;
       }
 
       if (Object.keys(updateData).length > 0) {
@@ -147,11 +147,11 @@ export const TeamSettings: React.ForwardRefExoticComponent<
             <div className="font-mono p-2 bg-accent rounded">{currentJoinCode}</div>
           </div>
           <div className="flex items-center gap-4">
-            <Label htmlFor="openToChallenge">Auto Accepting Challenges</Label>
+            <Label htmlFor="autoAcceptChallenge">Auto Accept Challenges</Label>
             <Switch
-              id="openToChallenge"
-              checked={openToChallenge}
-              onCheckedChange={setOpenToChallenge}
+              id="autoAcceptChallenge"
+              checked={autoAcceptChallenge}
+              onCheckedChange={setAutoAcceptChallenge}
             />
           </div>
           <div className="grid gap-2">

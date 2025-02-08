@@ -9,7 +9,7 @@ export interface AI2Team {
   wins: number;
   losses: number;
   draws: number;
-  openToChallenge: boolean;
+  autoAcceptChallenge: boolean;
   isBanned: boolean;
   captainDisplayName: string;
   repolink: string;

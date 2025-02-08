@@ -49,7 +49,7 @@ const Dashboard = () => {
   const { notifications, addNotification, markRead } = useNotifications();
   const [revealCode, setRevealCode] = useState(false);
   const [joinCode, setJoinCode] = useState("");
-  const [openToChallenge, setOpenToChallenge] = useState(false);
+  const [autoAcceptChallenge, setAutoAcceptChallenge] = useState(false);
 
   useEffect(() => {
     async function firebaseSignIn() {
@@ -102,7 +102,7 @@ const Dashboard = () => {
               setTeamMembers(teamData.members || []);
               setIsCaptain(teamData.captain === session?.user?.email);
               setJoinCode(teamData.joinCode || "");
-              setOpenToChallenge(teamData.openToChallenge || false);
+              setAutoAcceptChallenge(teamData.autoAcceptChallenge || false);
             }
           } else {
             console.log("[AI2] Registering user", session.user.email);
@@ -335,7 +335,7 @@ const Dashboard = () => {
                       onSave={(newName) => setTeam(newName)}
                       setJoinCode={(newCode) => setJoinCode(newCode)}
                       currentJoinCode={joinCode}
-                      currentOpenToChallenge={openToChallenge}
+                      currentAutoAcceptChallenge={autoAcceptChallenge}
                     />
                   </TooltipTrigger>
                   <TooltipContent>

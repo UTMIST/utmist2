@@ -76,7 +76,6 @@ export const ChallengePanel = () => {
       
       const teamsQuery = query(
         collection(db, 'AI2Teams'),
-        where('openToChallenge', '==', true)
       );
       
       const snapshot = await getDocs(teamsQuery);
@@ -89,7 +88,7 @@ export const ChallengePanel = () => {
         losses: doc.data().losses || 0,
         draws: doc.data().draws || 0,
         elo: doc.data().elo || 1200,
-        openToChallenge: doc.data().openToChallenge,
+        autoAcceptChallenge: doc.data().autoAcceptChallenge,
         isBanned: doc.data().isBanned || false,
         captainDisplayName: doc.data().captainDisplayName,
         members: doc.data().members || [],
@@ -110,90 +109,110 @@ export const ChallengePanel = () => {
     if (!selectedTeam || !db || !teamId) return;
 
     if (selectedTeam.id === teamId) {
-      toast({
-        title: "Invalid Challenge",
-        description: "You can't challenge your own team here silly goofy goober",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const submissionsQuery = query(
-      collection(db, 'AI2Submissions'),
-      where('team', '==', teamId),
-      where('statusCode', '==', 3)
-    );
-    const submissionsSnapshot = await getDocs(submissionsQuery);
-    if (submissionsSnapshot.empty) {
-      toast({
-        title: "No Valid Submission",
-        description: "You must have an accepted submission to challenge others",
-        variant: "destructive"
-      });
+      toast({ title: "Invalid Challenge", description: "You can't challenge your own team", variant: "destructive" });
       return;
     }
 
     try {
-      const existingChallengeQuery = query(
-        collection(db, 'AI2ChallengeRequests'),
-        where('challengerTeam', '==', teamId),
-        where('receiverTeam', '==', selectedTeam.id),
-        where('status', '==', 'pending')
-      );
-      const existingSnapshot = await getDocs(existingChallengeQuery);
+      const [challengerSubs, receiverSubs] = await Promise.all([
+        getDocs(query(collection(db, 'AI2Submissions'), 
+          where('team', '==', teamId), 
+          where('statusCode', '==', 3))),
+        getDocs(query(collection(db, 'AI2Submissions'),
+          where('team', '==', selectedTeam.id),
+          where('statusCode', '==', 3)))
+      ]);
 
-      if (!existingSnapshot.empty) {
-        const existingChallenge = existingSnapshot.docs[0].data();
-        const challengeAge = Date.now() - existingChallenge.createdAt.toDate().getTime();
-        const fiveMinutes = 5 * 60 * 1000;
-
-        if (challengeAge < fiveMinutes) {
-          toast({
-            title: "Challenge Cooldown",
-            description: "Please wait 5 minutes before challenging this team again",
-            variant: "destructive"
-          });
-          return;
-        } else {
-          await updateDoc(existingSnapshot.docs[0].ref, {
-            createdAt: new Date()
-          });
-          toast({
-            title: "Challenge Updated!",
-            description: `Challenge to ${selectedTeam.name} has been renewed`,
-          });
-          return;
-        }
+      if (challengerSubs.empty || receiverSubs.empty) {
+        toast({
+          title: "Missing Submission",
+          description: "Both teams must have valid submissions to challenge",
+          variant: "destructive"
+        });
+        return;
       }
 
-      const challengerTeamDoc = await getDoc(doc(db, 'AI2Teams', teamId));
-      const challengerTeamName = challengerTeamDoc.data()?.name || 'Unknown Team';
+      const receiverTeamDoc = await getDoc(doc(db, 'AI2Teams', selectedTeam.id));
+      const autoAccept = receiverTeamDoc.data()?.autoAcceptChallenge ?? false;
 
-      const challengeRef = doc(collection(db, 'AI2ChallengeRequests'));
-      await setDoc(challengeRef, {
-        challengerTeam: teamId,
-        challengerTeamName,
-        receiverTeam: selectedTeam.id,
-        receiverTeamName: selectedTeam.name,
-        status: 'pending',
-        createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-      });
+      if (autoAccept) {
+        const challengeRef = doc(collection(db, 'AI2Challenges'));
+        await setDoc(challengeRef, {
+          team1: teamId,
+          team2: selectedTeam.id,
+          status: 'ongoing',
+          createdAt: new Date(),
+          videoUrl: null,
+          result: null,
+          entryName: "HI",
+          opponentEntryName: "HI"
+        });
+        toast({ title: "Challenge Started!", description: "Match has been automatically accepted" });
+      } else {
+        const existingRequestQuery = query(
+          collection(db, 'AI2ChallengeRequests'),
+          where('challengerTeam', '==', teamId),
+          where('receiverTeam', '==', selectedTeam.id),
+          where('status', '==', 'pending')
+        );
+        
+        const existingSnapshot = await getDocs(existingRequestQuery);
 
-      toast({
-        title: "Challenge Sent!",
-        description: `${selectedTeam.name} has been notified`,
-      });
+        if (!existingSnapshot.empty) {
+          const existingChallenge = existingSnapshot.docs[0].data();
+          const challengeAge = Date.now() - existingChallenge.createdAt.toDate().getTime();
+          const fiveMinutes = 5 * 60 * 1000;
 
-      setSelectedTeam(null);
-      setSearchQuery('');
-      document.dispatchEvent(new Event('dialog-close'));
+          if (challengeAge < fiveMinutes) {
+            toast({
+              title: "Challenge Cooldown",
+              description: "Please wait 5 minutes before challenging this team again",
+              variant: "destructive"
+            });
+            return;
+          } else {
+            await updateDoc(existingSnapshot.docs[0].ref, {
+              createdAt: new Date()
+            });
+            toast({
+              title: "Challenge Updated!",
+              description: `Challenge to ${selectedTeam.name} has been renewed`,
+            });
+            return;
+          }
+        }
+
+        const challengerTeamDoc = await getDoc(doc(db, 'AI2Teams', teamId));
+        const challengerTeamName = challengerTeamDoc.data()?.name || 'Unknown Team';
+
+        const challengeRef = doc(collection(db, 'AI2ChallengeRequests'));
+        await setDoc(challengeRef, {
+          challengerTeam: teamId,
+          challengerTeamName,
+          receiverTeam: selectedTeam.id,
+          receiverTeamName: selectedTeam.name,
+          status: 'pending',
+          createdAt: new Date(),
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        });
+
+        toast({
+          title: "Challenge Sent!",
+          description: `${selectedTeam.name} has been notified`,
+        });
+
+        setSelectedTeam(null);
+        setSearchQuery('');
+        document.dispatchEvent(new Event('dialog-close'));
+      }
+      
       await fetchChallenges();
+      
     } catch (error) {
       console.error('Challenge creation failed:', error);
       toast({
         title: "Challenge Failed",
-        description: error instanceof Error ? error.message : "Could not send challenge",
+        description: error instanceof Error ? error.message : "Could not create challenge",
         variant: "destructive"
       });
     }
@@ -233,7 +252,6 @@ export const ChallengePanel = () => {
               actionText: "Accept",
               onAction: () => {
                 handleAcceptChallenge(change.doc.id);
-                markInteracted(change.doc.id);
               }
             });
           }
@@ -302,6 +320,7 @@ export const ChallengePanel = () => {
       result: null
     });
 
+    markInteracted(challengeRequestId);
     await updateDoc(challengeRef, { status: 'accepted' });
   };
 
@@ -335,8 +354,8 @@ export const ChallengePanel = () => {
                     >
                       <div className="flex justify-between items-center">
                         <span>{team.name}</span>
-                        <Badge variant={team.openToChallenge ? 'default' : 'destructive'}>
-                          {team.openToChallenge ? 'Open' : 'Closed'}
+                        <Badge variant={team.autoAcceptChallenge ? 'default' : 'destructive'}>
+                          {team.autoAcceptChallenge ? 'Auto Accept' : 'Manual Accept'}
                         </Badge>
                       </div>
                     </div>
