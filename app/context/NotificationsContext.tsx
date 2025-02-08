@@ -9,29 +9,33 @@ export type Notification = {
   actionText?: string;
   onAction?: () => void;
   read: boolean;
+  interacted: boolean;
 };
 
 type NotificationsContextType = {
   notifications: Notification[];
-  addNotification: (notification: Omit<Notification, 'id' | 'read'>) => void;
+  addNotification: (notification: Omit<Notification, 'id' | 'read' | 'interacted'>) => void;
   markRead: (id: string) => void;
+  markInteracted: (id: string) => void;
 };
 
 const NotificationsContext = createContext<NotificationsContextType>({
   notifications: [],
   addNotification: () => {},
-  markRead: () => {}
+  markRead: () => {},
+  markInteracted: () => {}
 });
 
 export const NotificationsProvider = ({ children }: { children: React.ReactNode }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const addNotification = (notification: Omit<Notification, 'id' | 'read'>) => {
+  const addNotification = (notification: Omit<Notification, 'id' | 'read' | 'interacted'>) => {
     setNotifications(prev => [
       {
         ...notification,
         id: Date.now().toString(),
         read: false,
+        interacted: false,
       },
       ...prev,
     ]);
@@ -43,8 +47,14 @@ export const NotificationsProvider = ({ children }: { children: React.ReactNode 
     );
   };
 
+  const markInteracted = (id: string) => {
+    setNotifications(prev =>
+      prev.map(n => (n.id === id ? { ...n, interacted: true } : n))
+    );
+  };
+
   return (
-    <NotificationsContext.Provider value={{ notifications, addNotification, markRead }}>
+    <NotificationsContext.Provider value={{ notifications, addNotification, markRead, markInteracted }}>
       {children}
     </NotificationsContext.Provider>
   );

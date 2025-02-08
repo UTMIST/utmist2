@@ -55,6 +55,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
         wins: 0,
         losses: 0,
         draws: 0,
+        elo: 1200,
         openToChallenge: true,
         isBanned: false,
         members: [{

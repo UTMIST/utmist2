@@ -13,9 +13,11 @@ import { Bell } from "lucide-react";
 export const NotificationsPanel = ({
   notifications,
   markRead,
+  markInteracted,
 }: {
   notifications: Notification[];
   markRead: (id: string) => void;
+  markInteracted: (id: string) => void;
 }) => {
   const [open, setOpen] = useState(false);
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -51,39 +53,42 @@ export const NotificationsPanel = ({
       >
         <div className="space-y-4">
           <h3 className="font-semibold text-lg">Notifications</h3>
-          {notifications.length > 0 ? (
-            notifications.map(notification => (
-              <div 
-                key={notification.id}
-                className={`p-4 rounded-lg border ${
-                  !notification.read 
-                    ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' 
-                    : 'bg-muted hover:bg-muted/50'
-                } transition-colors`}
-              >
-                <div className="flex justify-between items-start gap-2">
-                  <div className="flex-1">
-                    <h4 className="font-medium text-base">{notification.title}</h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {notification.description}
-                    </p>
+          {notifications.filter(n => !n.interacted).length > 0 ? (
+            notifications
+              .filter(n => !n.interacted)
+              .map(notification => (
+                <div 
+                  key={notification.id}
+                  className={`p-4 rounded-lg border ${
+                    !notification.read 
+                      ? 'bg-blue-50 border-blue-200 hover:bg-blue-100' 
+                      : 'bg-muted hover:bg-muted/50'
+                  } transition-colors`}
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-base">{notification.title}</h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {notification.description}
+                      </p>
+                    </div>
+                    {notification.actionText && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="shrink-0"
+                        onClick={() => {
+                          notification.onAction?.();
+                          markRead(notification.id);
+                          markInteracted(notification.id);
+                        }}
+                      >
+                        {notification.actionText}
+                      </Button>
+                    )}
                   </div>
-                  {notification.actionText && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="shrink-0"
-                      onClick={() => {
-                        notification.onAction?.();
-                        markRead(notification.id);
-                      }}
-                    >
-                      {notification.actionText}
-                    </Button>
-                  )}
                 </div>
-              </div>
-            ))
+              ))
           ) : (
             <div className="text-center text-muted-foreground py-4">
               No new notifications

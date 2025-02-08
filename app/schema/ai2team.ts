@@ -12,6 +12,7 @@ export interface AI2Team {
   openToChallenge: boolean;
   isBanned: boolean;
   captainDisplayName: string;
-  affiliation: string;
+  repolink: string;
   members: { email: string; displayName: string }[];
+  elo: number;
 } 
