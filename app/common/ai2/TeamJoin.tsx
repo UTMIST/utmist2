@@ -7,12 +7,11 @@ import { useFirebase } from "@app/firebase/useFirebase";
 import { useSession } from "next-auth/react";
 
 interface TeamJoinProps {
-  onTeamJoined: (teamName: string, password: string) => Promise<void>;
+  onTeamJoined: (joinCode: string) => Promise<void>;
 }
 
 export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
-  const [teamName, setTeamName] = useState("");
-  const [password, setPassword] = useState("");
+  const [joinCode, setJoinCode] = useState("");
   const { toast } = useToast();
   const { db } = useFirebase();
   const { data: session } = useSession();
@@ -30,15 +29,11 @@ export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
     }
 
     try {
-      await onTeamJoined(teamName, password)
+      await onTeamJoined(joinCode)
         .catch(error => {
           throw error;
         });
       
-      toast({
-        title: "Team Joined Successfully",
-        description: `You have joined team ${teamName}`,
-      });
     } catch (error) {
       toast({
         title: "Join Failed",
@@ -60,19 +55,9 @@ export const TeamJoin = ({ onTeamJoined }: TeamJoinProps) => {
           <div className="space-y-2">
             <Input
               type="text"
-              placeholder="Team Name"
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
-              required
-              className="w-full transition-colors duration-200"
-            />
-          </div>
-          <div className="space-y-2">
-            <Input
-              type="text"
               placeholder="Team Join Code"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
               required
               className="w-full transition-colors duration-200 font-mono"
             />

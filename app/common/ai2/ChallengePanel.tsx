@@ -31,7 +31,7 @@ export const ChallengePanel = () => {
   const [filteredTeams, setFilteredTeams] = useState<AI2Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<AI2Team | null>(null);
   const [teamId, setTeamId] = useState<string>('');
-  const { notifications, addNotification, markRead } = useNotifications();
+  const { notifications, addNotification, markRead, markInteracted } = useNotifications();
   
   const fetchChallenges = async () => {
     if (!db || !session?.user?.email) return;
@@ -88,11 +88,12 @@ export const ChallengePanel = () => {
         wins: doc.data().wins || 0,
         losses: doc.data().losses || 0,
         draws: doc.data().draws || 0,
+        elo: doc.data().elo || 1200,
         openToChallenge: doc.data().openToChallenge,
         isBanned: doc.data().isBanned || false,
         captainDisplayName: doc.data().captainDisplayName,
         members: doc.data().members || [],
-        affiliation: doc.data().affiliation || ''
+        repolink: doc.data().repolink || ''
       }));
 
       const filtered = allOpenTeams.filter(team =>
@@ -215,7 +216,10 @@ export const ChallengePanel = () => {
               title: "New Challenge!",
               description: `You have a challenge from ${challengeData.challengerTeamName}`,
               actionText: "Accept",
-              onAction: () => handleAcceptChallenge(change.doc.id)
+              onAction: () => {
+                handleAcceptChallenge(change.doc.id);
+                markInteracted(change.doc.id);
+              }
             });
           }
         });
@@ -257,6 +261,7 @@ export const ChallengePanel = () => {
 
     const challengeDoc = doc(collection(db, 'AI2Challenges'));
     await setDoc(challengeDoc, {
+      requestId: challengeRequestId,
       team1: challengerTeam,
       team2: receiverTeam,
       team1Name: challengerTeamName,

@@ -15,7 +15,21 @@ export default function Dashboard() {
   }, [status, router]);
 
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="text-4xl font-bold text-hackathon-primary animate-pulse">
+            UTMIST
+          </h1>
+          <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-hackathon-primary animate-progress"
+              style={{ width: '45%' }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!session) {

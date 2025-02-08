@@ -7,7 +7,7 @@ import { TournamentPanel } from "@ai2components/TournamentPanel";
 import { Header } from "@ai2/Header";
 import { Button } from "@ai2components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@ai2components/ui/card";
-import { Trash2, Copy } from "lucide-react";
+import { Trash2, LogOut, Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
@@ -260,7 +260,21 @@ const Dashboard = () => {
   };
 
   if (status === 'loading' || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="text-4xl font-bold text-hackathon-primary animate-pulse">
+            UTMIST
+          </h1>
+          <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-hackathon-primary animate-progress"
+              style={{ width: '45%' }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (status === 'unauthenticated' || !session) {
@@ -337,7 +351,7 @@ const Dashboard = () => {
                             size="icon" 
                             className="h-8 w-8"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            {isCaptain ? <Trash2 className="h-4 w-4" /> : <LogOut className="h-4 w-4" />}
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -371,7 +385,7 @@ const Dashboard = () => {
                             size="icon" 
                             className="h-8 w-8"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            {isCaptain ? <Trash2 className="h-4 w-4" /> : <LogOut className="h-4 w-4" />}
                           </Button>
                         </DialogTrigger>
                         <DialogContent>

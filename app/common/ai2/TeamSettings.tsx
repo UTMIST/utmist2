@@ -31,7 +31,7 @@ export const TeamSettings: React.ForwardRefExoticComponent<
   const router = useRouter();
   const [newTeamName, setNewTeamName] = useState(teamName || "");
   const [website, setWebsite] = useState("");
-  const [affiliation, setAffiliation] = useState("");
+  const [repolink, setRepolink] = useState("");
 
   const handleSaveTeamSettings = async () => {
     if (!teamId || !db) {
@@ -60,8 +60,8 @@ export const TeamSettings: React.ForwardRefExoticComponent<
       if (website && website !== teamData.website) {
         updateData.website = website;
       }
-      if (affiliation && affiliation !== teamData.affiliation) {
-        updateData.affiliation = affiliation;
+      if (repolink && repolink !== teamData.repolink) {
+        updateData.repolink = repolink;
       }
 
       if (Object.keys(updateData).length > 0) {
@@ -126,11 +126,11 @@ export const TeamSettings: React.ForwardRefExoticComponent<
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="affiliation">Affiliation</Label>
+            <Label htmlFor="repolink">Repo Link</Label>
             <Input
-              id="affiliation"
-              value={affiliation}
-              onChange={(e) => setAffiliation(e.target.value)}
+              id="repolink"
+              value={repolink}
+              onChange={(e) => setRepolink(e.target.value)}
               placeholder="https://github.com/your-team"
               pattern="^https?://github.com/.*"
               title="Must be a valid GitHub URL"
