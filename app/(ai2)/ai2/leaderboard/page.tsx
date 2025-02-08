@@ -62,9 +62,14 @@ const LeaderboardPage = () => {
                     <span className="text-xl font-bold">#{index + 1}</span>
                     <div>
                       <h3 className="text-lg font-semibold">{team.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {team.captainDisplayName}
-                      </p>
+                      <div className="text-sm text-muted-foreground">
+                        {team.members.map((member, i) => (
+                          <span key={member.email}>
+                            {member.displayName}
+                            {i < team.members.length - 1 ? ', ' : ''}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
