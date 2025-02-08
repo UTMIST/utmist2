@@ -88,6 +88,22 @@ export const Header = () => {
               <Moon className="h-5 w-5" />
             )}
           </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => window.open('https://discord.gg/TTGB62BE9U', '_blank')}
+          >
+            <svg
+              role="img"
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d={siDiscord.path}/>
+            </svg>
+          </Button>
 
           {session ? (
             <Button
