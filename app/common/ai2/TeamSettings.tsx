@@ -118,7 +118,11 @@ export const TeamSettings: React.ForwardRefExoticComponent<
             <Input
               id="teamName"
               value={newTeamName}
-              onChange={(e) => setNewTeamName(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!/^[\p{Emoji}A-Za-z0-9 ]+$/iu.test(val)) return;
+                setNewTeamName(val.slice(0, 80));
+              }}
               placeholder="Your team's public name shown to other competitors"
             />
           </div>

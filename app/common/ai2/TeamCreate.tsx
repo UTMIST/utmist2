@@ -30,6 +30,15 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
       return;
     }
 
+    if (!/^[\p{Emoji}A-Za-z0-9 ]{3,60}$/iu.test(teamName)) {
+      toast({
+        title: "Invalid team name",
+        description: "3-60 characters, only letters, numbers, spaces and emojis",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       const teamsQuery = query(
         collection(db, 'AI2Teams'),
@@ -101,8 +110,19 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
               type="text"
               placeholder="Team Name"
               value={teamName}
-              maxLength={80}
-              onChange={(e) => setTeamName(e.target.value)}
+              maxLength={60}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!/^[\p{Emoji}A-Za-z0-9 ]+$/iu.test(val)) {
+                  toast({
+                    title: "Invalid characters",
+                    description: "Max 60 chars. Only letters, numbers, spaces and emojis allowed",
+                    variant: "destructive"
+                  });
+                  return;
+                }
+                setTeamName(val);
+              }}
               required
               className="w-full transition-colors duration-200"
             />
