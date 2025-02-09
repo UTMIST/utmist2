@@ -14,5 +14,6 @@ export interface AI2Team {
   captainDisplayName: string;
   repolink: string;
   members: { email: string; displayName: string }[];
+  memberEmails: string[];
   elo: number;
 } 

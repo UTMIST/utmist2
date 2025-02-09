@@ -266,6 +266,7 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
             <FileSubmission 
               label="Upload your writeup (.md)"
               onSubmit={handleWriteupSubmission}
+              allowedExtensions={['.md']}
             />
           </div>
 

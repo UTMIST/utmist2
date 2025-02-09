@@ -41,6 +41,7 @@ export const ChallengePanel = () => {
     
     if (!teamId) return;
 
+    // console.log("[AI2] Fetching challenges for team:", teamId);
     const challengesQuery = query(
       collection(db, 'AI2Challenges'),
       or(
@@ -48,8 +49,10 @@ export const ChallengePanel = () => {
         where('team2', '==', teamId)
       )
     );
-    
+    // console.log("[AI2] Challenges query:", challengesQuery);
+
     const querySnapshot = await getDocs(challengesQuery);
+    // console.log("[AI2] Challenges query snapshot:", querySnapshot.docs);
     const challengesData = querySnapshot.docs.map(doc => ({
       id: doc.id,
       team1: doc.data().team1,
@@ -92,6 +95,7 @@ export const ChallengePanel = () => {
         isBanned: doc.data().isBanned || false,
         captainDisplayName: doc.data().captainDisplayName,
         members: doc.data().members || [],
+        memberEmails: doc.data().memberEmails || [],
         repolink: doc.data().repolink || ''
       }));
 
@@ -114,16 +118,13 @@ export const ChallengePanel = () => {
     }
 
     try {
-      const [challengerSubs, receiverSubs] = await Promise.all([
+      const [challengerSubs] = await Promise.all([
         getDocs(query(collection(db, 'AI2Submissions'), 
           where('team', '==', teamId), 
-          where('statusCode', '==', 3))),
-        getDocs(query(collection(db, 'AI2Submissions'),
-          where('team', '==', selectedTeam.id),
           where('statusCode', '==', 3)))
       ]);
 
-      if (challengerSubs.empty || receiverSubs.empty) {
+      if (challengerSubs.empty) {
         toast({
           title: "Missing Submission",
           description: "Both teams must have valid submissions to challenge",
@@ -268,7 +269,7 @@ export const ChallengePanel = () => {
   }, [teamId, db]);
 
   const handleAcceptChallenge = async (challengeRequestId: string) => {
-    console.log("[AI2] Accepting challenge:", challengeRequestId);
+    // console.log("[AI2] Accepting challenge:", challengeRequestId);
     const challengeRef = doc(db, 'AI2ChallengeRequests', challengeRequestId);
     const challengeSnap = await getDoc(challengeRef);
     

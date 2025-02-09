@@ -62,6 +62,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
           email: session.user.email,
           displayName: session.user.displayName
         }],
+        memberEmails: [session.user.email],
         captain: session.user.email,
         captainDisplayName: session.user.displayName,
       });

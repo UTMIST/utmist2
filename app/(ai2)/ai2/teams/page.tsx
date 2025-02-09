@@ -45,7 +45,8 @@ const TeamsPage = () => {
             lastSubmitted: doc.data().lastSubmitted,
             isBanned: doc.data().isBanned,
             repolink: doc.data().repolink || '',
-            members: doc.data().members || []
+            members: doc.data().members || [],
+            memberEmails: doc.data().memberEmails || []
           }));
           
           setTeams(teamsData);
@@ -114,8 +115,8 @@ const TeamsPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Teams</SelectItem>
-                  <SelectItem value="open">Open to Challenge</SelectItem>
-                  <SelectItem value="closed">Not Accepting Challenges</SelectItem>
+                  <SelectItem value="open">Auto Accepting Challenges</SelectItem>
+                  <SelectItem value="closed">Manual Challenges</SelectItem>
                 </SelectContent>
               </Select>
             </div>

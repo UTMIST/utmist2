@@ -106,6 +106,7 @@ const DashboardJoinPage = () => {
           email: session.user.email,
           displayName: session.user.displayName
         }],
+        memberEmails: [...teamData.memberEmails, session.user.email]
       });
 
       toast({

@@ -79,7 +79,7 @@ const Dashboard = () => {
             return;
           }
 
-          // const token = await auth.currentser?.getIdTokenResult();
+          // const token = await auth.currentUser?.getIdTokenResult();
           // console.log("Decoded token:", token, session.user.email);
           // console.log("Token email:", token?.claims.email);
           // console.log("[AI2] Fetching registration doc", session.user.email);
@@ -87,16 +87,18 @@ const Dashboard = () => {
           // console.log("[AI2] Registration doc:", registrationDoc.data());
           if (registrationDoc.exists()) {
             const teamId = registrationDoc.data().team || null;
-            console.log("[AI2] Team name:", teamId);
+            // console.log("[AI2] Team name:", teamId);
             setTeamId(teamId);
             if (teamId) {
+              // console.log("[AI2] Team ID:", teamId);
               const teamDoc = await getDoc(doc(db, "AI2Teams", teamId));
-              
+              // console.log("[AI2] Team doc:", teamDoc.data());
+
               if (!teamDoc.exists()) {
                 throw new Error('Team does not exist');
               }
 
-              console.log("[AI2] Team members:", teamDoc.data().members);
+              // console.log("[AI2] Team members:", teamDoc.data().members);
               const teamData = teamDoc.data();
               setTeam(teamData?.name || null);
               setTeamMembers(teamData.members || []);
@@ -105,7 +107,7 @@ const Dashboard = () => {
               setAutoAcceptChallenge(teamData.autoAcceptChallenge || false);
             }
           } else {
-            console.log("[AI2] Registering user", session.user.email);
+            // console.log("[AI2] Registering user", session.user.email);
             await setDoc(doc(db, 'AI2Registration', session.user.email), {
               email: session.user.email,
               name: session.user.displayName,
@@ -144,6 +146,7 @@ const Dashboard = () => {
         collection(db, 'AI2Teams'),
         where('name', '==', team)
       );
+
       const querySnapshot = await getDocs(teamsQuery);
       
       if (querySnapshot.empty) {
@@ -198,7 +201,8 @@ const Dashboard = () => {
       
       const teamRef = doc(db, 'AI2Teams', teamId);
       await updateDoc(teamRef, {
-        members: teamMembers.filter(member => member.email !== session.user?.email)
+        members: teamMembers.filter(member => member.email !== session.user?.email),
+        memberEmails: teamMembers.map(m => m.email).filter(e => e !== session.user?.email)
       });
 
       await updateDoc(doc(db, 'AI2Registration', session.user.email), {
@@ -243,6 +247,7 @@ const Dashboard = () => {
       }
       await updateDoc(teamRef, {
         members: teamMembers.filter(m => m.email !== memberEmail),
+        memberEmails: teamMembers.map(m => m.email).filter(e => e !== memberEmail)
       });
 
       await updateDoc(doc(db, 'AI2Registration', memberEmail), {

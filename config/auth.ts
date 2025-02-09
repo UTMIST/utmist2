@@ -62,10 +62,10 @@ export const authOptions: NextAuthOptions = {
       },
       async session({ session, token }) {
         if (session?.user) {
-          session.user.id = token?.sub ?? 'unknown';
-          // const adminAuth = getAuth();
-          // const firebaseUser = await adminAuth.getUserByEmail(session.user.email!);
-          // session.user.id = firebaseUser.uid;
+          // session.user.id = token?.sub ?? 'unknown';
+          const adminAuth = getAuth();
+          const firebaseUser = await adminAuth.getUserByEmail(session.user.email!);
+          session.user.id = firebaseUser.uid;
           const adminDb = getFirestore();
           try {
             const userQuery = await adminDb.collection('users')

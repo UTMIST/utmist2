@@ -8,13 +8,15 @@ interface FileSubmissionProps {
   onSubmit: (file: File) => Promise<void>;
   requiredWriteup?: boolean;
   text?: string;
+  allowedExtensions?: string[];
 }
 
 export const FileSubmission = ({ 
   label = "Upload file (.ipynb or .py)",
   onSubmit,
   requiredWriteup = false,
-  text = ""
+  text = "",
+  allowedExtensions = ['.ipynb', '.py']
 }: FileSubmissionProps) => {
   const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
@@ -30,10 +32,10 @@ export const FileSubmission = ({
         });
         return;
       }
-      if (!selectedFile.name.endsWith('.ipynb') && !selectedFile.name.endsWith('.py')) {
+      if (!allowedExtensions.some(ext => selectedFile.name.endsWith(ext))) {
         toast({
           title: "Invalid file type",
-          description: "Only .ipynb or .py files are allowed",
+          description: `Only ${allowedExtensions.join(', ')} files are allowed`,
           variant: "destructive",
         });
         return;
@@ -81,7 +83,7 @@ export const FileSubmission = ({
             <label className="text-sm text-muted-foreground">{label}</label>
             <input
               type="file"
-              accept=".ipynb"
+              accept={allowedExtensions.join(', ')}
               onChange={handleFileChange}
               className="w-full text-sm text-foreground file:mr-4 file:py-2 file:px-4 
                 file:rounded-md file:border-0 file:text-sm file:font-semibold

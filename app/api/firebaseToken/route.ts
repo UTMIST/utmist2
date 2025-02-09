@@ -24,7 +24,11 @@ export async function GET(request: Request) {
   
   try {
     const adminAuth = getAuth();
-    const customToken = await adminAuth.createCustomToken(session.user.id);
+    // const adminAuth = getAuth();
+    // const customToken = await adminAuth.createCustomToken(session.user.id);
+    // return NextResponse.json({ token: customToken });
+    const firebaseUser = await adminAuth.getUserByEmail(session.user.email!);
+    const customToken = await adminAuth.createCustomToken(firebaseUser.uid);
     return NextResponse.json({ token: customToken });
   } catch (error) {
     console.error("Error creating custom token:", error);
