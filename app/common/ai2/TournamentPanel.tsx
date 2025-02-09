@@ -66,8 +66,7 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
         status: 'uploading/verifying',
         createdAt: new Date(),
         filename: file.name
-      });
-
+      }); 
       setSubmissions(prev => [
         {
           id: docRef.id,
@@ -84,13 +83,12 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
       formData.append('submission', file);
       formData.append('submissionId', submissionId);
       
-      const response = await fetch(process.env.TOURNAMENT_WEBHOOK_URL + '/submit', {
+      const response = await fetch(process.env.NEXT_PUBLIC_TOURNAMENT_WEBHOOK_URL + '/submit', {
         method: 'POST',
         body: formData
       });
 
       const res = await response.json();
-      console.log('Response:', res);
 
       if (response.ok) {
         // await setDoc(docRef, { status: 'pending' }, { merge: true });
@@ -145,7 +143,7 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
       formData.append('writeup', file);
       formData.append('writeupId', writeupId);
       
-      const response = await fetch(process.env.TOURNAMENT_WEBHOOK_URL + '/submit-writeup', {
+      const response = await fetch(process.env.NEXT_PUBLIC_TOURNAMENT_WEBHOOK_URL + '/submit-writeup', {
         method: 'POST',
         body: formData
       });
