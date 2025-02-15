@@ -17,13 +17,13 @@ const TeamsPage = () => {
   const { data: session, status } = useSession();
   const { db } = useFirebase();
   const [teams, setTeams] = useState<AI2Team[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOpen, setFilterOpen] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchTeams = async () => {
-      if (status === 'authenticated' && db) {
+      // if (status === 'authenticated' && db) {
         try {
           const teamsQuery = query(
             collection(db, 'AI2Teams'),
@@ -55,9 +55,9 @@ const TeamsPage = () => {
         } finally {
           setLoading(false);
         }
-      } else if (status === 'unauthenticated') {
-        setLoading(false);
-      }
+      // } else if (status === 'unauthenticated') {
+      //   setLoading(false);
+      // }
     };
 
     fetchTeams();
@@ -81,10 +81,10 @@ const TeamsPage = () => {
     );
   }
 
-  if (status === 'unauthenticated' || !session) {
-    signIn('google', { callbackUrl: window.location.origin + '/ai2/teams' });
-    return null;
-  }
+  // if (status === 'unauthenticated' || !session) {
+  //   signIn('google', { callbackUrl: window.location.origin + '/ai2/teams' });
+  //   return null;
+  // }
 
   const filteredTeams = teams.filter(team => {
     const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -142,14 +142,6 @@ const TeamsPage = () => {
                         </a>
                       )}
                     </div>
-                    {!team.autoAcceptChallenge && (
-                      <Badge 
-                        variant="destructive"
-                        className="text-xs"
-                      >
-                        Not Auto-Accepting Challenges
-                      </Badge>
-                    )}
                   </div>
                   <p className="text-sm">
                     Captain: {team.captainDisplayName}
@@ -178,10 +170,20 @@ const TeamsPage = () => {
                       <p className="text-muted-foreground">Losses: {team.losses}</p>
                       <p className="text-muted-foreground">Draws: {team.draws}</p>
                     </div>
-                    <p className="text-muted-foreground text-right">
-                      Created: {new Date(team.createdAt.seconds * 1000).toLocaleDateString()} {new Date(team.createdAt.seconds * 1000).toLocaleTimeString()}
-                    </p>
-                  </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <p className="text-muted-foreground">
+                        Created: {new Date(team.createdAt.seconds * 1000).toLocaleDateString()} {new Date(team.createdAt.seconds * 1000).toLocaleTimeString()}
+                      </p>
+                      {!team.autoAcceptChallenge && (
+                        <Badge 
+                          variant="destructive"
+                          className="text-xs"
+                        >
+                          Not Auto-Accepting Challenges
+                        </Badge>
+                      )}
+                    </div>
+                  </div> 
                 </CardContent>
               </Card>
             ))}

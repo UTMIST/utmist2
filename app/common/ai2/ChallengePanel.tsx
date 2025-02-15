@@ -25,7 +25,7 @@ import { useNotifications } from "@app/context/NotificationsContext";
 export const ChallengePanel = () => {
   const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string } | null>(null);
   const { db } = useFirebase();
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const [challenges, setChallenges] = useState<AI2Challenge[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTeams, setFilteredTeams] = useState<AI2Team[]>([]);
@@ -231,7 +231,7 @@ export const ChallengePanel = () => {
 
   useEffect(() => {
     const checkPendingChallenges = async () => {
-      if (!teamId || !db) return;
+      if (sessionStatus === 'loading' || !teamId || !db) return;
       
       const challengesQuery = query(
         collection(db, 'AI2ChallengeRequests'),
@@ -266,7 +266,7 @@ export const ChallengePanel = () => {
     };
 
     checkPendingChallenges();
-  }, [teamId, db]);
+  }, [teamId, db, sessionStatus]);
 
   const handleAcceptChallenge = async (challengeRequestId: string) => {
     // console.log("[AI2] Accepting challenge:", challengeRequestId);

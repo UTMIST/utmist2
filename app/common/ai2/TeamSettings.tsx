@@ -64,6 +64,10 @@ export const TeamSettings: React.ForwardRefExoticComponent<
         updateData.website = website;
       }
       if (repolink && repolink !== teamData.repolink) {
+        if (!/^https?:\/\/github.com\/.*/.test(repolink)) {
+          toast({ title: "Invalid GitHub URL", variant: "destructive" });
+          return;
+        }
         updateData.repolink = repolink;
       }
       if (autoAcceptChallenge !== teamData.autoAcceptChallenge) {
@@ -140,7 +144,12 @@ export const TeamSettings: React.ForwardRefExoticComponent<
             <Input
               id="repolink"
               value={repolink}
-              onChange={(e) => setRepolink(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                // if (val === "" || /^https?:\/\/github.com\/.*/.test(val)) {
+                  setRepolink(val);
+                // }
+              }}
               placeholder="https://github.com/your-team"
               pattern="^https?://github.com/.*"
               title="Must be a valid GitHub URL"
