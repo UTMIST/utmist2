@@ -128,7 +128,7 @@ export const ChallengePanel = () => {
       if (challengerSubs.empty) {
         toast({
           title: "Missing Submission",
-          description: "Both teams must have valid submissions to challenge",
+          description: "You must have a valid submission to challenge other teams",
           variant: "destructive"
         });
         return;

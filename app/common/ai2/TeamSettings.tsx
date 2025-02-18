@@ -17,6 +17,7 @@ import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { generateRandomCode } from "@ai2/utils/generateRandomCode";
 import { Switch } from "@ai2components/ui/switch";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export const TeamSettings: React.ForwardRefExoticComponent<
   { 
@@ -35,6 +36,14 @@ export const TeamSettings: React.ForwardRefExoticComponent<
   const [website, setWebsite] = useState("");
   const [repolink, setRepolink] = useState("");
   const [autoAcceptChallenge, setAutoAcceptChallenge] = useState(currentAutoAcceptChallenge || false);
+
+  const hasValidSubmission = async (teamId: string) => {
+    const submissionsQuery = query(collection(db, 'AI2Submissions'), 
+      where('team', '==', teamId), 
+      where('statusCode', '==', 3));
+    const snapshot = await getDocs(submissionsQuery);
+    return !snapshot.empty;
+  };
 
   const handleSaveTeamSettings = async () => {
     if (!teamId || !db) {
@@ -71,6 +80,11 @@ export const TeamSettings: React.ForwardRefExoticComponent<
         updateData.repolink = repolink;
       }
       if (autoAcceptChallenge !== teamData.autoAcceptChallenge) {
+        if (autoAcceptChallenge && !(await hasValidSubmission(teamId))) {
+          toast({ title: "No Valid Submission", variant: "destructive", 
+            description: "You need at least one accepted submission to enable auto-accept" });
+          return;
+        }
         updateData.autoAcceptChallenge = autoAcceptChallenge;
       }
 
