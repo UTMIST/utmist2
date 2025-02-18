@@ -8,4 +8,5 @@ export interface AI2Challenge {
   result: string | null;
   entryName?: string;
   opponentEntryName?: string;
+  statusCode: number;
 } 

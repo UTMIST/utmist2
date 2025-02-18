@@ -62,8 +62,9 @@ export const ChallengePanel = () => {
       videoUrl: doc.data().videoUrl,
       result: doc.data().result,
       entryName: doc.data().entryName || null,
-      opponentEntryName: doc.data().opponentEntryName || null
-    } as AI2Challenge));
+      opponentEntryName: doc.data().opponentEntryName || null,
+      statusCode: doc.data().statusCode || 0
+    } as AI2Challenge)).sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
     
     setChallenges(challengesData);
     setTeamId(teamId || '');
@@ -146,7 +147,8 @@ export const ChallengePanel = () => {
           videoUrl: null,
           result: null,
           entryName: "HI",
-          opponentEntryName: "HI"
+          opponentEntryName: "HI",
+          statusCode: 0
         });
         toast({ title: "Challenge Started!", description: "Match has been automatically accepted" });
       } else {
@@ -318,7 +320,8 @@ export const ChallengePanel = () => {
       status: 'pending',
       createdAt: new Date(),
       videoUrl: null,
-      result: null
+      result: null,
+      statusCode: 0
     });
 
     markInteracted(challengeRequestId);
@@ -384,13 +387,22 @@ export const ChallengePanel = () => {
                     challenge.team1 === teamId ? 
                     filteredTeams.find(t => t.id === challenge.team2)?.name || 'Unknown Team' : 
                     filteredTeams.find(t => t.id === challenge.team1)?.name || 'Unknown Team'
-                  } <span className={`inline-block px-2 py-0.5 text-xs rounded-full ${
-                    challenge.status === "pending" ? "bg-yellow-100 text-yellow-800" :
-                    challenge.status === "ongoing" ? "bg-blue-100 text-blue-800" :
-                    "bg-green-100 text-green-800"
+                  }
+                  
+                  <span className={`inline-block px-2 py-0.5 ml-2 text-xs rounded-full ${
+                    challenge.result === teamId ? 
+                      "bg-green-100 text-green-800" : 
+                    challenge.result && challenge.result !== "Draw" ? 
+                      "bg-red-100 text-red-800" : 
+                      "bg-yellow-100 text-yellow-800"
                   }`}>
-                    {challenge.status}
-                  </span></p>
+                    {challenge.result === teamId ? "Win" : 
+                    challenge.result === null ? "Pending" : 
+                     challenge.result && challenge.result !== "Draw" ? "Loss" : 
+                     "Draw"}
+                  </span>
+                  
+                  </p>
                   {challenge.entryName && (
                     <div className="flex gap-2 text-sm text-gray-500">
                       <span>Your Bot: {challenge.entryName}</span>
@@ -398,10 +410,6 @@ export const ChallengePanel = () => {
                         <span>• Opponent: {challenge.opponentEntryName}</span>
                       )}
                     </div>
-                  )}
-                  
-                  {challenge.result && (
-                    <p className="text-sm font-semibold mt-1">Result: {challenge.result}</p>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
