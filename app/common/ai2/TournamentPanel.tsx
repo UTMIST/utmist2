@@ -46,7 +46,7 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
 
     try {
       const lastSubmission = submissions[0]?.createdAt;
-      if (lastSubmission) {
+      if (lastSubmission && submissions[0]?.statusCode === 3) {
         const lastSubmissionTime = new Date(lastSubmission.seconds * 1000);
         const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
         if (lastSubmissionTime > tenMinutesAgo) {
