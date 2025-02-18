@@ -31,6 +31,7 @@ export const ChallengePanel = () => {
   const [filteredTeams, setFilteredTeams] = useState<AI2Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<AI2Team | null>(null);
   const [teamId, setTeamId] = useState<string>('');
+  const [teamName, setTeamName] = useState<string>('');
   const { notifications, addNotification, markRead, markInteracted } = useNotifications();
   
   const fetchChallenges = async () => {
@@ -66,6 +67,7 @@ export const ChallengePanel = () => {
     
     setChallenges(challengesData);
     setTeamId(teamId || '');
+    setTeamName(teamDoc.data()?.name || '');
   };
 
   useEffect(() => {
@@ -140,6 +142,8 @@ export const ChallengePanel = () => {
         await setDoc(challengeRef, {
           team1: teamId,
           team2: selectedTeam.id,
+          team1Name: teamName,
+          team2Name: selectedTeam.name,
           status: 'ongoing',
           createdAt: new Date(),
           videoUrl: null,
