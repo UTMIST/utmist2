@@ -61,8 +61,6 @@ export const ChallengePanel = () => {
       createdAt: doc.data().createdAt,
       videoUrl: doc.data().videoUrl,
       result: doc.data().result,
-      entryName: doc.data().entryName || null,
-      opponentEntryName: doc.data().opponentEntryName || null,
       statusCode: doc.data().statusCode || 0
     } as AI2Challenge)).sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
     
@@ -146,8 +144,6 @@ export const ChallengePanel = () => {
           createdAt: new Date(),
           videoUrl: null,
           result: null,
-          entryName: "HI",
-          opponentEntryName: "HI",
           statusCode: 0
         });
         toast({ title: "Challenge Started!", description: "Match has been automatically accepted" });
@@ -403,14 +399,7 @@ export const ChallengePanel = () => {
                   </span>
                   
                   </p>
-                  {challenge.entryName && (
-                    <div className="flex gap-2 text-sm text-gray-500">
-                      <span>Your Bot: {challenge.entryName}</span>
-                      {challenge.opponentEntryName && (
-                        <span>• Opponent: {challenge.opponentEntryName}</span>
-                      )}
-                    </div>
-                  )}
+
                 </div>
                 <div className="flex items-center gap-2">
 
