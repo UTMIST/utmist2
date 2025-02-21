@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@ai2components/ui/card";
 import { ScrollArea } from "@ai2components/ui/scroll-area";
-import { Trophy, FileText } from "lucide-react";
+import { Trophy, FileText, MousePointerClick } from "lucide-react";
 import { FileSubmission } from "./FileSubmission";
 import { Button } from "@ai2components/ui/button";
 import { useState, useEffect } from "react";
@@ -15,6 +15,7 @@ import { query, collection, where, orderBy, getDocs, doc, setDoc } from "firebas
 import { useToast } from "@ai2components/ui/use-toast";
 import { AI2Submission } from "@app/schema/ai2submissions";
 import { AI2Writeup } from "@app/schema/ai2writeup";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@ai2components/ui/dialog";
 
 export const TournamentPanel = ({ teamId }: { teamId: string }) => {
   const [submissions, setSubmissions] = useState<AI2Submission[]>([]);
@@ -23,6 +24,7 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
   const { toast } = useToast();
   const { db } = useFirebase();
   const { data: session } = useSession();
+  const [selectedSubmissionId, setSelectedSubmissionId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -74,7 +76,8 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
           statusCode: 0,
           status: 'uploading/verifying',
           createdAt: { seconds: new Date().getTime() / 1000, nanoseconds: 0 },
-          filename: file.name
+          filename: file.name,
+          traceback: ''
         },
         ...prev
       ]);
@@ -220,12 +223,24 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
                       {new Date(submission.createdAt.seconds * 1000).toLocaleString()}
                     </p>
                   </div>
-                  <Badge variant={
-                    submission.statusCode === 0 ? 'secondary' : 
-                    submission.statusCode === 1 || submission.statusCode === 2 ? 'destructive' : 
-                    'default'
-                  } 
-                  className={submission.statusCode === 3 ? "bg-green-600 hover:bg-green-700 text-white" : ""}>
+                  <Badge 
+                    variant={
+                      submission.statusCode === 0 ? 'secondary' : 
+                      submission.statusCode === 3 ? 'default' : 'destructive'
+                    }
+                    className={`
+                      ${submission.statusCode === 3 ? "bg-green-600 hover:bg-green-700 text-white" : ""}
+                      ${(submission.statusCode === 1 || submission.statusCode === 2) ? 
+                        "cursor-pointer hover:underline relative pr-2" : ""}
+                    `}
+                    onClick={() => (submission.statusCode === 1 || submission.statusCode === 2) && setSelectedSubmissionId(submission.id)}
+                  >
+                    {(submission.statusCode === 1 || submission.statusCode === 2) && submission.traceback && (
+                      <MousePointerClick 
+                        className="w-5 h-5 absolute -left-2 -bottom-2 text-black rotate-90 drop-shadow-sm" 
+                        fill="currentColor"
+                      />
+                    )}
                     {submission.status}
                   </Badge>
                 </div>
@@ -270,6 +285,19 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
 
         {/* <div className="w-full h-px bg-border my-6 transition-[background-color,border-color] duration-200" /> */}
         
+        <Dialog open={!!selectedSubmissionId} onOpenChange={(open) => !open && setSelectedSubmissionId(null)}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Submission Details</DialogTitle>
+            </DialogHeader>
+            <pre className="whitespace-pre-wrap text-sm max-h-[60vh] overflow-auto">
+              {submissions.find(s => s.id === selectedSubmissionId)?.traceback || "No error details available"}
+            </pre>
+            <div className="flex justify-end">
+              <Button onClick={() => setSelectedSubmissionId(null)}>Close</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

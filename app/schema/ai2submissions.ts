@@ -5,4 +5,5 @@ export interface AI2Submission {
   status: 'uploading/verifying' | 'pending' | 'failed' | 'accepted';
   createdAt: { seconds: number; nanoseconds: number };
   filename: string;
+  traceback: string;
 }
