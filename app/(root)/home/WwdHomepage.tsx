@@ -4,13 +4,48 @@ import Link from "next/link";
 import Image from "next/image";
 
 const wwdData: WWeDoMetaData[] = [
-  { title: "Annual Milestone Events", imgPath: "", buttonHref: "#" },
-  { title: "Campus Engagement", imgPath: "", buttonHref: "#" },
-  { title: "Academic & Career Programs", imgPath: "", buttonHref: "#" },
-  { title: "Projects", imgPath: "", buttonHref: "#" },
-  { title: "deMISTify", imgPath: "", buttonHref: "#" },
-  { title: "Community Events", imgPath: "", buttonHref: "#" },
-  { title: "International Competition", imgPath: "", buttonHref: "#" },
+  {
+    title: "Annual Milestone Events", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "Campus Engagement", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "Academic & Career Programs", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "Projects", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "deMISTify", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "Community Events", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "International Competition", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
 ];
 
 const WwdHomepage: React.FC = () => {
