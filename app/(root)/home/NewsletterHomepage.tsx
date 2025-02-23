@@ -1,42 +1,42 @@
-import LinkButton from "@app/common/LinkButton";
-import LinkButtonSmall from "@app/common/LinkButtonSmall"
-import Image from 'next/image'
+import Image from "next/image";
 
 export default function NewsletterHomepage() {
     return (
-        <div className="lg:px-[7vw] lg:py-[23vh] sm:py-[13vh] sm:px-[13vw] bg-[#001128] font-roboto-mono">
-            <div className="w-full lg:flex flex-row items-center gap-[11vw] sm:hidden">
-                <div>
-                    <div className="w-[37.5vw] h-[92px] text-white text-[30px]">
-                        Subscribe to our newsletter
-                    </div>
-                    <div className="px-[1.6vw]">
-                        <form className="flex bg-white w-[37.5vw] h-[50px] mb-[38px]">
-                            <input className="items-center w-[100%] px-[32px]" placeholder="Email Address" />
-                        </form>
-                        <LinkButton buttonText="Subscribe" redirectPath="/" />
-                    </div>
-                </div>
-                <Image src="/assets/newsletterPageImage.svg" width={451} height={321} alt="newsletter subscription image" />
-            </div>
-            <div className="lg:hidden sm:flex gap-[37px] flex-col items-center">
-                <div className="text-[24px] text-white">
-                    Subscribe to our newsletter
-                </div>
-                <form className="flex bg-white w-full h-[40px]">
-                    <input className="items-center w-[100%] px-[24px]" placeholder="Email Address" />
-                </form>
-                <LinkButtonSmall buttonText="Subscribe" redirectPath="/" />
-                <div className="w-[249px] h-[182px]">
-                    <Image 
-                        src="/assets/newsletterPageImage.svg" 
-                        width={249} 
-                        height={182} 
-                        alt="newsletter subscription image"
-                    />
-                </div>
+        <div className="relative flex justify-center items-center w-screen h-[60vh] bg-[#001128] py-12">
+            <div className="absolute inset-0">
+                <Image 
+                    src="/assets/Rectangle45.svg" 
+                    layout="fill" 
+                    objectFit="cover"
+                    alt="Background Circuit Design"
+                    className="opacity-40"
+                />
             </div>
 
+            <div className="relative bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-md rounded-[25px] p-10 md:p-16 w-[90%] max-w-4xl flex flex-col items-center shadow-lg">
+                
+                <h2 className="text-white text-2xl md:text-3xl font-bold">
+                    Subscribe to our newsletter
+                </h2>
+                <p className="text-white text-md md:text-lg opacity-80 mt-2">
+                    Stay up to date on all things UTMIST
+                </p>
+
+                {/* Email Input and Subscribe Button */}
+                <form className="mt-6 flex w-full max-w-lg">
+                    <input 
+                        type="email" 
+                        placeholder="Email Address" 
+                        className="flex-1 p-3 rounded-l-md text-black text-md outline-none"
+                    />
+                    <button 
+                        type="submit" 
+                        className="bg-[#64C8FA] hover:bg-[#4DB2E6] text-[#1E1E1E] font-semibold px-6 py-3 rounded-r-md shadow-md transition"
+                    >
+                        Subscribe
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }

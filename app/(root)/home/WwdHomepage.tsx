@@ -1,73 +1,93 @@
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
-import React, { useEffect, useState } from "react";
-import SmallCard from "@/components/home/SmallCard";
-import LinkButton from "@app/common/LinkButton";
-import LinkButtonSmall from "@app/common/LinkButtonSmall";
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 const wwdData: WWeDoMetaData[] = [
   {
-      title: "Projects",
-      imgPath: "/images/wwd/projects.png",
-      buttonHref: "/projects",
-      description: "Student-led machine learning research and development projects",
-      slug: "projects",
-      publishDate: "2023-09-15"
+    title: "Annual Milestone Events", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
   },
   {
-      title: "Events",
-      imgPath: "/images/wwd/events.png",
-      buttonHref: "/events",
-      description: "Industry networking and social events",
-      slug: "events",
-      publishDate: "2023-09-15"
+    title: "Campus Engagement", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
   },
   {
-      title: "Competitions",
-      imgPath: "/images/wwd/competitions.png",
-      buttonHref: "/competitions",
-      description: "ML competitions and hackathons",
-      slug: "competitions",
-      publishDate: "2023-09-15"
-  }
+    title: "Academic & Career Programs", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "Projects", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "deMISTify", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "Community Events", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
+  {
+    title: "International Competition", imgPath: "", buttonHref: "#",
+    description: "",
+    slug: "",
+    publishDate: ""
+  },
 ];
 
-const WwdHomepage: React.FC = ({ }) => {
-
-  const smallCards = wwdData.map((item) => {
-    return <SmallCard key={item.slug} imgPath={item.imgPath} buttonHref={item.buttonHref} title={item.title}></SmallCard>
-  })
-
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    // Add event listener for window resize
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-  
+const WwdHomepage: React.FC = () => {
   return (
-    <div className="bg-dark-grey"> 
-      <div className="lg:py-[20vh] lg:px-[9vw] sm:px-[6vw]">
-        <div className="flex flex-row justify-between items-center mb-[6vh]">
-          <div className="text-white font-roboto-mono"> 
-            <div className="lg:text-[4.9vh] sm:text-[4.6vh]">What We Do</div>
-            <div className="lg:text-[2.2vh] sm:text-[2.7vh]">Lorem ipsum dolor sit amet</div>
+    <div className="bg-gradient-to-b from-[#1B1F6E] to-[#0E1D4A] py-[12vh] px-[6vw]">
+      <div className="text-white font-roboto-mono mb-[5vh]">
+        <h2 className="text-[4vh] font-semibold">What We Do</h2>
+        <p className="text-[2.2vh] opacity-80">Lorem ipsum dolor sit amet</p>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {wwdData.map((item, index) => (
+          <Link key={index} href={item.buttonHref} className="relative group">
+            <div className="rounded-[25px] overflow-hidden shadow-lg transition transform group-hover:scale-105 bg-[#292F6D]">
+              {item.imgPath ? (
+                <Image 
+                  src={item.imgPath} 
+                  alt={item.title} 
+                  width={300} 
+                  height={250} 
+                  className="object-cover w-full h-full"
+                />
+              ) : (
+                <div className="w-full h-[250px] flex items-center justify-center text-white bg-opacity-20">
+                  No Image
+                </div>
+              )}
+              {/* Overlay with Title */}
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4">
+                <p className="text-white text-sm font-semibold">{item.title}</p>
+              </div>
+            </div>
+          </Link>
+        ))}
+
+        {/* Find Out More Box */}
+        <Link href="#" className="relative group">
+          <div className="rounded-[25px] bg-gradient-to-b from-[#7A6CFF] to-[#3F63CE] flex justify-center items-center p-6 h-full text-white font-semibold text-lg shadow-lg transition transform group-hover:scale-105">
+            <span>Find Out More</span>
+            <span className="ml-3">→</span>
           </div>
-          {isMobile ? <LinkButtonSmall buttonText="Find out more" redirectPath="#"></LinkButtonSmall>
-          : <LinkButton buttonText="Find out more" redirectPath="/event"></LinkButton>}
-          
-        </div>
-        <div className="grid lg:grid-cols-4 sm:grid-cols-2 lg:gap-[1vh] sm:gap-x-[0.5vh] sm:gap-y-[1vw]">
-          {smallCards}
-        </div>
+        </Link>
       </div>
     </div>
   );
