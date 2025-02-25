@@ -7,4 +7,5 @@ export interface AI2Challenge {
   videoUrl: string | null;
   result: string | null;
   statusCode: number;
+  traceback: string | null;
 } 

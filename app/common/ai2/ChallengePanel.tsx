@@ -6,7 +6,7 @@ import { Button } from "@ai2components/ui/button";
 import { ScrollArea } from "@ai2components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@ai2components/ui/dialog";
 import { Input } from "@ai2components/ui/input";
-import { Swords, Upload, Video } from "lucide-react";
+import { Swords, Upload, Video, MousePointerClick } from "lucide-react";
 import { FileSubmission } from "./FileSubmission";
 import { VideoPlayer } from "./VideoPlayer";
 import AI2Layout from './layouts/AI2Layout'
@@ -33,6 +33,7 @@ export const ChallengePanel = () => {
   const [teamId, setTeamId] = useState<string>('');
   const [teamName, setTeamName] = useState<string>('');
   const { notifications, addNotification, markRead, markInteracted } = useNotifications();
+  const [selectedTraceback, setSelectedTraceback] = useState<string | null>(null);
   
   const fetchChallenges = async () => {
     if (!db || !session?.user?.email) return;
@@ -62,7 +63,8 @@ export const ChallengePanel = () => {
       createdAt: doc.data().createdAt,
       videoUrl: doc.data().videoUrl,
       result: doc.data().result,
-      statusCode: doc.data().statusCode || 0
+      statusCode: doc.data().statusCode || 0,
+      traceback: doc.data().traceback || ''
     } as AI2Challenge)).sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
     
     setChallenges(challengesData);
@@ -390,16 +392,25 @@ export const ChallengePanel = () => {
                   }
                   
                   <span className={`inline-block px-2 py-0.5 ml-2 text-xs rounded-full ${
+                    (challenge.statusCode === 1 || challenge.statusCode === 2) ? 
+                      "bg-red-100 text-red-800" :
                     challenge.result === teamId ? 
                       "bg-green-100 text-green-800" : 
                     challenge.result && challenge.result !== "Draw" ? 
                       "bg-red-100 text-red-800" : 
                       "bg-yellow-100 text-yellow-800"
-                  }`}>
-                    {challenge.result === teamId ? "Win" : 
-                    challenge.result === null ? "Pending" : 
-                     challenge.result && challenge.result !== "Draw" ? "Loss" : 
-                     "Draw"}
+                  } ${
+                    (challenge.statusCode === 1 || challenge.statusCode === 2) && challenge.traceback ? 
+                    "cursor-pointer hover:underline relative pl-4" : ""
+                  }`}
+                  onClick={() => (challenge.statusCode === 1 || challenge.statusCode === 2) && setSelectedTraceback(challenge.traceback)}>
+                    {(challenge.statusCode === 1 || challenge.statusCode === 2) && challenge.traceback && (
+                      <MousePointerClick className="w-5 h-5 absolute -left-2 -bottom-2 text-black rotate-90 drop-shadow-sm" fill="currentColor" />
+                    )}
+                    {(challenge.statusCode === 1 || challenge.statusCode === 2) ? "Error" : 
+                     challenge.result === teamId ? "Win" : 
+                     challenge.result === null ? "Pending" : 
+                     challenge.result !== "Draw" ? "Loss" : "Draw"}
                   </span>
                   
                   </p>
@@ -440,6 +451,21 @@ export const ChallengePanel = () => {
             videoUrl={selectedVideo.url}
             title={selectedVideo.title}
           />
+        )}
+        {selectedTraceback && (
+          <Dialog open={!!selectedTraceback} onOpenChange={(open) => !open && setSelectedTraceback(null)}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Challenge Error Details</DialogTitle>
+              </DialogHeader>
+              <pre className="whitespace-pre-wrap text-sm max-h-[60vh] overflow-auto">
+                {selectedTraceback || "No error details available"}
+              </pre>
+              <div className="flex justify-end">
+                <Button onClick={() => setSelectedTraceback(null)}>Close</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
       </Card>
     </AI2Layout>
