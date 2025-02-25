@@ -13,12 +13,12 @@ export default function NewsletterHomepage() {
                 />
             </div>
 
-            <div className="relative bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-md rounded-[25px] p-10 md:p-16 w-[90%] max-w-4xl flex flex-col items-center shadow-lg">
+            <div className="relative bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-md rounded-[25px] p-6 md:p-16 w-full max-w-4xl flex flex-col items-center shadow-lg mx-4">
                 
-                <h2 className="text-white text-2xl md:text-3xl font-bold">
+                <h2 className="text-white text-2xl md:text-3xl font-bold text-center">
                     Subscribe to our newsletter
                 </h2>
-                <p className="text-white text-md md:text-lg opacity-80 mt-2">
+                <p className="text-white text-md md:text-lg opacity-80 mt-2 text-center">
                     Stay up to date on all things UTMIST
                 </p>
 
