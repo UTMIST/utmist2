@@ -14,13 +14,10 @@ import { useSession } from "next-auth/react";
 import { query, collection, where, orderBy, getDocs, doc, setDoc } from "firebase/firestore";
 import { useToast } from "@ai2components/ui/use-toast";
 import { AI2Submission } from "@app/schema/ai2submissions";
-import { AI2Writeup } from "@app/schema/ai2writeup";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@ai2components/ui/dialog";
 
 export const TournamentPanel = ({ teamId }: { teamId: string }) => {
   const [submissions, setSubmissions] = useState<AI2Submission[]>([]);
-  const [writeups, setWriteups] = useState<AI2Writeup[]>([]);
-  const [writeupText, setWriteupText] = useState("");
   const { toast } = useToast();
   const { db } = useFirebase();
   const { data: session } = useSession();
@@ -100,68 +97,6 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
         throw new Error('Upload failed');
       }
 
-      setWriteupText("");
-    } catch (error) {
-      console.error('Submission failed:', error);
-      if (error instanceof Error && error.message.includes('Please wait')) {
-        toast({
-          title: "Cooldown",
-          description: error.message,
-          variant: "destructive"
-        });
-        throw error;
-      }
-    }
-  };
-
-
-  const handleWriteupSubmission = async (file: File) => {
-    if (!db || !session?.user?.email || !teamId) return;
-
-    try {
-      const docRef = doc(collection(db, 'AI2Writeups'));
-      const writeupId = docRef.id; 
-
-      await setDoc(docRef, {
-        team: teamId,
-        status: 'uploading/verifying',
-        statusCode: 0,
-        createdAt: new Date(),
-        filename: file.name
-      });
-
-      setWriteups(prev => [
-        {
-          id: docRef.id,
-          team: teamId,
-          statusCode: 0,
-          status: 'uploading/verifying',
-          createdAt: { seconds: new Date().getTime() / 1000, nanoseconds: 0 },
-          filename: file.name
-        },
-        ...prev
-      ]);
-
-      const formData = new FormData();
-      formData.append('writeup', file);
-      formData.append('writeupId', writeupId);
-      
-      const response = await fetch(process.env.NEXT_PUBLIC_TOURNAMENT_WEBHOOK_URL + '/submit-writeup', {
-        method: 'POST',
-        body: formData
-      });
-
-      const res = await response.json();
-      console.log('Response:', res);
-
-      if (response.ok) {
-        // await setDoc(docRef, { status: 'pending' }, { merge: true });
-      } else {
-        await setDoc(docRef, { status: 'failed' }, { merge: true });
-        throw new Error('Upload failed');
-      }
-
-      setWriteupText("");
     } catch (error) {
       console.error('Submission failed:', error);
       if (error instanceof Error && error.message.includes('Please wait')) {
@@ -244,11 +179,6 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
                     {submission.status}
                   </Badge>
                 </div>
-                {/* {submission.writeup && (
-                  <p className="text-sm mt-2 text-muted-foreground">
-                    {submission.writeup}
-                  </p>
-                )} */}
               </div>
             ))}
           </ScrollArea>
@@ -264,24 +194,14 @@ export const TournamentPanel = ({ teamId }: { teamId: string }) => {
           </div>
           <div className="space-y-2">
             <p className="text-sm text-gray-500">
-              Please provide a writeup for the bot you are submitting.
+              Please provide a writeup for the bot you are submitting at
+            </p>
+            <p>
+              <a href="https://forms.gle/4ZiJa2qRGJYP2EDn6" target="_blank" rel="noopener noreferrer">https://forms.gle/4ZiJa2qRGJYP2EDn6</a>.
             </p>
           </div>
         </div>
-          <div>
-            {/* <Label>Writeup</Label> */}
-            {/* <Textarea
-              value={writeupText}
-              onChange={(e) => setWriteupText(e.target.value)}
-              placeholder="Describe your submission..."
-              className="min-h-[100px]"
-            /> */}
-            <FileSubmission 
-              label="Upload your writeup (.md)"
-              onSubmit={handleWriteupSubmission}
-              allowedExtensions={['.md']}
-            />
-          </div>
+
 
         {/* <div className="w-full h-px bg-border my-6 transition-[background-color,border-color] duration-200" /> */}
         
