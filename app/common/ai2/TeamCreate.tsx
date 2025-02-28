@@ -14,6 +14,7 @@ interface TeamCreateProps {
 
 export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
   const [teamName, setTeamName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { db } = useFirebase();
   const { data: session } = useSession();
@@ -21,13 +22,28 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     if (!db || !session?.user?.email) {
       toast({
         title: "Error",
         description: "Not authenticated",
         variant: "destructive"
       });
+      setIsSubmitting(false);
       return;
+    }
+
+    const registrationDoc = await getDoc(doc(db, 'AI2Registration', session.user.email));
+    if (registrationDoc.exists() && registrationDoc.data().team) {
+        toast({
+            title: "Already in team",
+            description: "You must leave your current team before creating a new one",
+            variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
     }
 
     if (!/^[\p{Emoji}A-Za-z0-9 ]{3,60}$/iu.test(teamName)) {
@@ -36,6 +52,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
         description: "3-60 characters, only letters, numbers, spaces and emojis",
         variant: "destructive"
       });
+      setIsSubmitting(false);
       return;
     }
 
@@ -52,6 +69,7 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
           description: "This team name is already taken",
           variant: "destructive"
         });
+        setIsSubmitting(false);
         return;
       }
 
@@ -93,6 +111,8 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
         description: "Could not create team",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -137,8 +157,12 @@ export const TeamCreate = ({ onTeamCreated }: TeamCreateProps) => {
               className="w-full transition-colors duration-200 font-mono"
             />
           </div> */}
-          <Button type="submit" className="w-full bg-hackathon-primary hover:bg-hackathon-secondary text-white">
-            Create Team
+          <Button 
+            type="submit" 
+            className="w-full bg-hackathon-primary hover:bg-hackathon-secondary text-white"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Creating..." : "Create Team"}
           </Button>
         </form>
       </CardContent>
