@@ -30,7 +30,7 @@ const LeaderboardPage = () => {
           lastSubmitted: doc.data().lastSubmitted,
         } as AI2Team));
 
-        const rankedTeams = teamsData.filter(team => team.elo !== 1200).sort((a, b) => b.elo - a.elo); 
+        const rankedTeams = teamsData.filter(team => team.elo !== 1200).sort((a, b) => b.elo - a.elo);
         const unrankedTeams = teamsData.filter(team => team.elo === 1200);
         
         setTeams([...rankedTeams, ...unrankedTeams]);
