@@ -28,7 +28,7 @@ const LeaderboardPage = () => {
           ...doc.data(),
           createdAt: doc.data().createdAt,
           lastSubmitted: doc.data().lastSubmitted,
-        } as AI2Team));
+        } as AI2Team)).filter(team => team.elo !== 1200);
         
         setTeams(teamsData);
       } catch (error) {
