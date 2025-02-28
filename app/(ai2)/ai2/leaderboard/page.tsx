@@ -28,9 +28,12 @@ const LeaderboardPage = () => {
           ...doc.data(),
           createdAt: doc.data().createdAt,
           lastSubmitted: doc.data().lastSubmitted,
-        } as AI2Team)).filter(team => team.elo !== 1200);
+        } as AI2Team));
+
+        const rankedTeams = teamsData.filter(team => team.elo !== 1200).sort((a, b) => b.elo - a.elo);
+        const unrankedTeams = teamsData.filter(team => team.elo === 1200);
         
-        setTeams(teamsData);
+        setTeams([...rankedTeams, ...unrankedTeams]);
       } catch (error) {
         console.error('Error fetching teams:', error);
       } finally {
@@ -74,14 +77,18 @@ const LeaderboardPage = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-xl font-mono font-bold">
-                      {Math.round(team.elo)}
+                      {team.elo === 1200 ? 'UNRANKED' : Math.round(team.elo)}
                     </span>
                     <div className="w-24 text-right">
-                      <span className={`text-sm ${
-                        team.elo > 1200 ? 'text-green-500' : 'text-red-500'
-                      }`}>
-                        ({team.elo > 1200 ? '+' : ''}{Math.round(team.elo - 1200)})
-                      </span>
+                      {team.elo === 1200 ? (
+                        <span className="text-sm text-gray-400">-</span>
+                      ) : (
+                        <span className={`text-sm ${
+                          team.elo > 1200 ? 'text-green-500' : 'text-red-500'
+                        }`}>
+                          ({team.elo > 1200 ? '+' : ''}{Math.round(team.elo - 1200)})
+                        </span>
+                      )}
                     </div>
                   </div>
                 </CardContent>
