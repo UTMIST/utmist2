@@ -1,42 +1,40 @@
-import {ImpactMetaData} from "@/schemas/ImpactMetaData";
+import { ImpactMetaData } from "@/schemas/ImpactMetaData";
 import React from "react";
 
-const sampleData: ImpactMetaData[] = [
-    {
-        events: "10",
-        members: "150",
-        projects: "5",
-        slug: "impact-1",
-        publishDate: "2023-09-15"
-    }
+const sampleData = [
+    { number: "250+", text: "Lorem Ipsum Dolor" },
+    { number: "1500+", text: "Lorem Ipsum Dolor" },
+    { number: "250+", text: "Lorem Ipsum Dolor" },
+    { number: "250+", text: "Lorem Ipsum Dolor" }
 ];
 
-const Impact: React.FC = ({ }) => {
-    return <>
-        <div className="bg-dark-grey pb-14">
-            <div className="lg:text-[4.9vh] sm:text-[4.6vh] text-white font-roboto-mono pl-10 pt-10 md:pl-20">Impact</div>
-            <div className="flex flex-col items-center">
-                <div className="flex items-end p-10">
-                    <div className="bg-utmist-purple h-[7vh] w-[42vw] border-r-4 border-white"></div>
-                    <div className="text-white font-roboto-mono pl-3">
-                        {`${sampleData[0].events} Events Hosted`}
+const Impact: React.FC = () => {
+    return (
+        <div className="bg-gradient-to-b from-[#150050] to-[#1B1F6E] min-h-[80vh] flex flex-col justify-center items-center px-6 sm:px-10">
+            
+            <h2 className="text-white font-roboto-mono text-2xl sm:text-3xl font-semibold mb-8 sm:mb-12 text-center">
+                Impact
+            </h2>
+
+            {/* Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 w-full max-w-6xl">
+                {sampleData.map((item, index) => (
+                    <div 
+                        key={index} 
+                        className="bg-gradient-to-b from-[#414DA8] to-[#5B5DF5] rounded-[25px] shadow-lg p-6 sm:p-10 w-full min-h-[190px] flex flex-col justify-center items-center text-white"
+                    >
+                        <span className="text-3xl sm:text-4xl font-bold">{item.number}</span>
+                        <span className="text-sm sm:text-md mt-2">{item.text}</span>
                     </div>
-                </div>
-                <div className="flex items-end p-10">
-                    <div className="text-white font-roboto-mono pr-3">
-                        {`${sampleData[0].members} Members`}
-                    </div>
-                    <div className="bg-blue-800 h-[7vh] w-[45vw] border-l-4 border-white"></div>
-                </div>
-                <div className="flex items-end p-10">
-                    <div className="bg-utmist-purple h-[7vh] w-[46vw] border-r-4 border-white"></div>
-                    <div className="text-white font-roboto-mono pl-3">
-                            {`${sampleData[0].projects} Projects`}
-                    </div>
-                </div>
+                ))}
             </div>
+
+            {/* Button */}
+            <button className="bg-[#64C8FA] hover:bg-[#4DB2E6] text-[#1E1E1E] text-base sm:text-lg font-semibold px-5 sm:px-6 py-2 sm:py-3 rounded-md mt-10 sm:mt-12 shadow-md transition">
+                Learn More
+            </button>
         </div>
-    </>
-}
+    );
+};
 
 export default Impact;
