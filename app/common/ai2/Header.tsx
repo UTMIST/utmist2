@@ -15,7 +15,7 @@ export const Header = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { data: session } = useSession();
-  const { notifications, markRead } = useNotifications();
+  const { notifications, markRead, markInteracted } = useNotifications();
 
   const handleSignIn = () => {
     signIn('google', { 
@@ -56,6 +56,14 @@ export const Header = () => {
           <Button
             variant="ghost"
             className="flex items-center gap-2"
+            onClick={() => router.push('/ai2/leaderboard')}
+          >
+            Leaderboard
+          </Button>
+
+          <Button
+            variant="ghost"
+            className="flex items-center gap-2"
             onClick={() => router.push('/ai2/dashboard')}
           >
             Dashboard
@@ -66,6 +74,7 @@ export const Header = () => {
           <NotificationsPanel 
             notifications={notifications}
             markRead={markRead}
+            markInteracted={markInteracted}
           />
           
           <Button
@@ -78,6 +87,22 @@ export const Header = () => {
             ) : (
               <Moon className="h-5 w-5" />
             )}
+          </Button>
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => window.open('https://discord.gg/TTGB62BE9U', '_blank')}
+          >
+            <svg
+              role="img"
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d={siDiscord.path}/>
+            </svg>
           </Button>
 
           {session ? (

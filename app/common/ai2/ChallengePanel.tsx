@@ -6,7 +6,7 @@ import { Button } from "@ai2components/ui/button";
 import { ScrollArea } from "@ai2components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@ai2components/ui/dialog";
 import { Input } from "@ai2components/ui/input";
-import { Swords, Upload, Video } from "lucide-react";
+import { Swords, Upload, Video, MousePointerClick } from "lucide-react";
 import { FileSubmission } from "./FileSubmission";
 import { VideoPlayer } from "./VideoPlayer";
 import AI2Layout from './layouts/AI2Layout'
@@ -25,13 +25,15 @@ import { useNotifications } from "@app/context/NotificationsContext";
 export const ChallengePanel = () => {
   const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string } | null>(null);
   const { db } = useFirebase();
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const [challenges, setChallenges] = useState<AI2Challenge[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTeams, setFilteredTeams] = useState<AI2Team[]>([]);
   const [selectedTeam, setSelectedTeam] = useState<AI2Team | null>(null);
   const [teamId, setTeamId] = useState<string>('');
-  const { notifications, addNotification, markRead } = useNotifications();
+  const [teamName, setTeamName] = useState<string>('');
+  const { notifications, addNotification, markRead, markInteracted } = useNotifications();
+  const [selectedTraceback, setSelectedTraceback] = useState<string | null>(null);
   
   const fetchChallenges = async () => {
     if (!db || !session?.user?.email) return;
@@ -41,6 +43,7 @@ export const ChallengePanel = () => {
     
     if (!teamId) return;
 
+    // console.log("[AI2] Fetching challenges for team:", teamId);
     const challengesQuery = query(
       collection(db, 'AI2Challenges'),
       or(
@@ -48,8 +51,10 @@ export const ChallengePanel = () => {
         where('team2', '==', teamId)
       )
     );
-    
+    // console.log("[AI2] Challenges query:", challengesQuery);
+
     const querySnapshot = await getDocs(challengesQuery);
+    // console.log("[AI2] Challenges query snapshot:", querySnapshot.docs);
     const challengesData = querySnapshot.docs.map(doc => ({
       id: doc.id,
       team1: doc.data().team1,
@@ -58,12 +63,13 @@ export const ChallengePanel = () => {
       createdAt: doc.data().createdAt,
       videoUrl: doc.data().videoUrl,
       result: doc.data().result,
-      entryName: doc.data().entryName || null,
-      opponentEntryName: doc.data().opponentEntryName || null
-    } as AI2Challenge));
+      statusCode: doc.data().statusCode || 0,
+      traceback: doc.data().traceback || ''
+    } as AI2Challenge)).sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
     
     setChallenges(challengesData);
     setTeamId(teamId || '');
+    setTeamName(teamDoc.data()?.name || '');
   };
 
   useEffect(() => {
@@ -76,7 +82,6 @@ export const ChallengePanel = () => {
       
       const teamsQuery = query(
         collection(db, 'AI2Teams'),
-        where('openToChallenge', '==', true)
       );
       
       const snapshot = await getDocs(teamsQuery);
@@ -88,11 +93,13 @@ export const ChallengePanel = () => {
         wins: doc.data().wins || 0,
         losses: doc.data().losses || 0,
         draws: doc.data().draws || 0,
-        openToChallenge: doc.data().openToChallenge,
+        elo: doc.data().elo || 1200,
+        autoAcceptChallenge: doc.data().autoAcceptChallenge,
         isBanned: doc.data().isBanned || false,
         captainDisplayName: doc.data().captainDisplayName,
-        memberCount: doc.data().memberCount || 1,
-        affiliation: doc.data().affiliation || ''
+        members: doc.data().members || [],
+        memberEmails: doc.data().memberEmails || [],
+        repolink: doc.data().repolink || ''
       }));
 
       const filtered = allOpenTeams.filter(team =>
@@ -109,75 +116,108 @@ export const ChallengePanel = () => {
     if (!selectedTeam || !db || !teamId) return;
 
     if (selectedTeam.id === teamId) {
-      toast({
-        title: "Invalid Challenge",
-        description: "You can't challenge your own team here silly goofy goober",
-        variant: "destructive"
-      });
+      toast({ title: "Invalid Challenge", description: "You can't challenge your own team", variant: "destructive" });
       return;
     }
 
     try {
-      const existingChallengeQuery = query(
-        collection(db, 'AI2ChallengeRequests'),
-        where('challengerTeam', '==', teamId),
-        where('receiverTeam', '==', selectedTeam.id),
-        where('status', '==', 'pending')
-      );
-      const existingSnapshot = await getDocs(existingChallengeQuery);
+      const [challengerSubs] = await Promise.all([
+        getDocs(query(collection(db, 'AI2Submissions'), 
+          where('team', '==', teamId), 
+          where('statusCode', '==', 3)))
+      ]);
 
-      if (!existingSnapshot.empty) {
-        const existingChallenge = existingSnapshot.docs[0].data();
-        const challengeAge = Date.now() - existingChallenge.createdAt.toDate().getTime();
-        const fiveMinutes = 5 * 60 * 1000;
-
-        if (challengeAge < fiveMinutes) {
-          toast({
-            title: "Challenge Cooldown",
-            description: "Please wait 5 minutes before challenging this team again",
-            variant: "destructive"
-          });
-          return;
-        } else {
-          await updateDoc(existingSnapshot.docs[0].ref, {
-            createdAt: new Date()
-          });
-          toast({
-            title: "Challenge Updated!",
-            description: `Challenge to ${selectedTeam.name} has been renewed`,
-          });
-          return;
-        }
+      if (challengerSubs.empty) {
+        toast({
+          title: "Missing Submission",
+          description: "You must have a valid submission to challenge other teams",
+          variant: "destructive"
+        });
+        return;
       }
 
-      const challengerTeamDoc = await getDoc(doc(db, 'AI2Teams', teamId));
-      const challengerTeamName = challengerTeamDoc.data()?.name || 'Unknown Team';
+      const receiverTeamDoc = await getDoc(doc(db, 'AI2Teams', selectedTeam.id));
+      const autoAccept = receiverTeamDoc.data()?.autoAcceptChallenge ?? false;
 
-      const challengeRef = doc(collection(db, 'AI2ChallengeRequests'));
-      await setDoc(challengeRef, {
-        challengerTeam: teamId,
-        challengerTeamName,
-        receiverTeam: selectedTeam.id,
-        receiverTeamName: selectedTeam.name,
-        status: 'pending',
-        createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-      });
+      if (autoAccept) {
+        const challengeRef = doc(collection(db, 'AI2Challenges'));
+        await setDoc(challengeRef, {
+          team1: teamId,
+          team2: selectedTeam.id,
+          team1Name: teamName,
+          team2Name: selectedTeam.name,
+          status: 'ongoing',
+          createdAt: new Date(),
+          videoUrl: null,
+          result: null,
+          statusCode: 0
+        });
+        toast({ title: "Challenge Started!", description: "Match has been automatically accepted" });
+      } else {
+        const existingRequestQuery = query(
+          collection(db, 'AI2ChallengeRequests'),
+          where('challengerTeam', '==', teamId),
+          where('receiverTeam', '==', selectedTeam.id),
+          where('status', '==', 'pending')
+        );
+        
+        const existingSnapshot = await getDocs(existingRequestQuery);
 
-      toast({
-        title: "Challenge Sent!",
-        description: `${selectedTeam.name} has been notified`,
-      });
+        if (!existingSnapshot.empty) {
+          const existingChallenge = existingSnapshot.docs[0].data();
+          const challengeAge = Date.now() - existingChallenge.createdAt.toDate().getTime();
+          const fiveMinutes = 5 * 60 * 1000;
 
-      setSelectedTeam(null);
-      setSearchQuery('');
-      document.dispatchEvent(new Event('dialog-close'));
+          if (challengeAge < fiveMinutes) {
+            toast({
+              title: "Challenge Cooldown",
+              description: "Please wait 5 minutes before challenging this team again",
+              variant: "destructive"
+            });
+            return;
+          } else {
+            await updateDoc(existingSnapshot.docs[0].ref, {
+              createdAt: new Date()
+            });
+            toast({
+              title: "Challenge Updated!",
+              description: `Challenge to ${selectedTeam.name} has been renewed`,
+            });
+            return;
+          }
+        }
+
+        const challengerTeamDoc = await getDoc(doc(db, 'AI2Teams', teamId));
+        const challengerTeamName = challengerTeamDoc.data()?.name || 'Unknown Team';
+
+        const challengeRef = doc(collection(db, 'AI2ChallengeRequests'));
+        await setDoc(challengeRef, {
+          challengerTeam: teamId,
+          challengerTeamName,
+          receiverTeam: selectedTeam.id,
+          receiverTeamName: selectedTeam.name,
+          status: 'pending',
+          createdAt: new Date(),
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        });
+
+        toast({
+          title: "Challenge Sent!",
+          description: `${selectedTeam.name} has been notified`,
+        });
+
+        setSelectedTeam(null);
+        setSearchQuery('');
+        document.dispatchEvent(new Event('dialog-close'));
+      }
+      
       await fetchChallenges();
+      
     } catch (error) {
       console.error('Challenge creation failed:', error);
       toast({
         title: "Challenge Failed",
-        description: error instanceof Error ? error.message : "Could not send challenge",
+        description: error instanceof Error ? error.message : "Could not create challenge",
         variant: "destructive"
       });
     }
@@ -195,7 +235,7 @@ export const ChallengePanel = () => {
 
   useEffect(() => {
     const checkPendingChallenges = async () => {
-      if (!teamId || !db) return;
+      if (sessionStatus === 'loading' || !teamId || !db) return;
       
       const challengesQuery = query(
         collection(db, 'AI2ChallengeRequests'),
@@ -215,7 +255,9 @@ export const ChallengePanel = () => {
               title: "New Challenge!",
               description: `You have a challenge from ${challengeData.challengerTeamName}`,
               actionText: "Accept",
-              onAction: () => handleAcceptChallenge(change.doc.id)
+              onAction: () => {
+                handleAcceptChallenge(change.doc.id);
+              }
             });
           }
         });
@@ -228,10 +270,10 @@ export const ChallengePanel = () => {
     };
 
     checkPendingChallenges();
-  }, [teamId, db]);
+  }, [teamId, db, sessionStatus]);
 
   const handleAcceptChallenge = async (challengeRequestId: string) => {
-    console.log("[AI2] Accepting challenge:", challengeRequestId);
+    // console.log("[AI2] Accepting challenge:", challengeRequestId);
     const challengeRef = doc(db, 'AI2ChallengeRequests', challengeRequestId);
     const challengeSnap = await getDoc(challengeRef);
     
@@ -255,8 +297,24 @@ export const ChallengePanel = () => {
       return;
     }
 
+    const submissionsQuery = query(
+      collection(db, 'AI2Submissions'),
+      where('team', '==', teamId),
+      where('statusCode', '==', 3)
+    );
+    const submissionsSnapshot = await getDocs(submissionsQuery);
+    if (submissionsSnapshot.empty) {
+      toast({
+        title: "No Valid Submission",
+        description: "You must have an accepted submission to accept challenges",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const challengeDoc = doc(collection(db, 'AI2Challenges'));
     await setDoc(challengeDoc, {
+      requestId: challengeRequestId,
       team1: challengerTeam,
       team2: receiverTeam,
       team1Name: challengerTeamName,
@@ -264,9 +322,11 @@ export const ChallengePanel = () => {
       status: 'pending',
       createdAt: new Date(),
       videoUrl: null,
-      result: null
+      result: null,
+      statusCode: 0
     });
 
+    markInteracted(challengeRequestId);
     await updateDoc(challengeRef, { status: 'accepted' });
   };
 
@@ -300,8 +360,8 @@ export const ChallengePanel = () => {
                     >
                       <div className="flex justify-between items-center">
                         <span>{team.name}</span>
-                        <Badge variant={team.openToChallenge ? 'default' : 'destructive'}>
-                          {team.openToChallenge ? 'Open' : 'Closed'}
+                        <Badge variant={team.autoAcceptChallenge ? 'default' : 'destructive'}>
+                          {team.autoAcceptChallenge ? 'Auto Accept' : 'Manual Accept'}
                         </Badge>
                       </div>
                     </div>
@@ -329,25 +389,32 @@ export const ChallengePanel = () => {
                     challenge.team1 === teamId ? 
                     filteredTeams.find(t => t.id === challenge.team2)?.name || 'Unknown Team' : 
                     filteredTeams.find(t => t.id === challenge.team1)?.name || 'Unknown Team'
-                  } <span className={`inline-block px-2 py-0.5 text-xs rounded-full ${
-                    challenge.status === "pending" ? "bg-yellow-100 text-yellow-800" :
-                    challenge.status === "ongoing" ? "bg-blue-100 text-blue-800" :
-                    "bg-green-100 text-green-800"
-                  }`}>
-                    {challenge.status}
-                  </span></p>
-                  {challenge.entryName && (
-                    <div className="flex gap-2 text-sm text-gray-500">
-                      <span>Your Bot: {challenge.entryName}</span>
-                      {challenge.opponentEntryName && (
-                        <span>• Opponent: {challenge.opponentEntryName}</span>
-                      )}
-                    </div>
-                  )}
+                  }
                   
-                  {challenge.result && (
-                    <p className="text-sm font-semibold mt-1">Result: {challenge.result}</p>
-                  )}
+                  <span className={`inline-block px-2 py-0.5 ml-2 text-xs rounded-full ${
+                    (challenge.statusCode === 1 || challenge.statusCode === 2) ? 
+                      "bg-red-100 text-red-800" :
+                    challenge.result === teamId ? 
+                      "bg-green-100 text-green-800" : 
+                    challenge.result && challenge.result !== "Draw" ? 
+                      "bg-red-100 text-red-800" : 
+                      "bg-yellow-100 text-yellow-800"
+                  } ${
+                    (challenge.statusCode === 1 || challenge.statusCode === 2) && challenge.traceback ? 
+                    "cursor-pointer hover:underline relative pl-4" : ""
+                  }`}
+                  onClick={() => (challenge.statusCode === 1 || challenge.statusCode === 2) && setSelectedTraceback(challenge.traceback)}>
+                    {(challenge.statusCode === 1 || challenge.statusCode === 2) && challenge.traceback && (
+                      <MousePointerClick className="w-5 h-5 absolute -left-2 -bottom-2 text-black rotate-90 drop-shadow-sm" fill="currentColor" />
+                    )}
+                    {(challenge.statusCode === 1 || challenge.statusCode === 2) ? "Error" : 
+                     challenge.result === teamId ? "Win" : 
+                     challenge.result === null ? "Pending" : 
+                     challenge.result !== "Draw" ? "Loss" : "Draw"}
+                  </span>
+                  
+                  </p>
+
                 </div>
                 <div className="flex items-center gap-2">
 
@@ -384,6 +451,21 @@ export const ChallengePanel = () => {
             videoUrl={selectedVideo.url}
             title={selectedVideo.title}
           />
+        )}
+        {selectedTraceback && (
+          <Dialog open={!!selectedTraceback} onOpenChange={(open) => !open && setSelectedTraceback(null)}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Challenge Error Details</DialogTitle>
+              </DialogHeader>
+              <pre className="whitespace-pre-wrap text-sm max-h-[60vh] overflow-auto">
+                {selectedTraceback || "No error details available"}
+              </pre>
+              <div className="flex justify-end">
+                <Button onClick={() => setSelectedTraceback(null)}>Close</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
       </Card>
     </AI2Layout>

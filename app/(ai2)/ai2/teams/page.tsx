@@ -3,7 +3,6 @@
 import { Header } from "@ai2components/Header";
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
@@ -18,13 +17,13 @@ const TeamsPage = () => {
   const { data: session, status } = useSession();
   const { db } = useFirebase();
   const [teams, setTeams] = useState<AI2Team[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterOpen, setFilterOpen] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchTeams = async () => {
-      if (status === 'authenticated' && db) {
+      // if (status === 'authenticated' && db) {
         try {
           const teamsQuery = query(
             collection(db, 'AI2Teams'),
@@ -40,12 +39,14 @@ const TeamsPage = () => {
             wins: doc.data().wins,
             losses: doc.data().losses,
             draws: doc.data().draws,
-            openToChallenge: doc.data().openToChallenge,
+            elo: doc.data().elo,
+            autoAcceptChallenge: doc.data().autoAcceptChallenge,
             id: doc.id,
             lastSubmitted: doc.data().lastSubmitted,
             isBanned: doc.data().isBanned,
-            memberCount: doc.data().memberCount,
-            affiliation: doc.data().affiliation || ''
+            repolink: doc.data().repolink || '',
+            members: doc.data().members || [],
+            memberEmails: doc.data().memberEmails || []
           }));
           
           setTeams(teamsData);
@@ -54,29 +55,42 @@ const TeamsPage = () => {
         } finally {
           setLoading(false);
         }
-      } else if (status === 'unauthenticated') {
-        setLoading(false);
-      }
+      // } else if (status === 'unauthenticated') {
+      //   setLoading(false);
+      // }
     };
 
     fetchTeams();
   }, [status, db]);
 
   if (status === 'loading' || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="text-4xl font-bold text-hackathon-primary animate-pulse">
+            UTMIST
+          </h1>
+          <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-hackathon-primary animate-progress"
+              style={{ width: '45%' }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  if (status === 'unauthenticated' || !session) {
-    signIn('google', { callbackUrl: window.location.origin + '/ai2/teams' });
-    return null;
-  }
+  // if (status === 'unauthenticated' || !session) {
+  //   signIn('google', { callbackUrl: window.location.origin + '/ai2/teams' });
+  //   return null;
+  // }
 
   const filteredTeams = teams.filter(team => {
     const matchesSearch = team.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = filterOpen === null ? true : team.openToChallenge === filterOpen;
+    const matchesFilter = filterOpen === null ? true : team.autoAcceptChallenge === filterOpen;
     return matchesSearch && matchesFilter;
   });
-
 
   console.log("[AI2] Filtered teams:", filteredTeams);
   return (
@@ -101,23 +115,23 @@ const TeamsPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Teams</SelectItem>
-                  <SelectItem value="open">Open to Challenge</SelectItem>
-                  <SelectItem value="closed">Not Accepting Challenges</SelectItem>
+                  <SelectItem value="open">Auto Accepting Challenges</SelectItem>
+                  <SelectItem value="closed">Manual Challenges</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] gap-4">
             {filteredTeams.map((team) => (
               <Card key={team.name} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
                     <div className="flex items-center gap-2">
                       <CardTitle className="text-lg">{team.name}</CardTitle>
-                      {team.affiliation && (
+                      {team.repolink && (
                         <a 
-                          href={team.affiliation} 
+                          href={team.repolink} 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="hover:opacity-75 transition-opacity"
@@ -128,28 +142,48 @@ const TeamsPage = () => {
                         </a>
                       )}
                     </div>
-                    <Badge 
-                      variant={team.openToChallenge ? 'default' : 'destructive'}
-                      className="text-xs"
-                    >
-                      {team.openToChallenge ? 'Open' : 'Closed'}
-                    </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm">
                     Captain: {team.captainDisplayName}
                   </p>
+                  <div className="space-y-1">
+                    <div className="flex flex-wrap gap-1">
+                    <h3 className="text-sm">Members:</h3>
+                        {team.members.map((member: any) => (
+                          <Badge 
+                            key={member.email}
+                            variant="outline"
+                            className="text-xs"
+                          >
+                            {member.displayName}
+                          </Badge>
+                        ))}
+                      </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
+
+                  <div className="mt-2"></div>
                   <div className="flex justify-between text-sm">
                     <div className="space-y-1">
                       <p className="text-muted-foreground">Wins: {team.wins}</p>
                       <p className="text-muted-foreground">Losses: {team.losses}</p>
                       <p className="text-muted-foreground">Draws: {team.draws}</p>
                     </div>
-                    <p className="text-muted-foreground text-right">
-                      Created: {new Date(team.createdAt.seconds * 1000).toLocaleDateString()} {new Date(team.createdAt.seconds * 1000).toLocaleTimeString()}
-                    </p>
-                  </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <p className="text-muted-foreground">
+                        Created: {new Date(team.createdAt.seconds * 1000).toLocaleDateString()} {new Date(team.createdAt.seconds * 1000).toLocaleTimeString()}
+                      </p>
+                      {!team.autoAcceptChallenge && (
+                        <Badge 
+                          variant="destructive"
+                          className="text-xs"
+                        >
+                          Not Auto-Accepting Challenges
+                        </Badge>
+                      )}
+                    </div>
+                  </div> 
                 </CardContent>
               </Card>
             ))}

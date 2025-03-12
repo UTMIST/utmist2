@@ -6,6 +6,6 @@ export interface AI2Challenge {
   createdAt: { seconds: number; nanoseconds: number };
   videoUrl: string | null;
   result: string | null;
-  entryName?: string;
-  opponentEntryName?: string;
+  statusCode: number;
+  traceback: string | null;
 } 

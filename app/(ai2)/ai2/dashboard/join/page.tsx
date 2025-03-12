@@ -8,13 +8,14 @@ import { signIn } from "next-auth/react";
 import { collection, doc, getDoc, query, updateDoc, where, getDocs } from "firebase/firestore";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { useEffect, useState } from "react";
-import { comparePassword, hashPassword } from "@app/common/ai2/utils/auth";
+import { toast } from "@app/common/ai2/ui/use-toast";
 
 const DashboardJoinPage = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { db } = useFirebase();
   const [loading, setLoading] = useState(true);
+  const [lastAttemptTime, setLastAttemptTime] = useState<number>(0);
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -39,7 +40,21 @@ const DashboardJoinPage = () => {
   }, [status, session, db, router]);
 
   if (status === 'loading' || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="text-4xl font-bold text-hackathon-primary animate-pulse">
+            UTMIST
+          </h1>
+          <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-hackathon-primary animate-progress"
+              style={{ width: '45%' }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (status === 'unauthenticated' || !session) {
@@ -47,20 +62,27 @@ const DashboardJoinPage = () => {
     return null;
   }
 
-  const handleTeamJoined = async (teamName: string, password: string) => {
+  const handleTeamJoined = async (joinCode: string) => {
     if (!db || !session?.user?.email) {
       throw new Error('Not authenticated');
     }
+    const now = Date.now();
+    if (now - lastAttemptTime < 1000) {
+      throw new Error('Please wait 1 second before trying again');
+    }
+    setLastAttemptTime(now);
+
+    console.log('joinCode', joinCode);
 
     try {
       const teamsQuery = query(
         collection(db, 'AI2Teams'),
-        where('name', '==', teamName)
+        where('joinCode', '==', joinCode)
       );
       const querySnapshot = await getDocs(teamsQuery);
       
       if (querySnapshot.empty) {
-        throw new Error('Team does not exist');
+        throw new Error('Invalid join code');
       }
 
       const teamDoc = querySnapshot.docs[0];
@@ -71,15 +93,11 @@ const DashboardJoinPage = () => {
         throw new Error('Invalid team data');
       }
 
-      if (!(await comparePassword(password, teamData.password))) {
-        throw new Error('Incorrect team password');
-      }
-
-      if (teamData.members.map((member: { email: string, displayName: string }) => member.email).includes(session.user.email)) {
+      if (teamData.members.map((member: { email: string }) => member.email).includes(session.user.email)) {
         throw new Error('You are already a member of this team');
       }
 
-      if (teamData.memberCount >= 4) {
+      if (teamData.members.length >= 4) {
         throw new Error('Team is already full (maximum 4 members)');
       }
 
@@ -88,9 +106,13 @@ const DashboardJoinPage = () => {
           email: session.user.email,
           displayName: session.user.displayName
         }],
-        memberCount: teamData.memberCount + 1
+        memberEmails: [...teamData.memberEmails, session.user.email]
       });
 
+      toast({
+        title: "Team Joined Successfully",
+        description: `You have joined team ${teamData.name}`,
+      });
       await updateDoc(doc(db, 'AI2Registration', session.user.email), {
         team: teamDoc.id
       });

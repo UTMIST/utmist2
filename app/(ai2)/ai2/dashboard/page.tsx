@@ -7,7 +7,7 @@ import { TournamentPanel } from "@ai2components/TournamentPanel";
 import { Header } from "@ai2/Header";
 import { Button } from "@ai2components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@ai2components/ui/card";
-import { Trash2 } from "lucide-react";
+import { Trash2, LogOut, Copy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import {
@@ -47,6 +47,9 @@ const Dashboard = () => {
   const [showDisbandDialog, setShowDisbandDialog] = useState(false);
   const [isCaptain, setIsCaptain] = useState(false);
   const { notifications, addNotification, markRead } = useNotifications();
+  const [revealCode, setRevealCode] = useState(false);
+  const [joinCode, setJoinCode] = useState("");
+  const [autoAcceptChallenge, setAutoAcceptChallenge] = useState(false);
 
   useEffect(() => {
     async function firebaseSignIn() {
@@ -76,7 +79,7 @@ const Dashboard = () => {
             return;
           }
 
-          // const token = await auth.currentser?.getIdTokenResult();
+          // const token = await auth.currentUser?.getIdTokenResult();
           // console.log("Decoded token:", token, session.user.email);
           // console.log("Token email:", token?.claims.email);
           // console.log("[AI2] Fetching registration doc", session.user.email);
@@ -84,23 +87,27 @@ const Dashboard = () => {
           // console.log("[AI2] Registration doc:", registrationDoc.data());
           if (registrationDoc.exists()) {
             const teamId = registrationDoc.data().team || null;
-            console.log("[AI2] Team name:", teamId);
+            // console.log("[AI2] Team name:", teamId);
             setTeamId(teamId);
             if (teamId) {
+              // console.log("[AI2] Team ID:", teamId);
               const teamDoc = await getDoc(doc(db, "AI2Teams", teamId));
-              
+              // console.log("[AI2] Team doc:", teamDoc.data());
+
               if (!teamDoc.exists()) {
                 throw new Error('Team does not exist');
               }
 
-              console.log("[AI2] Team members:", teamDoc.data().members);
+              // console.log("[AI2] Team members:", teamDoc.data().members);
               const teamData = teamDoc.data();
               setTeam(teamData?.name || null);
               setTeamMembers(teamData.members || []);
               setIsCaptain(teamData.captain === session?.user?.email);
+              setJoinCode(teamData.joinCode || "");
+              setAutoAcceptChallenge(teamData.autoAcceptChallenge || false);
             }
           } else {
-            console.log("[AI2] Registering user", session.user.email);
+            // console.log("[AI2] Registering user", session.user.email);
             await setDoc(doc(db, 'AI2Registration', session.user.email), {
               email: session.user.email,
               name: session.user.displayName,
@@ -139,6 +146,7 @@ const Dashboard = () => {
         collection(db, 'AI2Teams'),
         where('name', '==', team)
       );
+
       const querySnapshot = await getDocs(teamsQuery);
       
       if (querySnapshot.empty) {
@@ -193,7 +201,8 @@ const Dashboard = () => {
       
       const teamRef = doc(db, 'AI2Teams', teamId);
       await updateDoc(teamRef, {
-        members: teamMembers.filter(member => member.email !== session.user?.email)
+        members: teamMembers.filter(member => member.email !== session.user?.email),
+        memberEmails: teamMembers.map(m => m.email).filter(e => e !== session.user?.email)
       });
 
       await updateDoc(doc(db, 'AI2Registration', session.user.email), {
@@ -238,7 +247,7 @@ const Dashboard = () => {
       }
       await updateDoc(teamRef, {
         members: teamMembers.filter(m => m.email !== memberEmail),
-        memberCount: teamMembers.length - 1
+        memberEmails: teamMembers.map(m => m.email).filter(e => e !== memberEmail)
       });
 
       await updateDoc(doc(db, 'AI2Registration', memberEmail), {
@@ -258,7 +267,21 @@ const Dashboard = () => {
   };
 
   if (status === 'loading' || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-background dark:bg-gray-900 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <h1 className="text-4xl font-bold text-hackathon-primary animate-pulse">
+            UTMIST
+          </h1>
+          <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-hackathon-primary animate-progress"
+              style={{ width: '45%' }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (status === 'unauthenticated' || !session) {
@@ -315,6 +338,9 @@ const Dashboard = () => {
                       teamName={team} 
                       teamId={teamId}
                       onSave={(newName) => setTeam(newName)}
+                      setJoinCode={(newCode) => setJoinCode(newCode)}
+                      currentJoinCode={joinCode}
+                      currentAutoAcceptChallenge={autoAcceptChallenge}
                     />
                   </TooltipTrigger>
                   <TooltipContent>
@@ -333,7 +359,7 @@ const Dashboard = () => {
                             size="icon" 
                             className="h-8 w-8"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            {isCaptain ? <Trash2 className="h-4 w-4" /> : <LogOut className="h-4 w-4" />}
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -367,7 +393,7 @@ const Dashboard = () => {
                             size="icon" 
                             className="h-8 w-8"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            {isCaptain ? <Trash2 className="h-4 w-4" /> : <LogOut className="h-4 w-4" />}
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -408,6 +434,35 @@ const Dashboard = () => {
               isCaptain={isCaptain}
               session={session}
             />
+
+            {/* {isCaptain && ( */}
+            {true && (
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-sm text-muted-foreground">Join Code:</span>
+                <div className="relative flex items-center gap-1">
+                  <div
+                    className={`font-mono cursor-pointer p-1 rounded ${!revealCode ? 'bg-black text-black' : 'bg-transparent'}`}
+                    onClick={() => {
+                      setRevealCode(!revealCode);
+                    }}
+                  >
+                    {revealCode ? joinCode : '••••••'}
+                  </div>
+                  {revealCode ?
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(joinCode);
+                      toast({ title: "Join code copied to clipboard!" });
+                    }}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                  : null}
+                </div>
+              </div>
+            )}
           </div>
           {/* Panels grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

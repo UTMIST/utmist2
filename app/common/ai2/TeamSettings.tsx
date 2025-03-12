@@ -15,23 +15,35 @@ import React from "react";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { hashPassword, comparePassword } from "@app/common/ai2/utils/auth";
+import { generateRandomCode } from "@ai2/utils/generateRandomCode";
+import { Switch } from "@ai2components/ui/switch";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export const TeamSettings: React.ForwardRefExoticComponent<
   { 
     teamName: string | null; 
     teamId: string | null;
     onSave?: (newName: string) => void;
+    currentJoinCode: string;
+    setJoinCode: (newCode: string) => void;
+    currentAutoAcceptChallenge: boolean;
   } & React.RefAttributes<HTMLButtonElement>
-> = React.forwardRef(({ teamName, teamId, onSave }, ref) => {
+> = React.forwardRef(({ teamName, teamId, onSave, currentJoinCode, setJoinCode, currentAutoAcceptChallenge }, ref) => {
   const { toast } = useToast();
   const { db } = useFirebase();
   const router = useRouter();
   const [newTeamName, setNewTeamName] = useState(teamName || "");
-  const [newPassword, setNewPassword] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
   const [website, setWebsite] = useState("");
-  const [affiliation, setAffiliation] = useState("");
+  const [repolink, setRepolink] = useState("");
+  const [autoAcceptChallenge, setAutoAcceptChallenge] = useState(currentAutoAcceptChallenge || false);
+
+  const hasValidSubmission = async (teamId: string) => {
+    const submissionsQuery = query(collection(db, 'AI2Submissions'), 
+      where('team', '==', teamId), 
+      where('statusCode', '==', 3));
+    const snapshot = await getDocs(submissionsQuery);
+    return !snapshot.empty;
+  };
 
   const handleSaveTeamSettings = async () => {
     if (!teamId || !db) {
@@ -51,20 +63,6 @@ export const TeamSettings: React.ForwardRefExoticComponent<
         throw new Error("Team does not exist");
       }
 
-      console.log(teamSnap.data().password);
-      console.log(await hashPassword(currentPassword));
-
-      if (!(await comparePassword(currentPassword, teamSnap.data().password))) {
-      // if (teamSnap.data().password !== await hashPassword(currentPassword)) {
-        // toast({
-        //   title: "Password mismatch",
-        //   description: "Current password does not match our records",
-        //   variant: "destructive"
-        // });
-        throw new Error('Incorrect team password');
-        // return;
-      }
-
       const teamData = teamSnap.data();
       const updateData: any = {};
 
@@ -74,11 +72,20 @@ export const TeamSettings: React.ForwardRefExoticComponent<
       if (website && website !== teamData.website) {
         updateData.website = website;
       }
-      if (affiliation && affiliation !== teamData.affiliation) {
-        updateData.affiliation = affiliation;
+      if (repolink && repolink !== teamData.repolink) {
+        if (!/^https?:\/\/github.com\/.*/.test(repolink)) {
+          toast({ title: "Invalid GitHub URL", variant: "destructive" });
+          return;
+        }
+        updateData.repolink = repolink;
       }
-      if (newPassword) {
-        updateData.password = await hashPassword(newPassword);
+      if (autoAcceptChallenge !== teamData.autoAcceptChallenge) {
+        if (autoAcceptChallenge && !(await hasValidSubmission(teamId))) {
+          toast({ title: "No Valid Submission", variant: "destructive", 
+            description: "You need at least one accepted submission to enable auto-accept" });
+          return;
+        }
+        updateData.autoAcceptChallenge = autoAcceptChallenge;
       }
 
       if (Object.keys(updateData).length > 0) {
@@ -129,28 +136,12 @@ export const TeamSettings: React.ForwardRefExoticComponent<
             <Input
               id="teamName"
               value={newTeamName}
-              onChange={(e) => setNewTeamName(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!/^[\p{Emoji}A-Za-z0-9 ]+$/iu.test(val)) return;
+                setNewTeamName(val.slice(0, 80));
+              }}
               placeholder="Your team's public name shown to other competitors"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="newPassword">New Team Password</Label>
-            <Input
-              id="newPassword"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Set a new team join password"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="currentPassword">Confirm Current Password</Label>
-            <Input
-              id="currentPassword"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Provide your current team password"
             />
           </div>
           <div className="grid gap-2">
@@ -163,15 +154,46 @@ export const TeamSettings: React.ForwardRefExoticComponent<
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="affiliation">Affiliation</Label>
+            <Label htmlFor="repolink">Repo Link</Label>
             <Input
-              id="affiliation"
-              value={affiliation}
-              onChange={(e) => setAffiliation(e.target.value)}
+              id="repolink"
+              value={repolink}
+              onChange={(e) => {
+                const val = e.target.value;
+                // if (val === "" || /^https?:\/\/github.com\/.*/.test(val)) {
+                  setRepolink(val);
+                // }
+              }}
               placeholder="https://github.com/your-team"
               pattern="^https?://github.com/.*"
               title="Must be a valid GitHub URL"
             />
+          </div>
+          <div className="grid gap-2">
+            <Label>Current Join Code</Label>
+            <div className="font-mono p-2 bg-accent rounded">{currentJoinCode}</div>
+          </div>
+          <div className="flex items-center gap-4">
+            <Label htmlFor="autoAcceptChallenge">Auto Accept Challenges</Label>
+            <Switch
+              id="autoAcceptChallenge"
+              checked={autoAcceptChallenge}
+              onCheckedChange={setAutoAcceptChallenge}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Button 
+              variant="destructive"
+              onClick={async () => {
+                const newCode = generateRandomCode();
+                const teamRef = doc(db, "AI2Teams", teamId!);
+                await updateDoc(teamRef, { joinCode: newCode });
+                setJoinCode(newCode);
+                toast({ title: "Join code regenerated!" });
+              }}
+            >
+              Regenerate Join Code
+            </Button>
           </div>
           <Button onClick={handleSaveTeamSettings}>Submit</Button>
         </div>
