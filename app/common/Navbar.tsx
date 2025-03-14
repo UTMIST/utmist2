@@ -53,9 +53,6 @@ export default function Navbar() {
           </Link>
           <div className="hidden lg:flex items-center">
             <ul className="flex items-center">
-              <Link href="/ai2">
-                <li className="inline-block ml-10 text-white">Happening Now: AI2</li>
-              </Link>
               <Link href="/about">
                 <li className="inline-block ml-10 text-white">About Us</li>
               </Link>
