@@ -43,6 +43,7 @@ import { projectsCollection } from "./collections/projects";
 import { usersCollection } from "./collections/users";
 import { firebaseConfig } from "@app/firebase/firebase-config";
 import { teamsCollection } from "./collections/teams";
+import { publicUsersCollection } from "./collections/publicUsers";
 
 function CMSPage() {
     const myAuthenticator: Authenticator<FirebaseUserWrapper> = useCallback(async ({
@@ -66,7 +67,8 @@ function CMSPage() {
     const collections = useMemo(() => [
         projectsCollection,
         usersCollection,
-        teamsCollection
+        teamsCollection,
+        publicUsersCollection
     ], []);
 
     const {

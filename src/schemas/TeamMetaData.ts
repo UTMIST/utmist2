@@ -4,16 +4,19 @@ export interface TeamMember {
     name: string;
     image?: string;
     socials: {
-        LinkedIn: string;
-        GitHub: string;
-        Twitter: string;
+        LinkedIn?: string;
+        GitHub?: string;
+        Twitter?: string;
+        GoogleScholar?: string;
+        Medium?: string;
+        Website?: string;
     };
     role: string;
-    year: string; // Added year to filter team members by year
+    year: string;
 }
 
 export interface TeamMetaData extends BaseMetaData {
-  title: string; // Team title or name
-  description: string; // Description of the team
-  team: TeamMember[]; // Array of team members
+  title: string;
+  description: string;
+  team: TeamMember[];
 }

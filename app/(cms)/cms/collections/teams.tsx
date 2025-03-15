@@ -5,11 +5,11 @@ export const teamsCollection = buildCollection({
     name: "Teams",
     path: "teams",
     properties: {
-        // id: {
-        //     dataType: "string",
-        //     name: "Team ID",
-        //     validation: { required: true },
-        // },
+        id: {
+            dataType: "string",
+            name: "Team ID",
+            validation: { required: true },
+        },
         title: {
             dataType: "string",
             name: "Team Name",
@@ -20,35 +20,29 @@ export const teamsCollection = buildCollection({
             },
             description: "The display name of the team (e.g., 'Web Dev Team')"
         },
-        // Optional: Add team members as references to users
+        description: {
+            dataType: "string",
+            name: "Team Description",
+            multiline: true,
+            validation: { required: true },
+            description: "A brief description of what the team does"
+        },
         members: {
             dataType: "array",
             name: "Team Members",
             of: {
-                dataType: "reference",
-                path: "users"
+                dataType: "reference" as any,
+                path: "publicUsers"
             },
             description: "Members belonging to this team"
         },
-        // Optional: Add team creation date
-        createdAt: {
-            dataType: "date",
-            name: "Creation Date",
-            autoValue: "on_create",
-            mode: "date_time"
-        },
-        // Optional: Add team status
-        active: {
-            dataType: "boolean",
-            name: "Active",
-            defaultValue: true,
-            description: "Whether the team is currently active"
+        name: {
+            dataType: "string",
+            name: "Team Identifier",
+            validation: { 
+                required: true 
+            },
+            description: "A unique identifier for the team (used in URLs)"
         }
-    },
-    // Optional permissions configuration
-    permissions: ({ authController }) => ({
-        edit: true,
-        create: true,
-        delete: authController.extra?.roles?.includes('admin')
-    })
+    }
 });

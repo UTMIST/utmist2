@@ -16,6 +16,7 @@ export default function ProjectsPage() {
     const [isProjectFilterOpen, setIsProjectFilterOpen] = useState(false);
     const [selectedYear, setSelectedYear] = useState<string[]>([]);
     const [selectedProjectType, setSelectedProjectType] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const { db } = useFirebase();
 
     useEffect(() => {
@@ -99,10 +100,21 @@ export default function ProjectsPage() {
     const resetFilters = () => {
         setSelectedYear([]);
         setSelectedProjectType("");
+        setSearchQuery("");
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
     };
 
 
     const filteredProjects = projects
+        .filter((project) => {
+            if (searchQuery) {
+                return project.title.toLowerCase().includes(searchQuery.toLowerCase());
+            }
+            return true;
+        })
         .filter((project) => {
             if (selectedYear.length > 0) {
                 const projectYear = project.startDate.substring(0, 4);
@@ -120,7 +132,7 @@ export default function ProjectsPage() {
             <Link href={`/projects/${project.slug}`} key={project.id}>
                 <br />
                 <br />
-                <div className="rounded-md overflow-hidden bg-black shadow-lg w-362">
+                <div className="bg-[#1E1650] rounded-[25px] overflow-hidden shadow-xl hover:shadow-[0_0_25px_rgba(148,97,255,0.5)] transition-all">
                     <div className="absolute bg-black text-white py-1 px-3 rounded font-roboto-mono">
                         {project.status}
                     </div>
@@ -131,11 +143,11 @@ export default function ProjectsPage() {
                         width={400}
                         height={315}
                     />
-                    <div className="px-6 py-4">
-                        <div className="font-bold text-white font-roboto-mono">
+                    <div className="p-4 text-center bg-[#665ADF] hover:bg-[#7A6FEB] transition-colors cursor-pointer flex flex-col justify-center">
+                        <div className="font-bold text-left text-white font-roboto-mono">
                             {project.title}
                         </div>
-                        <p className="text-white font-roboto-mono">
+                        <p className="text-white text-left font-roboto-mono mt-1">
                             {project.synopsis}
                         </p>
                     </div>
@@ -150,7 +162,6 @@ export default function ProjectsPage() {
             </div>
         );
     }
-
     if (error) {
         return (
             <div className="flex justify-center items-center min-h-screen bg-dark-grey">
@@ -160,17 +171,30 @@ export default function ProjectsPage() {
     }
 
     return (
-        <div className="bg-dark-grey overflow-x-hidden">
-            <div className="w-screen h-[53vh] bg-cover bg-wwd-banner"></div>
-            <div className="absolute left-[16.7vw] top-[18vh] text-white text-[5.2vh] font-roboto-mono">
-                <div>Projects</div>
-                <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
+        <div className="bg-gradient-to-b from-[#161652] to-[#483EE0] overflow-x-hidden">
+            <div className="w-screen h-[40vh] bg-cover relative">
+            <Image 
+                src="/imgs/headers/header1.png" 
+                alt="Header Image" 
+                fill
+                sizes="100vw"
+                style={{ 
+                objectFit: "cover", 
+                objectPosition: "center 0%", 
+                filter: "contrast(1.3) brightness(1.1)",
+                }}
+                // className="opacity-100"
+            />
             </div>
-            <div className="absolute left-[16.7vw] top-[33vh] text-white text-[2.3vh] font-roboto-mono">
-                <p>Project Developer</p>
-                <p>Applications are Now Open!</p>
-                <p>For more information,...</p>
+            <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
+            <div className="font-bold">Projects</div>
+            <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
             </div>
+            
+            <div className="text-white px-10 pt-8 pb-4 font-['October_Tamil_Regular']">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+            
             <div className="relative flex items-center justify-center mt-6">
                 <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
                     <li className="relative">
@@ -231,6 +255,23 @@ export default function ProjectsPage() {
                         </button>
                     </li>
                 </ul>
+            </div>
+            
+            <div className="flex justify-center mb-6 pt-10 px-10">
+                <div className="w-full max-w-xl flex">
+                    <input
+                        type="text"
+                        placeholder="Project Name"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        className="w-full py-2 px-4 rounded-l-md border-0 focus:outline-none"
+                    />
+                    <button className="bg-[#92DEFF] px-4 rounded-r-md flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div className={filteredProjects.length == 0 ? "flex justify-center m-10 h-[26vh]" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-10"}>

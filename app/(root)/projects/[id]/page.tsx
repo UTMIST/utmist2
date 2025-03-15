@@ -1,17 +1,84 @@
 "use client";
 
-import LinkButton from "@app/common/LinkButton";
-import ReactMarkdown from "react-markdown";
-import React from "react";
-import { useFirebase } from "@app/firebase/useFirebase";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Project } from "@schema/project";
-import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+
+import LinkButton from "@app/common/LinkButton";
+import TeamMember from "@app/common/TeamMember";
+import { useFirebase } from "@app/firebase/useFirebase";
+import { Project } from "@schema/project";
+
+interface TeamMember {
+    id: string;
+    displayName: string;
+    name: string;
+    image: string;
+    role: string;
+    email?: string;
+    socials?: {
+        LinkedIn?: string;
+        GitHub?: string;
+    };
+}
+
+interface Team {
+    id: string;
+    name: string;
+    title: string;
+    description: string;
+    members: any[];
+}
+
+const MarkdownComponents = {
+    h1: ({ children, className = "mt-[1vh]", ...props }: { children?: React.ReactNode, className?: string, [key: string]: any }) => (
+        <div className={`px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[2vh]`}>
+            {children}
+            <div className={`bg-[#00349F] w-[8.1vw] h-[6px] ${className}`}></div>
+        </div>
+    ),
+    h2: ({ children, className = "mt-[1vh]", ...props }: { children?: React.ReactNode, className?: string, [key: string]: any }) => (
+        <div className={`px-[9.5vw] font-roboto-mono text-white text-[20px] font-[700] mb-[2vh] mt-[3.5vh]`}>
+            {children}
+            <div className={`bg-[#00349F] w-[6.1vw] h-[4px] ${className}`}></div>
+        </div>
+    ),
+    ul: ({ children, ...props }: { children?: React.ReactNode, [key: string]: any }) => (
+        <div className={`px-[9.5vw] font-roboto-mono text-white text-[16px] font-[400] mb-[3vh]`}>
+            {children}
+        </div>
+    ),
+    p: ({ children, ...props }: { children?: React.ReactNode, [key: string]: any }) => (
+        <div className={`px-[9.5vw] font-roboto-mono text-white text-[16px] font-[400] mb-[3vh]`}>
+            <div style={{ whiteSpace: 'pre-wrap' }}>{children}</div>
+        </div>
+    ),
+    img: ({ src, alt }: { src?: string, alt?: string }) => (
+        <div className="rounded-md">
+            <Image 
+                src={src || ''} 
+                alt={alt || ''} 
+                width={800} 
+                height={600}
+                className="w-full h-auto"
+            />
+        </div>
+    ),
+    h6: ({ children, className }: { children?: React.ReactNode, className?: string }) => (
+        <div className="px-[9.5vw] inline-block mb-[3vh]">
+            {children}
+        </div>
+    ),
+    br: () => <br />,
+};
 
 const IndividualProject = () => {
     const [project, setProject] = useState<Project | null>(null);
+    const [team, setTeam] = useState<Team | null>(null);
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { db } = useFirebase();
@@ -23,14 +90,12 @@ const IndividualProject = () => {
 
         const fetchProject = async () => {
             if (!db) {
-                console.warn("[ProjectPage] Database not initialized");
                 setError("Database not initialized");
                 setLoading(false);
                 return;
             }
 
             try {
-                console.log("[ProjectPage] Fetching project with slug:", id);
                 const projectsRef = collection(db, "projects");
                 const q = query(projectsRef, where("slug", "==", id));
                 const querySnapshot = await getDocs(q);
@@ -49,9 +114,12 @@ const IndividualProject = () => {
 
                 if (isMounted) {
                     setProject(projectData);
+                    
+                    if (projectData.teamId && typeof projectData.teamId === 'object' && 'type' in projectData.teamId) {
+                        await fetchTeamData(projectData.teamId);
+                    }
                 }
             } catch (error) {
-                console.error("[ProjectPage] Error fetching project:", error, id);
                 if (error instanceof Error) {
                     setError(error.message);
                 } else {
@@ -64,12 +132,222 @@ const IndividualProject = () => {
             }
         };
 
+        const fetchTeamData = async (teamRef: any) => {
+            try {
+                const teamDoc = await getDoc(teamRef);
+                
+                if (teamDoc.exists()) {
+                    const rawData = teamDoc.data() as any;
+                    const teamData: Team = {
+                        id: teamDoc.id,
+                        name: rawData.name || '',
+                        title: rawData.title || '',
+                        description: rawData.description || '',
+                        members: rawData.members || []
+                    };
+                    
+                    setTeam(teamData);
+                    
+                    if (teamData.members && teamData.members.length > 0) {
+                        await processTeamMembers(teamData.members);
+                    }
+                }
+            } catch (err) {
+            }
+        };
+
+        const processTeamMembers = async (members: any[]) => {
+            const membersArray: TeamMember[] = [];
+            let permissionError = false;
+            let successfulFetches = 0;
+            
+            for (let i = 0; i < members.length; i++) {
+                const memberRef = members[i];
+                
+                try {
+                    if (!memberRef) {
+                        continue;
+                    }
+                    
+                    let path = null;
+                    let userId = null;
+                    
+                    if (typeof memberRef === 'string') {
+                        path = memberRef;
+                        userId = path.split('/').pop();
+                    } else if (memberRef.path) {
+                        path = memberRef.path;
+                        userId = path.split('/').pop();
+                    } else if (memberRef._key && memberRef._key.path && memberRef._key.path.segments) {
+                        const segments = memberRef._key.path.segments;
+                        userId = segments[segments.length - 1];
+                        path = `publicUsers/${userId}`;
+                    } else if (memberRef._path && memberRef._path.segments) {
+                        const segments = memberRef._path.segments;
+                        userId = segments[segments.length - 1];
+                        path = `publicUsers/${userId}`;
+                    } else if (memberRef.id) {
+                        userId = memberRef.id;
+                        path = `publicUsers/${userId}`;
+                    }
+
+                    console.log(path, userId)
+                    
+                    if (path) {
+                        try {
+                            const memberDocRef = doc(db as any, path);
+                            const memberDoc = await getDoc(memberDocRef);
+                            
+                            if (memberDoc.exists()) {
+                                const userData = memberDoc.data() as any;
+                                
+                                const publicUserData = {
+                                    displayName: userData.displayName || userData.name || "Team Member",
+                                    name: userData.name || userData.displayName || "Team Member",
+                                    image: userData.image || "/imgs/team/default.svg",
+                                    role: userData.role || "Member",
+                                    socials: userData.socials || {}
+                                };
+                                
+                                console.log(userData);
+
+                                successfulFetches++;
+                                
+                                membersArray.push({
+                                    id: userId || `user-${i}`,
+                                    displayName: publicUserData.displayName,
+                                    name: publicUserData.name,
+                                    image: publicUserData.image,
+                                    role: publicUserData.role,
+                                    socials: publicUserData.socials
+                                });
+                            }
+                        } catch (fetchError: any) {
+                            if (fetchError.code === 'permission-denied') {
+                                permissionError = true;
+                            }
+                        }
+                    }
+                } catch (err) {
+                }
+            }
+            
+            if (membersArray.length > 0) {
+                setTeamMembers(membersArray);
+            } else if (permissionError) {
+                const userIds = members.map((ref, index) => {
+                    if (typeof ref === 'string') return ref.split('/').pop() || `user-${index}`;
+                    if (ref.path) return ref.path.split('/').pop() || `user-${index}`;
+                    if (ref._key && ref._key.path && ref._key.path.segments) {
+                        const segments = ref._key.path.segments;
+                        return segments[segments.length - 1] || `user-${index}`;
+                    }
+                    if (ref._path && ref._path.segments) {
+                        const segments = ref._path.segments;
+                        return segments[segments.length - 1] || `user-${index}`;
+                    }
+                    if (ref.id) return ref.id;
+                    return `user-${index}`;
+                });
+                
+                userIds.forEach((userId, index) => {
+                    membersArray.push({
+                        id: userId,
+                        displayName: `Team Member ${index + 1}`,
+                        name: `Team Member ${index + 1}`,
+                        image: "/imgs/team/default.svg",
+                        role: index === 0 ? "Team Lead" : "Member",
+                        email: "",
+                        socials: {}
+                    });
+                });
+                
+                setTeamMembers(membersArray);
+            }
+        };
+
         fetchProject();
 
         return () => {
             isMounted = false;
         };
     }, [db, id]);
+
+    const TeamSection = () => {
+        if (!team) {
+            return (
+                <div className="w-full py-8">
+                    <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
+                        <div className="mb-[1vh]">Team</div>
+                        <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
+                    </div>
+                    
+                    <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
+                        No team information available for this project.
+                    </div>
+                </div>
+            );
+        }
+        
+        return (
+            <div className="w-full py-8">
+                <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
+                    <div className="mb-[1vh]">Team</div>
+                    <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
+                </div>
+                
+                <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
+                    {team.description || "No team description available."}
+                </div>
+                
+                {teamMembers.length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 px-[7vw] mb-8">
+                        {teamMembers.map((member) => (
+                            <TeamMember key={member.id} data={member} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
+                        No team members listed for this project.
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    const renderMarkdownContent = (content: string) => (
+        <ReactMarkdown
+            className="markdown-body"
+            components={MarkdownComponents}
+        >
+            {typeof content === 'string' ? content.replace(/\\n/g, '\n') : content}
+        </ReactMarkdown>
+    );
+
+    const processContent = () => {
+        if (!project?.content) return null;
+        
+        const TEAMS_PLACEHOLDER = "{{teams}}";
+        
+        if (project.content.includes(TEAMS_PLACEHOLDER)) {
+            const contentParts = project.content.split(TEAMS_PLACEHOLDER);
+            
+            return (
+                <>
+                    {renderMarkdownContent(contentParts[0])}
+                    <TeamSection />
+                    {contentParts.length > 1 && renderMarkdownContent(contentParts[1])}
+                </>
+            );
+        } else {
+            return (
+                <>
+                    {renderMarkdownContent(project.content)}
+                    <TeamSection />
+                </>
+            );
+        }
+    };
 
     if (loading) {
         return (
@@ -87,65 +365,29 @@ const IndividualProject = () => {
         );
     }
 
-    // creating custom components to style markdown content
-    const H1Component = (props: { className?: string, children?: React.ReactNode }) => (
-        <div className={`px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[2vh]`}>
-            {props.children}
-            <div className={`bg-[#00349F] w-[8.1vw] h-[6px] ${props.className}`}></div>
-        </div>
-    );
-
-    const H2Component = (props: { className?: string, children?: React.ReactNode }) => (
-        <div className={`px-[9.5vw] font-roboto-mono text-white text-[20px] font-[700] mb-[2vh] mt-[3.5vh]`}>
-            {props.children}
-            <div className={`bg-[#00349F] w-[6.1vw] h-[4px] ${props.className}`}></div>
-        </div>
-    );
-
-    const UlComponent = (props: { className?: string, children?: React.ReactNode }) => (
-        <div className={`px-[9.5vw] font-roboto-mono text-white text-[16px] font-[400] mb-[3vh]`}>
-            {props.children}
-        </div>
-    );
-
-    const PComponent = (props: { className?: string, children?: React.ReactNode }) => {
-        return (
-            <div className={`px-[9.5vw] font-roboto-mono text-white text-[16px] font-[400] mb-[3vh]`}>
-                {props.children}
-            </div>
-        )
-    }
-
-    const ImgComponent = (props: {src?: string, alt?: string}) => {
-        return (
-            <div className="rounded-md">
-                <Image 
-                    src={props.src || ''} 
-                    alt={props.alt || ''} 
-                    width={800} 
-                    height={600}
-                    className="w-full h-auto"
-                />
-            </div>
-        );
-    }
-
-    const H6Component = (props: {className?: string, children?: React.ReactNode}) => {
-        return (
-            <div className="px-[9.5vw] inline-block mb-[3vh]">
-                {props.children}
-            </div>
-        );
-    }
-
     return (
         <>
-            <div className="relative w-screen h-auto bg-dark-grey pb-16">
-                <div className="w-screen h-[40vh] bg-cover bg-wwd-banner mb-[5vh]"></div>
-                <div className="absolute left-[16.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-                    <div>{project.title}</div>
-                    <div className="bg-[#00349F] w-[13.1vw] h-[6px]"></div>
+            <div className="relative w-screen h-auto bg-gradient-to-b from-[#161652] to-[#483EE0] pb-16">
+                <div className="w-screen h-[40vh] bg-cover relative">
+                    <Image 
+                        src="/imgs/headers/header1.png" 
+                        alt="Header Image" 
+                        fill
+                        sizes="100vw"
+                        style={{ 
+                        objectFit: "cover", 
+                        objectPosition: "center 0%", 
+                        filter: "contrast(1.3) brightness(1.1)",
+                        }}
+                    />
                 </div>
+                <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
+                    <div className="font-bold">{project.title}</div>
+                    <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
+                </div>
+
+                <br />
+        
                 <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
                     <div className="mb-[1vh]">Synopsis</div>
                     <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
@@ -162,28 +404,25 @@ const IndividualProject = () => {
                     <p>Status: {project.status}</p>
                     <p>Duration: {project.startDate} - {project.endDate}</p>
                 </div>
-                {project.content && (
-                    <ReactMarkdown
-                        className="markdown-body"
-                        components={{
-                            h1: ({ children, className = "mt-[1vh]", ...props }) => <H1Component className={className} {...props}>{children}</H1Component>,
-                            h2: ({ children, className = "mt-[1vh]", ...props }) => <H2Component className={className} {...props}>{children}</H2Component>,
-                            ul: ({ children, ...props }) => <UlComponent {...props}>{children}</UlComponent>,
-                            p: ({ children, ...props }) => (
-                                <PComponent {...props}>
-                                    <div style={{ whiteSpace: 'pre-wrap' }}>{children}</div>
-                                </PComponent>
-                            ),
-                            img: ({ src, alt }) => <ImgComponent src={src} alt={alt} />,
-                            h6: ({ children, className }) => <H6Component>{children}</H6Component>,
-                            br: () => <br />,
-                        }}>
-                        {typeof project.content === 'string' ? project.content.replace(/\\n/g, '\n') : project.content}
-                    </ReactMarkdown>
+                
+                {project.content && project.content.includes('{{documentation}}') && (
+                    <div className="px-[9.5vw] bg-indigo-900 rounded-md p-4 mb-8">
+                        <h3 className="text-white font-bold mb-2">Teams Feature Documentation</h3>
+                        <p className="text-white text-sm mb-2">
+                            You can embed the team section anywhere in your project content by adding the <code>{'{{teams}}'}</code> placeholder. 
+                            If no placeholder is found, the team section will be added at the end of the content.
+                        </p>
+                        <p className="text-white text-sm">
+                            Example: <br/>
+                            <code># Project Content<br/>Some content here...<br/><br/>{'{{teams}}'}<br/><br/>More content after the team section...</code>
+                        </p>
+                    </div>
                 )}
+                
+                {project.content ? processContent() : <TeamSection />}
             </div>
         </>
     );
 };
 
-export default IndividualProject; 
+export default IndividualProject;

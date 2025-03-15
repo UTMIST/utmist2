@@ -1,5 +1,4 @@
 import { buildCollection, buildProperty } from "@firecms/core";
-// import { Project } from "@/schemas/TeamMetaData";
 
 export const projectsCollection = buildCollection({
     id: "projects",
@@ -14,7 +13,7 @@ export const projectsCollection = buildCollection({
             }
         },
         teamId: buildProperty({
-            dataType: "reference",
+            dataType: "reference" as any,
             name: "Team",
             path: "teams",
             validation: {
@@ -49,14 +48,9 @@ export const projectsCollection = buildCollection({
         thumbnail: {
             dataType: "string",
             name: "Thumbnail",
-            // storage: {
-            //     storagePath: "project_thumbnails",
-            //     acceptedFiles: ["image/*"],
-            //     maxSize: 1024 * 1024,
-            //     metadata: {
-            //         cacheControl: "max-age=1000000"
-            //     }
-            // }
+            validation: {
+                required: true
+            }
         },
         status: {
             dataType: "string",
@@ -97,7 +91,34 @@ export const projectsCollection = buildCollection({
                 Academic: "Academic",
                 Applied: "Applied",
                 Infrastructure: "Infrastructure"
+            },
+            validation: {
+                required: true
             }
         },
+        description: {
+            dataType: "string",
+            name: "Description",
+            multiline: true,
+            validation: {
+                required: false
+            }
+        },
+        youtube: {
+            dataType: "string",
+            name: "YouTube Link",
+            url: true,
+            validation: {
+                required: false
+            }
+        },
+        proposal: {
+            dataType: "string",
+            name: "Proposal Link",
+            url: true,
+            validation: {
+                required: false
+            }
+        }
     }
 });
