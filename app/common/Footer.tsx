@@ -27,6 +27,7 @@ import githubLogo from "public/assets/GitH.svg";
 import gitlabLogo from "public/assets/GitLab.svg";
 import mediumLogo from "public/assets/Medium.svg";
 import youtubeLogo from "public/assets/YT.svg";
+import stripedBg from "public/imgs/fillers/striped_bg.png";
 
 interface SocialMediaLinkProps {
   href: string;
@@ -41,15 +42,17 @@ const SocialMediaLink: React.FC<SocialMediaLinkProps> = ({
   alt,
   text,
 }) => (
-  <Link href={href}>
-    <div className="flex space-x-2 group">
+  <Link href={href} className="mx-4 my-3">
+    <div className="flex items-center space-x-3 group">
       <Image
         src={src}
-        className="hover:filter duration-200 ease-in-out brightness-[.5] hover:brightness-100 group-hover:filter-none"
+        className="hover:filter duration-200 ease-in-out brightness-[.5] hover:brightness-100 group-hover:filter-none w-6 h-6"
         alt={alt}
+        width={24}
+        height={24}
       />
 
-      <span className="font-['Roboto_Mono'] text-zinc-300 text-lg transition-colors duration-200 ease-in-out group-hover:text-white">
+      <span className="font-['Roboto_Mono'] font-normal text-zinc-300 text-xl transition-colors duration-200 ease-in-out group-hover:text-white">
         {text}
       </span>
     </div>
@@ -59,175 +62,191 @@ const SocialMediaLink: React.FC<SocialMediaLinkProps> = ({
 export default function Footer() {
   return (
     <>
-      <div className="w-full bg-blue-800">
-        {/* Mobile */}
-        <div className="lg:hidden">
-          <div className="flex flex-row justify-center items-center py-4 space-x-20">
-            <div className="text-center text-white">
-              <div className="text-lg font-bold font-['Roboto_Mono'] text-white text-lg my-2 py-5">
-                Social Media
-              </div>
-              <div className="flex flex-col justify-center space-y-2">
-                <SocialMediaLink
-                  href="mailto:utorontomist@gmail.com"
-                  src={emailLogo}
-                  alt="Email"
-                  text="Email"
-                />
-                <SocialMediaLink
-                  href="https://www.facebook.com/UofT.MIST"
-                  src={facebookLogo}
-                  alt="Facebook"
-                  text="Facebook"
-                />
-                <SocialMediaLink
-                  href="https://www.instagram.com/uoft_utmist"
-                  src={instagramLogo}
-                  alt="Instagram"
-                  text="Instagram"
-                />
-                <SocialMediaLink
-                  href="https://twitter.com/UTMIST1"
-                  src={twitterLogo}
-                  alt="Twitter"
-                  text="Twitter"
-                />
-                <SocialMediaLink
-                  href="https://www.linkedin.com/company/utmist/"
-                  src={linkedinLogo}
-                  alt="LinkedIn"
-                  text="LinkedIn"
-                />
-              </div>
-            </div>
+      <div className="w-full bg-blue-800 relative overflow-hidden">
+        {/* Background Stripe Pattern */}
+        <div className="absolute top-0 right-0 w-full h-full pointer-events-none">
+          <Image 
+            src={stripedBg} 
+            alt="Background pattern" 
+            fill
+            sizes="100vw"
+            style={{
+              objectFit: "cover",
+              objectPosition: "right center"
+            }}
+            className="opacity-100"
+          />
+        </div>
 
-            <div className="text-center text-white">
-              <div className="text-lg font-bold font-['Roboto_Mono'] text-white text-lg my-2 py-5">
-                Workspaces
-              </div>
-              <div className="flex flex-col justify-center space-y-2">
-                <SocialMediaLink
-                  href="https://discord.com/invite/88mSPw8"
-                  src={discordLogo}
-                  alt="Discord"
-                  text="Discord"
-                />
-                <SocialMediaLink
-                  href="https://github.com/UTMIST"
-                  src={githubLogo}
-                  alt="Github"
-                  text="Github"
-                />
-                <SocialMediaLink
-                  href="https://gitlab.com/utmist"
-                  src={gitlabLogo}
-                  alt="Gitlab"
-                  text="Gitlab"
-                />
-                <SocialMediaLink
-                  href="https://medium.com/@utorontomist"
-                  src={mediumLogo}
-                  alt="Medium"
-                  text="Medium"
-                />
-                <SocialMediaLink
-                  href="https://youtube.com/channel/UC7G_kmlXrUUvoHyfT3ZTxaw"
-                  src={youtubeLogo}
-                  alt="YouTube"
-                  text="YouTube"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-center items-center py-4">
-            <div className="w-1/8 max-w-xs">
+        {/* Larger Screens */}
+        <div className="hidden lg:block relative z-10 container mx-auto px-8 py-10">
+          <div className="flex items-center justify-center max-w-5xl mx-auto">
+            <div className="w-1/3 pr-10">
               <Image src={logo} alt="UTMIST Logo" className="w-full h-auto" />
+            </div>
+            
+            <div className="w-2/3">
+              <div className="mb-10">
+                <h2 className="font-['Roboto_Mono'] font-bold text-white text-2xl mb-5">
+                  Find us at:
+                </h2>
+                <div className="flex flex-wrap">
+                  <SocialMediaLink
+                    href="mailto:utorontomist@gmail.com"
+                    src={emailLogo}
+                    alt="Email"
+                    text="Email"
+                  />
+                  <SocialMediaLink
+                    href="https://www.facebook.com/UofT.MIST"
+                    src={facebookLogo}
+                    alt="Facebook"
+                    text="Facebook"
+                  />
+                  <SocialMediaLink
+                    href="https://www.instagram.com/uoft_utmist"
+                    src={instagramLogo}
+                    alt="Instagram"
+                    text="Instagram"
+                  />
+                  <SocialMediaLink
+                    href="https://twitter.com/UTMIST1"
+                    src={twitterLogo}
+                    alt="Twitter"
+                    text="Twitter"
+                  />
+                  <SocialMediaLink
+                    href="https://www.linkedin.com/company/utmist/"
+                    src={linkedinLogo}
+                    alt="LinkedIn"
+                    text="LinkedIn"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <h2 className="font-['Roboto_Mono'] font-bold text-white text-2xl mb-5">
+                  Workspaces
+                </h2>
+                <div className="flex flex-wrap">
+                  <SocialMediaLink
+                    href="https://discord.com/invite/88mSPw8"
+                    src={discordLogo}
+                    alt="Discord"
+                    text="Discord"
+                  />
+                  <SocialMediaLink
+                    href="https://github.com/UTMIST"
+                    src={githubLogo}
+                    alt="Github"
+                    text="Github"
+                  />
+                  <SocialMediaLink
+                    href="https://gitlab.com/utmist"
+                    src={gitlabLogo}
+                    alt="Gitlab"
+                    text="Gitlab"
+                  />
+                  <SocialMediaLink
+                    href="https://medium.com/@utorontomist"
+                    src={mediumLogo}
+                    alt="Medium"
+                    text="Medium"
+                  />
+                  <SocialMediaLink
+                    href="https://youtube.com/channel/UC7G_kmlXrUUvoHyfT3ZTxaw"
+                    src={youtubeLogo}
+                    alt="YouTube"
+                    text="YouTube"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Larger */}
-        <div className="hidden lg:flex lg:items-center lg:py-10 lg:w-full lg:justify-center">
-          <div className="flex flex-col justify-center">
-            <div className="mr-8">
-              <Image src={logo} alt="UTMIST Logo" className="w-auto h-auto" />
+        {/* Mobile */}
+        <div className="lg:hidden relative z-10 px-4 py-6">
+          <div className="flex items-center justify-center">
+            <div className="w-2/5 pr-4">
+              <Image src={logo} alt="UTMIST Logo" className="w-full h-auto" />
             </div>
-          </div>
+            
+            <div className="w-3/5">
+              <div className="mb-5">
+                <h2 className="font-['Roboto_Mono'] font-bold text-white text-lg mb-3">
+                  Find us at:
+                </h2>
+                <div className="flex flex-wrap">
+                  <SocialMediaLink
+                    href="mailto:utorontomist@gmail.com"
+                    src={emailLogo}
+                    alt="Email"
+                    text="Email"
+                  />
+                  <SocialMediaLink
+                    href="https://www.facebook.com/UofT.MIST"
+                    src={facebookLogo}
+                    alt="Facebook"
+                    text="Facebook"
+                  />
+                  <SocialMediaLink
+                    href="https://www.instagram.com/uoft_utmist"
+                    src={instagramLogo}
+                    alt="Instagram"
+                    text="Instagram"
+                  />
+                  <SocialMediaLink
+                    href="https://twitter.com/UTMIST1"
+                    src={twitterLogo}
+                    alt="Twitter"
+                    text="Twitter"
+                  />
+                  <SocialMediaLink
+                    href="https://www.linkedin.com/company/utmist/"
+                    src={linkedinLogo}
+                    alt="LinkedIn"
+                    text="LinkedIn"
+                  />
+                </div>
+              </div>
 
-          <div>
-            <div className="text-left text-white mb-8">
-              <div className="text-xl font-bold font-['Roboto_Mono'] text-white text-lg mb-4">
-                Social Media
-              </div>
-              <div className="flex flex-row space-x-14">
-                <SocialMediaLink
-                  href="mailto:utorontomist@gmail.com"
-                  src={emailLogo}
-                  alt="Email"
-                  text="Email"
-                />
-                <SocialMediaLink
-                  href="https://www.facebook.com/UofT.MIST"
-                  src={facebookLogo}
-                  alt="Facebook"
-                  text="Facebook"
-                />
-                <SocialMediaLink
-                  href="https://www.instagram.com/uoft_utmist"
-                  src={instagramLogo}
-                  alt="Instagram"
-                  text="Instagram"
-                />
-                <SocialMediaLink
-                  href="https://twitter.com/UTMIST1"
-                  src={twitterLogo}
-                  alt="Twitter"
-                  text="Twitter"
-                />
-                <SocialMediaLink
-                  href="https://www.linkedin.com/company/utmist/"
-                  src={linkedinLogo}
-                  alt="LinkedIn"
-                  text="LinkedIn"
-                />
-              </div>
-            </div>
-            <div className="text-left text-white">
-              <div className="text-xl font-bold font-['Roboto_Mono'] text-white text-lg mb-4">
-                Workspaces
-              </div>
-              <div className="flex flex-row space-x-14">
-                <SocialMediaLink
-                  href="https://discord.com/invite/88mSPw8"
-                  src={discordLogo}
-                  alt="Discord"
-                  text="Discord"
-                />
-                <SocialMediaLink
-                  href="https://github.com/UTMIST"
-                  src={githubLogo}
-                  alt="Github"
-                  text="Github"
-                />
-                <SocialMediaLink
-                  href="https://gitlab.com/utmist"
-                  src={gitlabLogo}
-                  alt="Gitlab"
-                  text="Gitlab"
-                />
-                <SocialMediaLink
-                  href="https://medium.com/@utorontomist"
-                  src={mediumLogo}
-                  alt="Medium"
-                  text="Medium"
-                />
-                <SocialMediaLink
-                  href="https://youtube.com/channel/UC7G_kmlXrUUvoHyfT3ZTxaw"
-                  src={youtubeLogo}
-                  alt="YouTube"
-                  text="YouTube"
-                />
+              <div>
+                <h2 className="font-['Roboto_Mono'] font-bold text-white text-lg mb-3">
+                  Workspaces
+                </h2>
+                <div className="flex flex-wrap">
+                  <SocialMediaLink
+                    href="https://discord.com/invite/88mSPw8"
+                    src={discordLogo}
+                    alt="Discord"
+                    text="Discord"
+                  />
+                  <SocialMediaLink
+                    href="https://github.com/UTMIST"
+                    src={githubLogo}
+                    alt="Github"
+                    text="Github"
+                  />
+                  <SocialMediaLink
+                    href="https://gitlab.com/utmist"
+                    src={gitlabLogo}
+                    alt="Gitlab"
+                    text="Gitlab"
+                  />
+                  <SocialMediaLink
+                    href="https://medium.com/@utorontomist"
+                    src={mediumLogo}
+                    alt="Medium"
+                    text="Medium"
+                  />
+                  <SocialMediaLink
+                    href="https://youtube.com/channel/UC7G_kmlXrUUvoHyfT3ZTxaw"
+                    src={youtubeLogo}
+                    alt="YouTube"
+                    text="YouTube"
+                  />
+                </div>
               </div>
             </div>
           </div>

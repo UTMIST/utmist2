@@ -12,7 +12,7 @@ export default function JoinUs() {
 
   return (
     <>
-      <div className="relative w-screen h-auto bg-dark-grey">
+      <div className="relative w-screen h-auto bg-[#3749E4]">
         <div className="w-screen h-[40vh] bg-cover relative">
           <Image 
             src="/imgs/headers/header1.png" 
@@ -50,7 +50,7 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer h-[80px] flex items-center justify-center">
                   <p className="font-roboto-mono font-bold text-xl">Join our Discord</p>
                 </div>
               </div>
@@ -64,7 +64,7 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer h-[80px] flex items-center justify-center">
                   <p className="font-roboto-mono font-bold text-xl">Sign up for our newsletter</p>
                 </div>
               </div>
@@ -78,7 +78,7 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer h-[80px] flex items-center justify-center">
                   <p className="font-roboto-mono font-bold text-xl">Attend an event</p>
                 </div>
               </div>
@@ -92,7 +92,7 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer h-[80px] flex items-center justify-center">
                   <p className="font-roboto-mono font-bold text-xl">View our projects</p>
                 </div>
               </div>

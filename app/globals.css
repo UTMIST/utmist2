@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+@import url('https://fonts.cdnfonts.com/css/october-tamil');
+
 @config "../tailwind.config.ts";
 @tailwind base;
 @tailwind components;

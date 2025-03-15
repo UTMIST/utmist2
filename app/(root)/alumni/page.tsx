@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function AlumniPage() {
   return (
     <>
-      <div className="relative w-screen h-auto bg-dark-grey">
+      <div className="relative w-screen h-auto bg-[#3749E4]">
         <div className="w-screen h-[40vh] bg-cover relative">
           <Image 
             src="/imgs/headers/header1.png" 

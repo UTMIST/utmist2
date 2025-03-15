@@ -34,6 +34,10 @@ const config: Config = {
       "2xl": "1536px",
     },
     extend: {
+      fontFamily: {
+        'roboto-mono': ['Roboto Mono', 'monospace'],
+        'october-tamil': ['October Tamil', 'sans-serif'],
+      },
       boxShadow: {
         md: "4px 4px 10px rgba(255, 255, 255, 0.25)",
       },
