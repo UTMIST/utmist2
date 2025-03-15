@@ -46,16 +46,13 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed font-roboto-mono bg-[#1E1E1E] z-10 w-full h-14 flex items-center">
+    <nav className="fixed top-0 left-0 w-full z-50 bg-[#171C69] shadow-md font-roboto-mono h-14 flex items-center">
         <div className="flex justify-between items-center px-4 w-full">
           <Link href="/">
             <Image src={logo} alt="logo" className="cursor-pointer h-9 w-auto"/>
           </Link>
           <div className="hidden lg:flex items-center">
             <ul className="flex items-center">
-              <Link href="/ai2">
-                <li className="inline-block ml-10 text-white">Happening Now: AI2</li>
-              </Link>
               <Link href="/about">
                 <li className="inline-block ml-10 text-white">About Us</li>
               </Link>
@@ -108,7 +105,8 @@ export default function Navbar() {
                 <li className="inline-block ml-10">
                   <button
                     onClick={handleSignIn}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+                    style={{ borderRadius: '8px', border: '1px solid #64C8FA' }}
+                    className="bg-[#92DEFF] hover:bg-[#7BCFE6] text-[#1E1E1E] font-bold py-2 px-4 transition duration-200 shadow-md"
                   >
                     Login
                   </button>
