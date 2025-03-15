@@ -15,7 +15,7 @@ const sampleDemistifyData: DemistifyData[] = [
     slug: "issue-5",
     publishDate: "2024-02-01",
     issueNumber: "Issue #5",
-    imgPath: "/assets/demistify/issue5.jpg",
+    imgPath: "/imgs/fillers/circuits.png",
     buttonHref: "utorontomist.medium.com/issue-5",
     description: "Exploring the Latest Advances in Natural Language Processing and Their Impact on AI Development"
   },
@@ -23,7 +23,7 @@ const sampleDemistifyData: DemistifyData[] = [
     slug: "issue-4",
     publishDate: "2023-12-15",
     issueNumber: "Issue #4",
-    imgPath: "/assets/demistify/issue4.jpg",
+    imgPath: "/imgs/fillers/circuits.png",
     buttonHref: "utorontomist.medium.com/issue-4",
     description: "Deep Learning in Computer Vision: Breaking Down Complex Visual Tasks"
   },
@@ -31,7 +31,7 @@ const sampleDemistifyData: DemistifyData[] = [
     slug: "issue-3",
     publishDate: "2023-10-30",
     issueNumber: "Issue #3",
-    imgPath: "/assets/demistify/issue3.jpg",
+    imgPath: "/imgs/fillers/circuits.png",
     buttonHref: "utorontomist.medium.com/issue-3",
     description: "Reinforcement Learning: From Game Playing to Real-World Applications"
   },
@@ -39,7 +39,7 @@ const sampleDemistifyData: DemistifyData[] = [
     slug: "issue-2",
     publishDate: "2023-09-15",
     issueNumber: "Issue #2",
-    imgPath: "/assets/demistify/issue2.jpg",
+    imgPath: "/imgs/fillers/circuits.png",
     buttonHref: "utorontomist.medium.com/issue-2",
     description: "The Ethics of AI: Addressing Bias and Fairness in Machine Learning Systems"
   },
@@ -47,7 +47,7 @@ const sampleDemistifyData: DemistifyData[] = [
     slug: "issue-1",
     publishDate: "2023-08-01",
     issueNumber: "Issue #1",
-    imgPath: "/assets/demistify/issue1.jpg",
+    imgPath: "/imgs/fillers/circuits.png",
     buttonHref: "utorontomist.medium.com/issue-1",
     description: "Introduction to Machine Learning: Understanding the Basics of AI"
   }
@@ -92,7 +92,13 @@ const Demistify: React.FC = ({ }) => {
         .map((item, ind) => {
             return (
                 <div key={ind} className="rounded-md overflow-hidden bg-black shadow-lg w-362">
-                    <Image className="w-full h-315" src={item.imgPath} alt="Card Image" />
+                    <Image 
+                        className="w-full h-315" 
+                        src={item.imgPath} 
+                        alt="Card Image"
+                        width={362}
+                        height={315}
+                    />
                     <div className="px-6 py-4">
                         <div className="font-bold text-white font-roboto-mono">{item.publishDate}</div>
                         <div className="font-bold text-white font-roboto-mono">{item.issueNumber}</div>
@@ -106,12 +112,27 @@ const Demistify: React.FC = ({ }) => {
 
         return <>
          <div className="bg-dark-grey overflow-x-hidden">
-             <div className=" w-screen h-[53vh] bg-cover bg-wwd-banner"></div>
-             <div className=" absolute left-[16.7vw] top-[18vh] text-white text-[5.2vh] font-roboto-mono">
-                 <div>deMISTify</div>
-                 <div className="bg-[#00349F] w-[14vw] h-[6px]"></div>
-             </div>
-             <div className="relative flex items-center justify-center mt-6">
+            <div className="w-screen h-[40vh] bg-cover relative">
+            <Image 
+                src="/imgs/headers/header1.png" 
+                alt="Header Image" 
+                fill
+                sizes="100vw"
+                style={{ 
+                objectFit: "cover", 
+                objectPosition: "center 0%", 
+                filter: "contrast(1.3) brightness(1.1)",
+                }}
+            />
+            </div>
+            <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
+                <div className="font-bold">deMISTify</div>
+                <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
+            </div>
+
+            <div className="flex flex-col justify-around items-center text-white px-[10vw] py-[5vh] bg-gradient-to-b from-[#161652] to-[#483EE0]">
+
+            <div className="relative flex items-center justify-center mt-6">
                     <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
                         <li className="relative">
                             <button
@@ -135,36 +156,51 @@ const Demistify: React.FC = ({ }) => {
                         </li>
                     </ul>
                 </div>
-             <div className="grid grid-cols-1 md:grid-cols-1 gap-4 p-10">
+             <div className="flex flex-col gap-12 p-10 max-w-[1000px] w-full">
                  {sampleDemistifyData.map((item, ind) => {
                      return (
-                         <div className="rounded-md overflow-hidden bg-black shadow-lg w-full flex flex-col" key={ind}>
+                        <Link href={`https://${item.buttonHref}`} key={ind} className="rounded-[20px] overflow-hidden shadow-lg w-full flex flex-col cursor-pointer hover:opacity-95 transition-opacity">
                              <div>
-                                 <Image className="w-full h-40 object-cover" src={item.imgPath} alt="Card Image" />
-                                 <Image className="w-full h-40 object-cover" src={item.issueNumber} alt="Card Image" />
+                                 <Image 
+                                     className="w-full h-52 object-cover" 
+                                     src={item.imgPath} 
+                                     alt="Circuit board"
+                                     width={1000}
+                                     height={208}
+                                 />
                              </div>
-                             <div className="px-6 py-4 flex-grow">
-                                 <p className="text-white font-roboto-mono">
-                                     {item.description}
-                                 </p>
+                             <div className="px-8 py-8 flex-grow bg-[#665ADF] rounded-b-[20px]">
+                                 <div className="font-bold text-white font-roboto-mono text-lg uppercase">
+                                     {item.publishDate.split('-')[0]}-{item.publishDate.split('-')[1]}-{item.publishDate.split('-')[2]} | {item.issueNumber}
+                                 </div>
+                                 
+                                 <div className="font-bold text-white font-roboto-mono mt-4 text-lg uppercase">
+                                     WHAT THIS NEWSLETTER COVERS:
+                                 </div>
+                                 <div className="text-white font-roboto-mono mt-4 text-lg">
+                                    {item.description}
+                                 </div>
+                                 {/* <ul className="list-disc pl-6 mt-3 text-white font-roboto-mono space-y-2">
+                                     <li>{item.description}</li>
+                                     <li>Lorem Ipsum</li>
+                                     <li>Lorem Ipsum</li>
+                                     <li>Lorem Ipsum</li>
+                                 </ul> */}
                              </div>
-                             <div className="px-6 py-4 flex justify-end">
-                                 <Link
-                                     href={`utorontomist.medium.com/${item.slug}`}
-                                     className="flex justify-center items-center rounded-md bg-utmist-purple shadow-md mt-5 text-[2.2vh] text-center w-[25vw] h-[5vh] lg:w-[8vw] lg:h-[4.9vh] md:w-[9vw] md:h-[6vh]"
-                                 >
-                                     <div className="text-white font-roboto-mono">Read More</div>
-                                 </Link>
-                             </div>
-
-                         </div>
+                        </Link>
                      );
                  })}
              </div>
 
-
-
-
+             <div className="flex justify-center gap-10 pb-12 mt-4">
+                 <Link href="#" className="flex justify-center items-center rounded-[10px] bg-[#92DEFF] shadow-md text-center px-10 py-3 w-[320px]">
+                     <div className="text-black font-roboto-mono font-normal text-lg">Subscribe to deMISTify</div>
+                 </Link>
+                 <Link href="https://medium.com/utorontomist" className="flex justify-center items-center rounded-[10px] bg-[#92DEFF] shadow-md text-center px-10 py-3 w-[320px]">
+                     <div className="text-black font-roboto-mono font-normal text-lg">Read on Medium!</div>
+                 </Link>
+             </div>
+            </div>
          </div>
      </>
  }

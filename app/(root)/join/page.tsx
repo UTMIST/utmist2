@@ -50,8 +50,8 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-6 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
-                  <p className="font-roboto-mono font-bold text-xl py-1">Join our Discord</p>
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                  <p className="font-roboto-mono font-bold text-xl">Join our Discord</p>
                 </div>
               </div>
               
@@ -64,8 +64,8 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-6 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
-                  <p className="font-roboto-mono font-bold text-xl py-1">Sign up for our newsletter</p>
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                  <p className="font-roboto-mono font-bold text-xl">Sign up for our newsletter</p>
                 </div>
               </div>
               
@@ -78,8 +78,8 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-6 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
-                  <p className="font-roboto-mono font-bold text-xl py-1">Attend an event</p>
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                  <p className="font-roboto-mono font-bold text-xl">Attend an event</p>
                 </div>
               </div>
               
@@ -92,8 +92,8 @@ export default function JoinUs() {
                     style={{ objectFit: "cover" }} 
                   />
                 </div>
-                <div className="p-6 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
-                  <p className="font-roboto-mono font-bold text-xl py-1">View our projects</p>
+                <div className="p-4 text-center bg-[#6C63FF] hover:bg-[#8F88FF] transition-colors cursor-pointer">
+                  <p className="font-roboto-mono font-bold text-xl">View our projects</p>
                 </div>
               </div>
             </div>
