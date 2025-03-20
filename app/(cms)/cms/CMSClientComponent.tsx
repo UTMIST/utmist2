@@ -58,7 +58,7 @@ function CMSPage() {
 
         // auth is limited to 2 people 
         console.log(user?.email);
-        if (user?.email != null && (user?.email == "ajwmagnuson@gmail.com" || user?.email == "zainhmoustafa@gmail.com")) {
+        if (user?.email != null && (user?.email == "ajwmagnuson@gmail.com" || user?.email == "zainhmoustafa@gmail.com" || user?.email == "bonnybyc@gmail.com")) {
             return true;
         }
         return false;

@@ -48,8 +48,8 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "autoprefixer": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",

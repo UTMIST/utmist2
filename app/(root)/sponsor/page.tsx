@@ -83,7 +83,7 @@ export default function SponsorPage() {
             style={{ 
               objectFit: "cover", 
               objectPosition: "center 0%", 
-              filter: "contrast(1.3) brightness(1.1)",
+              filter: "contrast(1.1) brightness(1)",
             }}
           />
         </div>
