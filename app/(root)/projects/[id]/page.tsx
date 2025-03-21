@@ -11,6 +11,8 @@ import LinkButton from "@app/common/LinkButton";
 import TeamMember from "@app/common/TeamMember";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { Project } from "@schema/project";
+import PageHeader from "@app/components/PageHeader";
+
 
 interface TeamMember {
     id: string;
@@ -367,59 +369,44 @@ const IndividualProject = () => {
 
     return (
         <>
-            <div className="relative w-screen h-auto bg-gradient-to-b from-[#161652] to-[#483EE0] pb-16">
-                <div className="w-screen h-[40vh] bg-cover relative">
-                    <Image 
-                        src="/imgs/headers/header1.png" 
-                        alt="Header Image" 
-                        fill
-                        sizes="100vw"
-                        style={{ 
-                        objectFit: "cover", 
-                        objectPosition: "center 0%", 
-                        filter: "contrast(1.3) brightness(1.1)",
-                        }}
-                    />
-                </div>
-                <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-                    <div className="font-bold">{project.title}</div>
-                    <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
-                </div>
+            <div className="relative w-screen h-auto">
+            <PageHeader title={project.title} />
 
+            <div className="relative w-screen h-auto bg-gradient-to-b from-[#131B6B] to-[#483EE0] pb-16">
                 <br />
-        
                 <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
-                    <div className="mb-[1vh]">Synopsis</div>
-                    <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
-                </div>
-                <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
-                    {project.synopsis}
-                </div>
-                <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
-                    <div className="mb-[1vh]">Details</div>
-                    <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
-                </div>
-                <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
-                    <p>Type: {project.type}</p>
-                    <p>Status: {project.status}</p>
-                    <p>Duration: {project.startDate} - {project.endDate}</p>
-                </div>
-                
-                {project.content && project.content.includes('{{documentation}}') && (
-                    <div className="px-[9.5vw] bg-indigo-900 rounded-md p-4 mb-8">
-                        <h3 className="text-white font-bold mb-2">Teams Feature Documentation</h3>
-                        <p className="text-white text-sm mb-2">
-                            You can embed the team section anywhere in your project content by adding the <code>{'{{teams}}'}</code> placeholder. 
-                            If no placeholder is found, the team section will be added at the end of the content.
-                        </p>
-                        <p className="text-white text-sm">
-                            Example: <br/>
-                            <code># Project Content<br/>Some content here...<br/><br/>{'{{teams}}'}<br/><br/>More content after the team section...</code>
-                        </p>
+                        <div className="mb-[1vh]">Synopsis</div>
+                        <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
                     </div>
-                )}
-                
-                {project.content ? processContent() : <TeamSection />}
+                    <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
+                        {project.synopsis}
+                    </div>
+                    <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
+                        <div className="mb-[1vh]">Details</div>
+                        <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
+                    </div>
+                    <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
+                        <p>Type: {project.type}</p>
+                        <p>Status: {project.status}</p>
+                        <p>Duration: {project.startDate} - {project.endDate}</p>
+                    </div>
+                    
+                    {project.content && project.content.includes('{{documentation}}') && (
+                        <div className="px-[9.5vw] bg-indigo-900 rounded-md p-4 mb-8">
+                            <h3 className="text-white font-bold mb-2">Teams Feature Documentation</h3>
+                            <p className="text-white text-sm mb-2">
+                                You can embed the team section anywhere in your project content by adding the <code>{'{{teams}}'}</code> placeholder. 
+                                If no placeholder is found, the team section will be added at the end of the content.
+                            </p>
+                            <p className="text-white text-sm">
+                                Example: <br/>
+                                <code># Project Content<br/>Some content here...<br/><br/>{'{{teams}}'}<br/><br/>More content after the team section...</code>
+                            </p>
+                        </div>
+                    )}
+                    
+                    {project.content ? processContent() : <TeamSection />}
+                </div>
             </div>
         </>
     );
