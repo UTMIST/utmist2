@@ -4,7 +4,7 @@ export interface User {
   image: string;
   Joined: Date;
   createdAt: Date;
-  role: string;
+  roles: Record<string, string[]>;
   socials?: {
     LinkedIn?: string;
     GitHub?: string;

@@ -1,4 +1,3 @@
-import { ImpactMetaData } from "@/schemas/ImpactMetaData";
 import React from "react";
 
 const sampleData = [

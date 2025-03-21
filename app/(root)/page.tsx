@@ -1,6 +1,6 @@
 'use client';
 
-import MissionStatement from "@src/components/home/MissionStatement";
+import MissionStatement from "@root/home/MissionStatement";
 import Banner from "@app/common/banner";
 import WwdHomepage from "@root/home/WwdHomepage";
 import AlumniSpotlight from "@/components/home/AlumniSpotlight";

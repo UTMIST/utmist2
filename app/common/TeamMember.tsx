@@ -5,6 +5,7 @@ import { User } from "@app/schema/publicUser";
 type TeamMemberProps = {
   data: User;
   className?: string;
+  yearToDisplay?: string;
 };
 
 const socialIcons = {
@@ -40,10 +41,26 @@ const socialIcons = {
   )
 };
 
-export default function TeamMember({ data, className = "" }: TeamMemberProps) {
+export default function TeamMember({ data, className = "", yearToDisplay }: TeamMemberProps) {
   const memberPhoto = data.image || "/imgs/team/default.svg";
   const socialLinks = data.socials ? Object.entries(data.socials).filter(([_, url]) => url) : [];
   const userId = 'id' in data ? data.id : null;
+
+  const getCurrentRoles = () => {
+    if (!data.roles) return null;
+    
+    if (yearToDisplay && data.roles[yearToDisplay]) {
+      return data.roles[yearToDisplay];
+    }
+    
+    // If no year specified, get the most recent year with roles
+    const years = Object.keys(data.roles).sort().reverse();
+    const mostRecentYear = years.length > 0 ? years[0] : null;
+    
+    return mostRecentYear ? data.roles[mostRecentYear] : null;
+  };
+  
+  const currentRoles = getCurrentRoles();
 
   return (
     <div className={`flex flex-col items-center ${className}`}>
@@ -89,7 +106,11 @@ export default function TeamMember({ data, className = "" }: TeamMemberProps) {
         <Link href={userId ? `/user/${userId}` : '#'} className={userId ? 'cursor-pointer hover:underline' : 'cursor-default'}>
           <p className="text-white text-base font-medium">{data.displayName || data.name}</p>
         </Link>
-        {data.role && <p className="text-white text-sm">{data.role}</p>}
+        {currentRoles && currentRoles.length > 0 && (
+          <div className="text-white text-sm">
+            {currentRoles.join(', ')}
+          </div>
+        )}
       </div>
     </div>
   );

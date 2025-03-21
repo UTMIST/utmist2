@@ -20,11 +20,57 @@ export const publicUsersCollection = buildCollection({
             name: "Name",
             validation: { required: true }
         },
-        role: {
-            dataType: "string",
-            name: "Role",
-            defaultValue: "user",
-            validation: { required: true }
+        roles: {
+            dataType: "map",
+            name: "Roles by Year",
+            properties: {
+                "2024": {
+                    dataType: "array",
+                    name: "2024 Roles",
+                    of: {
+                        dataType: "string",
+                        name: "Role"
+                    },
+                    validation: { required: false }
+                },
+                "2023": {
+                    dataType: "array",
+                    name: "2023 Roles",
+                    of: {
+                        dataType: "string",
+                        name: "Role"
+                    },
+                    validation: { required: false }
+                },
+                "2022": {
+                    dataType: "array",
+                    name: "2022 Roles",
+                    of: {
+                        dataType: "string",
+                        name: "Role"
+                    },
+                    validation: { required: false }
+                },
+                "2021": {
+                    dataType: "array",
+                    name: "2021 Roles",
+                    of: {
+                        dataType: "string",
+                        name: "Role"
+                    },
+                    validation: { required: false }
+                },
+                "2020": {
+                    dataType: "array",
+                    name: "2020 Roles",
+                    of: {
+                        dataType: "string",
+                        name: "Role"
+                    },
+                    validation: { required: false }
+                }
+            },
+            validation: { required: false }
         },
         socials: {
             dataType: "map",

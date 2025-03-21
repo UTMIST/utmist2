@@ -31,12 +31,6 @@ export const usersCollection = buildCollection({
             name: "Profile Image",
             validation: { required: false }
         },
-        role: {
-            dataType: "string",
-            name: "Role",
-            defaultValue: "user",
-            validation: { required: true }
-        },
         emailVerified: {
             dataType: "string",
             name: "Email Verified",
@@ -57,9 +51,9 @@ export const usersCollection = buildCollection({
             name: "Legacy Claimed",
             defaultValue: false
         },
-        legacyClaimedBy: {
+        AuthID: {
             dataType: "string",
-            name: "Legacy Claimed By",
+            name: "Authentication ID (Leave empty if legacy user)",
             validation: { required: false }
         }
     }

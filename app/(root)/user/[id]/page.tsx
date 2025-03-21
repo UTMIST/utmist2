@@ -51,43 +51,54 @@ const EditProfileModal = ({ isOpen, onClose, userData, onSave }: {
   userData: PublicUser,
   onSave: (data: Partial<PublicUser>) => Promise<void>
 }) => {
-  const [displayName, setDisplayName] = useState(userData.displayName || "");
-  const [image, setImage] = useState(userData.image || "");
-  const [linkedIn, setLinkedIn] = useState(userData.socials?.LinkedIn || "");
-  const [gitHub, setGitHub] = useState(userData.socials?.GitHub || "");
-  const [twitter, setTwitter] = useState(userData.socials?.Twitter || "");
-  const [googleScholar, setGoogleScholar] = useState(userData.socials?.GoogleScholar || "");
-  const [medium, setMedium] = useState(userData.socials?.Medium || "");
-  const [website, setWebsite] = useState(userData.socials?.Website || "");
-  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    displayName: userData.displayName || '',
+    image: userData.image || '',
+    socials: userData.socials || {}
+  });
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (userData) {
+      setFormData({
+        displayName: userData.displayName || '',
+        image: userData.image || '',
+        socials: userData.socials || {}
+      });
+    }
+  }, [userData]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name.startsWith('socials.')) {
+      const socialField = name.split('.')[1];
+      setFormData(prev => ({
+        ...prev,
+        socials: {
+          ...prev.socials,
+          [socialField]: value
+        }
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
-    
-    try {
-      await onSave({
-        displayName,
-        image,
-        socials: {
-          LinkedIn: linkedIn,
-          GitHub: gitHub,
-          Twitter: twitter,
-          GoogleScholar: googleScholar,
-          Medium: medium,
-          Website: website
-        }
-      });
-      onClose();
-    } catch (error) {
-      console.error("Error saving profile:", error);
-      alert("Failed to save profile. Please try again.");
-    } finally {
-      setIsSaving(false);
-    }
+    // Make sure we're preserving the roles and username when saving
+    const dataToSave = {
+      ...formData,
+      name: userData.name, // Keep the existing username
+      roles: userData.roles // Keep the existing roles
+    };
+    await onSave(dataToSave);
+    onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -110,131 +121,66 @@ const EditProfileModal = ({ isOpen, onClose, userData, onSave }: {
           </div>
           
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="displayName">
-                Display Name
-              </label>
-              <input
-                id="displayName"
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
-                Profile Image URL
-              </label>
-              <input
-                id="image"
-                type="url"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                required
-              />
-            </div>
-            
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">Social Links</h3>
-              
-              <div className="mb-3">
-                <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="linkedin">
-                  LinkedIn
-                </label>
+            <div className="grid grid-cols-1 gap-6">
+              <div>
+                <label className="block text-sm mb-2">Display Name</label>
                 <input
-                  id="linkedin"
-                  type="url"
-                  value={linkedIn}
-                  onChange={(e) => setLinkedIn(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  type="text"
+                  name="displayName"
+                  value={formData.displayName}
+                  onChange={handleChange}
+                  className="w-full bg-gray-100 text-gray-800 rounded-md p-2"
                 />
               </div>
               
-              <div className="mb-3">
-                <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="github">
-                  GitHub
-                </label>
+              <div>
+                <label className="block text-sm mb-2">Profile Image URL</label>
                 <input
-                  id="github"
-                  type="url"
-                  value={gitHub}
-                  onChange={(e) => setGitHub(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  type="text"
+                  name="image"
+                  value={formData.image}
+                  onChange={handleChange}
+                  className="w-full bg-gray-100 text-gray-800 rounded-md p-2"
                 />
               </div>
               
-              <div className="mb-3">
-                <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="twitter">
-                  Twitter
-                </label>
-                <input
-                  id="twitter"
-                  type="url"
-                  value={twitter}
-                  onChange={(e) => setTwitter(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
+              <div className="border-t border-slate-700 pt-4">
+                <h3 className="text-lg font-bold mb-4">Social Media</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(socialIcons).map(([platform, icon]) => (
+                    <div key={platform}>
+                      <label className="block text-sm mb-1 flex items-center">
+                        <span className="mr-2">{icon}</span>
+                        {platform}
+                      </label>
+                      <input
+                        type="text"
+                        name={`socials.${platform}`}
+                        value={(formData.socials as any)[platform] || ''}
+                        onChange={handleChange}
+                        placeholder={`${platform} URL`}
+                        className="w-full bg-gray-100 text-gray-800 rounded-md p-2 text-sm"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
               
-              <div className="mb-3">
-                <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="scholar">
-                  Google Scholar
-                </label>
-                <input
-                  id="scholar"
-                  type="url"
-                  value={googleScholar}
-                  onChange={(e) => setGoogleScholar(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
+              <div className="flex justify-end space-x-3 mt-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-md text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-md text-white"
+                >
+                  Save Changes
+                </button>
               </div>
-              
-              <div className="mb-3">
-                <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="medium">
-                  Medium
-                </label>
-                <input
-                  id="medium"
-                  type="url"
-                  value={medium}
-                  onChange={(e) => setMedium(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              
-              <div className="mb-3">
-                <label className="block text-gray-700 text-sm font-bold mb-1" htmlFor="website">
-                  Personal Website
-                </label>
-                <input
-                  id="website"
-                  type="url"
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-            </div>
-            
-            <div className="flex items-center justify-end">
-              <button
-                type="button"
-                onClick={onClose}
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isSaving}
-                className="bg-[#8B7FFF] hover:bg-[#7A6FEB] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                {isSaving ? 'Saving...' : 'Save Changes'}
-              </button>
             </div>
           </form>
         </div>
@@ -283,7 +229,6 @@ const UserProfile = () => {
   const [error, setError] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   
-  console.log(userId, session);
   const isOwnProfile = session?.user?.firestoreid === userId;
 
   const saveProfileChanges = async (data: Partial<PublicUser>) => {
@@ -442,7 +387,22 @@ const UserProfile = () => {
                 <div className="flex-1 text-white text-center md:pr-16">
                   <div className="text-3xl mb-6">@{userData.name}</div>
                   <div className="text-6xl font-bold mb-6">{userData.displayName}</div>
-                  <div className="text-2xl mb-10">{userData.role}</div>
+                  
+                  {/* Display roles by year */}
+                  {userData.roles && Object.keys(userData.roles).length > 0 ? (
+                    <div className="mb-10">
+                      {Object.entries(userData.roles)
+                        .sort(([yearA], [yearB]) => parseInt(yearB) - parseInt(yearA))
+                        .map(([year, roles]) => (
+                          <div key={year} className="mb-3">
+                            <div className="text-xl font-semibold">{year}</div>
+                            <div className="text-lg">{roles.join(', ')}</div>
+                          </div>
+                        ))}
+                    </div>
+                  ) : (
+                    <div className="text-2xl mb-10">No roles assigned</div>
+                  )}
                   
                   {/* Social Media Links */}
                   {userData.socials && Object.entries(userData.socials).filter(([_, url]) => url).length > 0 && (

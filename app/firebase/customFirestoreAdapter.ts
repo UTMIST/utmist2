@@ -12,33 +12,41 @@ export function CustomFirestoreAdapter(config: any): Adapter {
       if (!baseAdapter?.createUser) {
         throw new Error("createUser method is undefined");
       }
-      const user = await baseAdapter.createUser(data);
+      
+      try {
+        const user = await baseAdapter.createUser(data);
 
-      await db.collection("users").doc(user.id).set(
-        {
-          ...user,
-          createdAt: new Date(),
-          legacy: false,
-          legacyClaimed: false,
-          legacyClaimedBy: null,
-        },
-        { merge: true }
-      );
+        await db.collection("users").doc(user.id).set(
+          {
+            ...user,
+            id: user.id,
+            email: data.email,
+            createdAt: new Date(),
+            legacy: false,
+            legacyClaimed: false,
+          },
+          { merge: true }
+        );
 
-      await db.collection("publicUsers").doc(user.id).set(
-        {
-          displayName: user.name,
-          createdAt: new Date(),
-          Joined: new Date(),
-          name: user.name,
-          image: user.image || "/imgs/default-user.svg",
-          role: "user",
-          socials: user.socials || {},
-        },
-        { merge: true }
-      );
+        await db.collection("publicUsers").doc(user.id).set(
+          {
+            id: user.id,
+            displayName: user.name,
+            createdAt: new Date(),
+            Joined: new Date(),
+            name: user.name,
+            image: user.image || "/imgs/default-user.svg",
+            roles: user.roles || {},
+            socials: user.socials || {},
+          },
+          { merge: true }
+        );
 
-      return user;
+        return user;
+      } catch (error) {
+        console.error("Error in createUser:", error);
+        throw error;
+      }
     },
     linkAccount: async (data: AdapterAccount) => {
       if (!baseAdapter?.linkAccount) {

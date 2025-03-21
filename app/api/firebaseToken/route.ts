@@ -24,12 +24,26 @@ export async function GET(request: Request) {
   
   try {
     const adminAuth = getAuth();
-    // const adminAuth = getAuth();
-    // const customToken = await adminAuth.createCustomToken(session.user.id);
-    // return NextResponse.json({ token: customToken });
-    const firebaseUser = await adminAuth.getUserByEmail(session.user.email!);
-    const customToken = await adminAuth.createCustomToken(firebaseUser.uid);
-    return NextResponse.json({ token: customToken });
+    
+    try {
+      const firebaseUser = await adminAuth.getUserByEmail(session.user.email!);
+      const customToken = await adminAuth.createCustomToken(firebaseUser.uid);
+      return NextResponse.json({ token: customToken });
+    } catch (emailError) {
+      console.error("Error getting user by email:", emailError);
+      
+      if (session.user.id) {
+        try {
+          const customToken = await adminAuth.createCustomToken(session.user.id);
+          return NextResponse.json({ token: customToken });
+        } catch (idError) {
+          console.error("Error creating token with user id:", idError);
+          throw idError;
+        }
+      } else {
+        throw emailError;
+      }
+    }
   } catch (error) {
     console.error("Error creating custom token:", error);
     return NextResponse.json({ error: "Error creating custom token" }, { status: 500 });

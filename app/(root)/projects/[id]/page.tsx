@@ -198,7 +198,7 @@ const IndividualProject = () => {
                                     displayName: userData.displayName || userData.name || "Team Member",
                                     name: userData.name || userData.displayName || "Team Member",
                                     image: userData.image || "/imgs/team/default.svg",
-                                    role: userData.role || "Member",
+                                    roles: userData.roles || {},
                                     socials: userData.socials || {}
                                 };
                                 
@@ -211,7 +211,7 @@ const IndividualProject = () => {
                                     displayName: publicUserData.displayName,
                                     name: publicUserData.name,
                                     image: publicUserData.image,
-                                    role: publicUserData.role,
+                                    roles: publicUserData.roles,
                                     socials: publicUserData.socials,
                                     Joined: userData.Joined || new Date(),
                                     createdAt: userData.createdAt || new Date()
@@ -251,7 +251,7 @@ const IndividualProject = () => {
                         displayName: `Team Member ${index + 1}`,
                         name: `Team Member ${index + 1}`,
                         image: "/imgs/team/default.svg",
-                        role: index === 0 ? "Team Lead" : "Member",
+                        roles: {},
                         socials: {},
                         Joined: new Date(),
                         createdAt: new Date()
@@ -270,47 +270,37 @@ const IndividualProject = () => {
     }, [db, id]);
 
     const TeamSection = () => {
-        if (!team) {
-            return (
-                <div className="w-full py-8">
-                    <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
-                        <div className="mb-[1vh]">Team</div>
-                        <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
-                    </div>
-                    
-                    <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
-                        No team information available for this project.
-                    </div>
-                </div>
-            );
-        }
+        if (!teamMembers || teamMembers.length === 0) return null;
         
         return (
-            <div className="w-full py-8">
-                <div className="px-[7.4vw] font-roboto-mono text-white text-[24px] font-[700] mb-[3vh]">
-                    <div className="mb-[1vh]">Team</div>
-                    <div className="bg-[#00349F] w-[8.1vw] h-[6px]"></div>
+            <div className="pt-20">
+                <div className="text-center mb-12">
+                    <h2 className="text-white text-5xl font-roboto-mono font-normal">
+                        Team
+                    </h2>
+                    <div className="mx-auto w-40 h-1 bg-gradient-to-r from-[#8B7FFF] to-[#92DEFF] mt-3"></div>
                 </div>
                 
-                <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
-                    {team.description || "No team description available."}
-                </div>
-                
-                {teamMembers.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 px-[7vw] mb-8">
-                        {teamMembers.map((member) => (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 px-4 md:px-12">
+                    {teamMembers.map((member, index) => {
+                        const memberData = { ...member };
+                        // if (index === 0) {
+                        //     const currentYear = new Date().getFullYear().toString();
+                        //     memberData.roles = {
+                        //         ...memberData.roles,
+                        //         [currentYear]: ["Team Lead"]
+                        //     };
+                        // }
+                        
+                        return (
                             <TeamMember 
-                                key={member.id} 
-                                data={member} 
-                                className=""
+                                key={member.id}
+                                data={memberData}
+                                className="mx-auto"
                             />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="px-[9.5vw] font-roboto-mono text-white font-[400] text-[14px] mb-[5vh]">
-                        No team members listed for this project.
-                    </div>
-                )}
+                        );
+                    })}
+                </div>
             </div>
         );
     };

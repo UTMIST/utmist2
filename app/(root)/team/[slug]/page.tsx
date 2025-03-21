@@ -9,21 +9,33 @@ import PageHeader from "@app/components/PageHeader";
 export default function DepartmentTeamPage({ params }: { params: { slug: string } }) {
 
   const departmentName = params.slug.charAt(0).toUpperCase() + params.slug.slice(1);
+  const currentYear = new Date().getFullYear().toString();
 
-  // Placeholder for firebase data
-  const placeholderMembers = Array(8).fill(null).map((_, i) => ({
-    id: `${i + 1}`,
-    name: `John Doe ${i + 1}`,
-    displayName: `John Doe ${i + 1}`,
-    role: i === 0 ? "Director" : i === 1 ? "Lead" : "Member",
-    image: "", 
-    socials: {
-      LinkedIn: "https://linkedin.com/in/example",
-      GitHub: "https://github.com/example",
-    },
-    Joined: new Date(),
-    createdAt: new Date()
-  }));
+  const placeholderMembers = Array(8).fill(null).map((_, i) => {
+    let memberRoles: Record<string, string[]> = {};
+    
+    if (i === 0) {
+      memberRoles[currentYear] = ["Director"];
+    } else if (i === 1) {
+      memberRoles[currentYear] = ["Lead"];
+    } else {
+      memberRoles[currentYear] = ["Member"];
+    }
+    
+    return {
+      id: `${i + 1}`,
+      name: `John Doe ${i + 1}`,
+      displayName: `John Doe ${i + 1}`,
+      roles: memberRoles,
+      image: "", 
+      socials: {
+        LinkedIn: "https://linkedin.com/in/example",
+        GitHub: "https://github.com/example",
+      },
+      Joined: new Date(),
+      createdAt: new Date()
+    };
+  });
 
   return (
     <div className="relative w-screen h-auto">
