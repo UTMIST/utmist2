@@ -43,6 +43,7 @@ const socialIcons = {
 export default function TeamMember({ data, className = "" }: TeamMemberProps) {
   const memberPhoto = data.image || "/imgs/team/default.svg";
   const socialLinks = data.socials ? Object.entries(data.socials).filter(([_, url]) => url) : [];
+  const userId = 'id' in data ? data.id : null;
 
   return (
     <div className={`flex flex-col items-center ${className}`}>
@@ -67,23 +68,27 @@ export default function TeamMember({ data, className = "" }: TeamMemberProps) {
           </div>
         )}
         
-        <div 
-          className="w-[140px] h-[140px] rounded-full overflow-hidden bg-gray-200 border-4 border-purple-300" 
-          style={{ borderRadius: '9999px' }}
-        >
-          <Image 
-            src={memberPhoto}
-            alt={data.name || "Team member image"}
-            width={140}
-            height={140}
-            className="w-full h-full object-cover rounded-full"
+        <Link href={userId ? `/user/${userId}` : '#'} className={userId ? 'cursor-pointer' : 'cursor-default'}>
+          <div 
+            className="w-[140px] h-[140px] rounded-full overflow-hidden bg-gray-200 border-4 border-purple-300 hover:border-purple-400 transition-colors" 
             style={{ borderRadius: '9999px' }}
-          />
-        </div>
+          >
+            <Image 
+              src={memberPhoto}
+              alt={data.name || "Team member image"}
+              width={140}
+              height={140}
+              className="w-full h-full object-cover rounded-full"
+              style={{ borderRadius: '9999px' }}
+            />
+          </div>
+        </Link>
       </div>
       
       <div className="text-center mt-2">
-        <p className="text-white text-base font-medium">{data.displayName || data.name}</p>
+        <Link href={userId ? `/user/${userId}` : '#'} className={userId ? 'cursor-pointer hover:underline' : 'cursor-default'}>
+          <p className="text-white text-base font-medium">{data.displayName || data.name}</p>
+        </Link>
         {data.role && <p className="text-white text-sm">{data.role}</p>}
       </div>
     </div>

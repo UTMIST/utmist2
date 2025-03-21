@@ -21,6 +21,8 @@ export default function DepartmentTeamPage({ params }: { params: { slug: string 
       LinkedIn: "https://linkedin.com/in/example",
       GitHub: "https://github.com/example",
     },
+    Joined: new Date(),
+    createdAt: new Date()
   }));
 
   return (

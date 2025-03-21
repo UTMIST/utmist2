@@ -11,20 +11,11 @@ import LinkButton from "@app/common/LinkButton";
 import TeamMember from "@app/common/TeamMember";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { Project } from "@schema/project";
+import { User } from "@app/schema/publicUser";
 import PageHeader from "@app/components/PageHeader";
 
-
-interface TeamMember {
-    id: string;
-    displayName: string;
-    name: string;
-    image: string;
-    role: string;
-    email?: string;
-    socials?: {
-        LinkedIn?: string;
-        GitHub?: string;
-    };
+interface UserWithId extends User {
+  id: string;
 }
 
 interface Team {
@@ -80,7 +71,7 @@ const MarkdownComponents = {
 const IndividualProject = () => {
     const [project, setProject] = useState<Project | null>(null);
     const [team, setTeam] = useState<Team | null>(null);
-    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+    const [teamMembers, setTeamMembers] = useState<UserWithId[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { db } = useFirebase();
@@ -159,7 +150,7 @@ const IndividualProject = () => {
         };
 
         const processTeamMembers = async (members: any[]) => {
-            const membersArray: TeamMember[] = [];
+            const membersArray: UserWithId[] = [];
             let permissionError = false;
             let successfulFetches = 0;
             
@@ -221,7 +212,9 @@ const IndividualProject = () => {
                                     name: publicUserData.name,
                                     image: publicUserData.image,
                                     role: publicUserData.role,
-                                    socials: publicUserData.socials
+                                    socials: publicUserData.socials,
+                                    Joined: userData.Joined || new Date(),
+                                    createdAt: userData.createdAt || new Date()
                                 });
                             }
                         } catch (fetchError: any) {
@@ -259,8 +252,9 @@ const IndividualProject = () => {
                         name: `Team Member ${index + 1}`,
                         image: "/imgs/team/default.svg",
                         role: index === 0 ? "Team Lead" : "Member",
-                        email: "",
-                        socials: {}
+                        socials: {},
+                        Joined: new Date(),
+                        createdAt: new Date()
                     });
                 });
                 
@@ -305,7 +299,11 @@ const IndividualProject = () => {
                 {teamMembers.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 px-[7vw] mb-8">
                         {teamMembers.map((member) => (
-                            <TeamMember key={member.id} data={member} />
+                            <TeamMember 
+                                key={member.id} 
+                                data={member} 
+                                className=""
+                            />
                         ))}
                     </div>
                 ) : (
