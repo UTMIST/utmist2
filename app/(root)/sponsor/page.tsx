@@ -163,7 +163,7 @@ export default function SponsorPage() {
           <div className="w-full relative">
             <div className="fixed-bg w-full h-[100vh] overflow-hidden relative">
               <Image 
-                src="/imgs/headers/header1.png" 
+                src="/imgs/headers/header1.jpg" 
                 alt="FAQ Background" 
                 fill
                 sizes="100vw"

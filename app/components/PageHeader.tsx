@@ -16,7 +16,7 @@ export default function PageHeader({
     objectPosition: "center 30%", 
     filter: "brightness(.9) contrast(1) saturate(1.2) hue-rotate(00deg)",
   },
-  imageSrc = "/imgs/headers/header1.png"
+  imageSrc = "/imgs/headers/header1.jpg"
 }: PageHeaderProps) {
   return (
     <>

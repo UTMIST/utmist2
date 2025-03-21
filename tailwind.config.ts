@@ -49,8 +49,8 @@ const config: Config = {
         "utmist-black": "#121212",
       },
       backgroundImage: {
-        "banner-small": "url('/imgs/homepage/banner-small.png')",
-        "banner-large": "url('/imgs/homepage/banner.png')",
+        "banner-small": "url('/imgs/homepage/banner-small.jpg')",
+        "banner-large": "url('/imgs/homepage/banner.jpg')",
         "wwd-banner": "url('/assets/Rectangle45.svg')",
         "github": "url('/assets/GithubIcon.svg')",
         "linkedin": "url('/assets/LinkedinIcon.svg')",
