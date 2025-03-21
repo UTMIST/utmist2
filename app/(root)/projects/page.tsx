@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import DropDown from "public/assets/Vector 4.svg";
 import { useFirebase } from "@app/firebase/useFirebase";
 import { collection, getDocs } from "firebase/firestore";
+import PageHeader from "@app/components/PageHeader";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -166,111 +167,96 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="relative w-screen h-auto bg-[#3749E4] overflow-x-hidden">
-      <div className="w-screen h-[40vh] bg-cover relative">
-        <Image 
-          src="/imgs/headers/header1.png" 
-          alt="Header Image" 
-          fill
-          sizes="100vw"
-          style={{ 
-            objectFit: "cover", 
-            objectPosition: "center 0%", 
-            filter: "contrast(1.1) brightness(1)",
-          }}
-        />
-      </div>
-      <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-        <div className="font-bold">Projects</div>
-        <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
-      </div>
+    <div className="relative w-screen h-auto">
+      <PageHeader title="Projects" />
       
-      <div className="text-white px-10 pt-8 pb-4 font-['October_Tamil_Regular']">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec justo vel sapien varius efficitur. Nullam sit amet metus sit amet metus scelerisque consectetur non a felis. Sed vel aliquet odio. Proin nec tellus quis nunc efficitur tincidunt.
-      </div>
+      <div className="relative w-screen h-auto bg-gradient-to-b from-[#131B6B] to-[#483EE0] overflow-x-hidden">
+        <div className="text-white px-10 pt-8 pb-4 font-['October_Tamil_Regular'] text-center max-w-5xl mx-auto">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec justo vel sapien varius efficitur. Nullam sit amet metus sit amet metus scelerisque consectetur non a felis. Sed vel aliquet odio. Proin nec tellus quis nunc efficitur tincidunt.
+        </div>
 
-      <div className="relative flex items-center justify-center mt-6">
-        <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
-          <li className="relative">
-            <button
-              className={isYearFilterOpen ? "flex items-center justify-center rounded-md bg-utmist-pink shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]" : "flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"}
-              onClick={yearFilterToggle}
-            >
-              <p className="text-white font-roboto-mono">Year</p>
-              <Image src={DropDown} height={14} width={14} alt="select year" className="ml-2" />
-            </button>
-            {isYearFilterOpen && (
-              <ul className="absolute top-full left-0 mt-1 bg-dropdown rounded-md shadow-md text-white text-[2.2vh] w-[69.7vw] lg:w-[19.7vw] z-10 flex flex-col items-center">
-                {yearFilter.map((item, index) => (
-                  <li key={index}>
-                    <Link href="#" onClick={() => filterByYear(item)} className={selectedYear.includes(item.slice(-4)) ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
-                      {item}
+        <div className="relative flex items-center justify-center mt-6">
+          <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+            <li className="relative">
+              <button
+                className={isYearFilterOpen ? "flex items-center justify-center rounded-md bg-utmist-pink shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]" : "flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"}
+                onClick={yearFilterToggle}
+              >
+                <p className="text-white font-roboto-mono">Year</p>
+                <Image src={DropDown} height={14} width={14} alt="select year" className="ml-2" />
+              </button>
+              {isYearFilterOpen && (
+                <ul className="absolute top-full left-0 mt-1 bg-dropdown rounded-md shadow-md text-white text-[2.2vh] w-[69.7vw] lg:w-[19.7vw] z-10 flex flex-col items-center">
+                  {yearFilter.map((item, index) => (
+                    <li key={index}>
+                      <Link href="#" onClick={() => filterByYear(item)} className={selectedYear.includes(item.slice(-4)) ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
+                        {item}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+
+            <li className="relative">
+              <button
+                className={isProjectFilterOpen ? "flex items-center justify-center rounded-md bg-utmist-pink shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]" : "flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"}
+                onClick={projectTypeToggle}
+              >
+                <p className="text-white font-roboto-mono">Project Type </p>
+                <Image src={DropDown} height={14} width={14} alt="select year" className="ml-2" />
+              </button>
+              {isProjectFilterOpen && (
+                <ul className="absolute top-full left-0 mt-1 bg-dropdown rounded-md shadow-md text-white text-[2.2vh] w-[69.7vw] lg:w-[19.7vw] z-10 flex flex-col items-center">
+                  <li>
+                    <Link href="#" onClick={() => filterByProject("Academic")} className={selectedProjectType == "Academic" ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
+                      Academic
                     </Link>
                   </li>
-                ))}
-              </ul>
-            )}
-          </li>
-
-          <li className="relative">
-            <button
-              className={isProjectFilterOpen ? "flex items-center justify-center rounded-md bg-utmist-pink shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]" : "flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"}
-              onClick={projectTypeToggle}
-            >
-              <p className="text-white font-roboto-mono">Project Type </p>
-              <Image src={DropDown} height={14} width={14} alt="select year" className="ml-2" />
-            </button>
-            {isProjectFilterOpen && (
-              <ul className="absolute top-full left-0 mt-1 bg-dropdown rounded-md shadow-md text-white text-[2.2vh] w-[69.7vw] lg:w-[19.7vw] z-10 flex flex-col items-center">
-                <li>
-                  <Link href="#" onClick={() => filterByProject("Academic")} className={selectedProjectType == "Academic" ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
-                    Academic
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" onClick={() => filterByProject("Applied")} className={selectedProjectType == "Applied" ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
-                    Applied
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" onClick={() => filterByProject("Infrastructure")} className={selectedProjectType == "Infrastructure" ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
-                    Infrastructure
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </li>
-          <li>
-            <button
-              className="flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"
-              onClick={resetFilters}
-            >
-              <p className="text-white font-roboto-mono">Reset Filters</p>
-            </button>
-          </li>
-        </ul>
-      </div>
-      
-      <div className="flex justify-center mb-6 pt-10 px-10">
-        <div className="w-full max-w-xl flex">
-          <input
-            type="text"
-            placeholder="Project Name"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full py-2 px-4 rounded-l-md border-0 focus:outline-none"
-          />
-          <button className="bg-[#92DEFF] px-4 rounded-r-md flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
+                  <li>
+                    <Link href="#" onClick={() => filterByProject("Applied")} className={selectedProjectType == "Applied" ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
+                      Applied
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="#" onClick={() => filterByProject("Infrastructure")} className={selectedProjectType == "Infrastructure" ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
+                      Infrastructure
+                    </Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+            <li>
+              <button
+                className="flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"
+                onClick={resetFilters}
+              >
+                <p className="text-white font-roboto-mono">Reset Filters</p>
+              </button>
+            </li>
+          </ul>
         </div>
-      </div>
+        
+        <div className="flex justify-center mb-6 pt-10 px-10">
+          <div className="w-full max-w-xl flex">
+            <input
+              type="text"
+              placeholder="Project Name"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full py-2 px-4 rounded-l-md border-0 focus:outline-none"
+            />
+            <button className="bg-[#92DEFF] px-4 rounded-r-md flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-      {/* Projects List */}
-      <div className={filteredProjects.length == 0 ? "flex justify-center m-10 h-[26vh]" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-10"}>
-        {filteredProjects.length == 0 ? <p className="text-white font-roboto-mono">No projects found for the selected criteria.</p> : filteredProjects}
+        <div className={filteredProjects.length == 0 ? "flex justify-center m-10 h-[26vh]" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-10"}>
+          {filteredProjects.length == 0 ? <p className="text-white font-roboto-mono">No projects found for the selected criteria.</p> : filteredProjects}
+        </div>
       </div>
     </div>
   );

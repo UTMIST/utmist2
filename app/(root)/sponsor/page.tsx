@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import PageHeader from "@app/components/PageHeader";
 
 interface FAQItemProps {
   question: string;
@@ -73,28 +74,12 @@ export default function SponsorPage() {
 
   return (
     <>
-      <div className="relative w-screen h-auto bg-[#3749E4]">
-        <div className="w-screen h-[40vh] bg-cover relative">
-          <Image 
-            src="/imgs/headers/header1.png" 
-            alt="Header Image" 
-            fill
-            sizes="100vw"
-            style={{ 
-              objectFit: "cover", 
-              objectPosition: "center 0%", 
-              filter: "contrast(1.1) brightness(1)",
-            }}
-          />
-        </div>
-        <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-          <div className="font-bold">Become a UTMIST Partner</div>
-          <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
-        </div>
+      <div className="relative w-screen h-auto">
+        <PageHeader title="Become a UTMIST Partner" />
 
         <div className="mt-[-0vh] flex flex-col justify-around items-center text-white">
           
-          <div className="w-full py-24 bg-gradient-to-b from-[#161652] to-[#4B3EE0] min-h-[40vh] flex items-center">
+          <div className="w-full py-24 bg-gradient-to-b from-[#131B6B] to-[#4B3EE0] min-h-[40vh] flex items-center">
             <div className="max-w-6xl mx-auto px-6 text-center">
               <p className="text-2xl md:text-3xl mb-12 font-october-tamil leading-relaxed max-w-4xl mx-auto">
                 At UTMIST, we produce in-house academic content, spearhead design teams 
@@ -119,7 +104,7 @@ export default function SponsorPage() {
                   objectFit: "cover",
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#161652] to-[#4B3EE0] opacity-70 mix-blend-multiply"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#131B6B] to-[#4B3EE0] opacity-70 mix-blend-multiply"></div>
             </div>
             
             <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
@@ -148,7 +133,7 @@ export default function SponsorPage() {
             </div>
           </div>
 
-          <div className="w-full py-20 bg-gradient-to-b from-[#161652] to-[#4B3EE0] min-h-[60vh] flex items-center">
+          <div className="w-full py-20 bg-gradient-to-b from-[#131B6B] to-[#4B3EE0] min-h-[60vh] flex items-center">
             <div className="max-w-6xl mx-auto px-6 w-full">
               <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                 <div className="mb-8 md:mb-0">
@@ -186,7 +171,7 @@ export default function SponsorPage() {
                   objectFit: "cover",
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#161652] to-[#4B3EE0] opacity-70 mix-blend-multiply"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#131B6B] to-[#4B3EE0] opacity-70 mix-blend-multiply"></div>
             </div>
             
             <div className="relative z-10 py-32 min-h-[90vh]">

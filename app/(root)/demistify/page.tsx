@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import DropDown from "public/assets/Vector 4.svg";
+import PageHeader from "@app/components/PageHeader";
 
 interface DemistifyProp {
   data: DemistifyData[];
@@ -111,26 +112,10 @@ const Demistify: React.FC = ({ }) => {
         });
 
         return <>
-         <div className="bg-dark-grey overflow-x-hidden">
-            <div className="w-screen h-[40vh] bg-cover relative">
-            <Image 
-                src="/imgs/headers/header1.png" 
-                alt="Header Image" 
-                fill
-                sizes="100vw"
-                style={{ 
-                objectFit: "cover", 
-                objectPosition: "center 0%", 
-                filter: "contrast(1.3) brightness(1.1)",
-                }}
-            />
-            </div>
-            <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-                <div className="font-bold">deMISTify</div>
-                <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
-            </div>
+         <div className="overflow-x-hidden">
+            <PageHeader title="deMISTify" />
 
-            <div className="flex flex-col justify-around items-center text-white px-[10vw] py-[5vh] bg-gradient-to-b from-[#161652] to-[#483EE0]">
+            <div className="flex flex-col justify-around items-center text-white px-[10vw] py-[5vh] bg-gradient-to-b from-[#131B6B] to-[#483EE0]">
 
             <div className="relative flex items-center justify-center mt-6">
                     <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">

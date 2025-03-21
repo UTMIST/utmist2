@@ -4,6 +4,7 @@ import InfoCard from "@src/components/whatWeDo/InfoCard";
 import { WWeDoMetaData } from "@/schemas/WWeDoMetaData";
 import Image from "next/image";
 import Link from "next/link";
+import PageHeader from "@app/components/PageHeader";
 
 const sampleWWeDoData: WWeDoMetaData[] = [
     {
@@ -79,28 +80,13 @@ const WhatWeDo = () => {
 
     return (
         <>
-            <div className="relative w-screen h-auto bg-gradient-to-b from-[#131B6B] via-[#00349F] to-[#4B3EE0]">
+            <div className="relative w-screen h-auto"> 
+                <PageHeader title="What We Do" />
 
-            <div className="w-screen h-[40vh] bg-cover relative bg-[#3749E4]">
-            <Image 
-                src="/imgs/headers/header1.png" 
-                alt="Header Image" 
-                fill
-                sizes="100vw"
-                style={{ 
-                objectFit: "cover", 
-                objectPosition: "center 0%", 
-                filter: "contrast(1.1) brightness(1)",
-                }}
-            />
-            </div>
-            <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-                <div className="font-bold">What We Do</div>
-                <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
-            </div>
-
-                <div className="flex flex-col justify-around items-center text-white mt-[10vh]">
-                    {infoCards}
+                <div className="relative w-screen h-auto bg-gradient-to-b from-[#131B6B] via-[#00349F] to-[#4B3EE0] py-[10vh]">
+                    <div className="flex flex-col justify-around items-center text-white">
+                        {infoCards}
+                    </div>
                 </div>
             </div>
         </>

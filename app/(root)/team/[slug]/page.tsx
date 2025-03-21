@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import TeamMember from "../../../common/TeamMember";
+import PageHeader from "@app/components/PageHeader";
 
 // Replace with Firebase
 export default function DepartmentTeamPage({ params }: { params: { slug: string } }) {
@@ -23,27 +24,10 @@ export default function DepartmentTeamPage({ params }: { params: { slug: string 
   }));
 
   return (
-    <div className="relative w-screen h-auto bg-[#3749E4]">
-      <div className="w-screen h-[40vh] bg-cover relative">
-        <Image 
-          src="/imgs/headers/header1.png"
-          alt="Header Image"
-          fill
-          sizes="100vw"
-          style={{ 
-            objectFit: "cover", 
-            objectPosition: "center 0%", 
-            filter: "contrast(1.1) brightness(1)",
-          }}
-          priority
-        />
-      </div>
-      <div className="absolute left-[8.7vw] top-[15.7vh] text-white text-[5.2vh] font-roboto-mono">
-        <div className="font-bold">{departmentName} Department</div>
-        <div className="bg-[#DA92F6] w-[11.1vw] h-[6px]"></div>
-      </div>
+    <div className="relative w-screen h-auto">
+        <PageHeader title={departmentName + " Department"} />
 
-      <div className="flex flex-col justify-around items-center text-white px-[10vw] py-[5vh] bg-gradient-to-b from-[#161652] to-[#483EE0]">
+      <div className="flex flex-col justify-around items-center text-white px-[10vw] py-[5vh] bg-gradient-to-b from-[#131B6B] to-[#483EE0]">
         
         {/* Description */}
         <div className="w-full mb-[5vh]">
