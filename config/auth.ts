@@ -75,6 +75,7 @@ export const authOptions: NextAuthOptions = {
             const userDoc = userQuery.docs[0];
             // console.log("[AI2] User doc:", userDoc?.data(), session.user.email);
             session.user.displayName = userDoc?.data()?.displayName || session.user.name;
+            session.user.firestoreid = userDoc?.data()?.id;
           } catch (error) {
             console.error("Error fetching user document:", error);
           }

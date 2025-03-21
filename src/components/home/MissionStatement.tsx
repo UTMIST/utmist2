@@ -13,7 +13,7 @@ const missionData: MissionMetaData[] = [
 
 const MissionStatement: React.FC = () => {
     return (
-        <div className="relative flex justify-center items-center w-screen min-h-[80vh] bg-gradient-to-b from-[#221690] to-[#1A1F6C] px-6 sm:px-12 lg:px-[10vw]">
+        <div className="relative flex justify-center items-center w-full min-h-[80vh] bg-gradient-to-b from-[#221690] to-[#1A1F6C] px-6 sm:px-12 lg:px-[10vw]">
             
             {/* Content Box */}
             <div 

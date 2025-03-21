@@ -391,20 +391,6 @@ const IndividualProject = () => {
                         <p>Duration: {project.startDate} - {project.endDate}</p>
                     </div>
                     
-                    {project.content && project.content.includes('{{documentation}}') && (
-                        <div className="px-[9.5vw] bg-indigo-900 rounded-md p-4 mb-8">
-                            <h3 className="text-white font-bold mb-2">Teams Feature Documentation</h3>
-                            <p className="text-white text-sm mb-2">
-                                You can embed the team section anywhere in your project content by adding the <code>{'{{teams}}'}</code> placeholder. 
-                                If no placeholder is found, the team section will be added at the end of the content.
-                            </p>
-                            <p className="text-white text-sm">
-                                Example: <br/>
-                                <code># Project Content<br/>Some content here...<br/><br/>{'{{teams}}'}<br/><br/>More content after the team section...</code>
-                            </p>
-                        </div>
-                    )}
-                    
                     {project.content ? processContent() : <TeamSection />}
                 </div>
             </div>

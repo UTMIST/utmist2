@@ -28,6 +28,8 @@ export function CustomFirestoreAdapter(config: any): Adapter {
       await db.collection("publicUsers").doc(user.id).set(
         {
           displayName: user.name,
+          createdAt: new Date(),
+          Joined: new Date(),
           name: user.name,
           image: user.image || "/imgs/default-user.svg",
           role: "user",

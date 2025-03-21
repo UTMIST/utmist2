@@ -147,22 +147,28 @@ export default function Program({ }) {
                         <div className="text-white font-roboto-mono mb-[8.7vh] text-[16px]">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim cursus tellus sed iaculis. Donec egestas id odio ac semper. Nulla eget posuere purus, quis dignissim elit. Donec vel volutpat augue, suscipit dignissim odio. Nam molestie ligula id vestibulum sodales. Mauris volutpat ligula arcu, ac varius velit porta non. In hac habitasse platea dictumst. Sed massa orci, ullamcorper a euismod quis, auctor et leo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dignissim cursus tellus sed iaculis. Donec egestas id odio ac semper. Nulla eget posuere purus, quis dignissim elit. Donec vel volutpat augue, suscipit dignissim odio..
                         </div>
-                        <button className={isYearFilterOpen ? "flex items-center justify-center rounded-md bg-utmist-pink shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]" : "flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"}
-                            onClick={yearFilterToggle}>
-                            <p className="text-white font-roboto-mono">Year</p>
-                            <Image src={DropDown} height={14} width={14} alt="select year" className="ml-2" />
-                        </button>
-                        {isYearFilterOpen && (
-                            <ul className="left-0 mt-1 bg-dropdown rounded-md shadow-md text-white text-[2.2vh] w-[69.7vw] lg:w-[19.7vw] z-10 flex flex-col items-center">
-                                {yearFilter.map((item, index) => (
-                                    <li key={index}>
-                                        <Link href="#" onClick={() => filterByYear(item)} className={selectedYear === item ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
-                                            {item}
-                                        </Link>
-                                    </li>
-                                ))}
+                        <div className="relative flex items-center justify-center mt-6">
+                            <ul className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+                                <li className="relative">
+                                    <button className={isYearFilterOpen ? "flex items-center justify-center rounded-md bg-utmist-pink shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]" : "flex items-center justify-center rounded-md bg-utmist-purple shadow-md text-[2.2vh] w-[69.7vw] h-[8.9vh] lg:w-[19.7vw] lg:h-[5.6vh]"}
+                                        onClick={yearFilterToggle}>
+                                        <p className="text-white font-roboto-mono">Year</p>
+                                        <Image src={DropDown} height={14} width={14} alt="select year" className="ml-2" />
+                                    </button>
+                                    {isYearFilterOpen && (
+                                        <ul className="absolute top-full left-0 mt-1 bg-dropdown rounded-md shadow-md text-white text-[2.2vh] w-[69.7vw] lg:w-[19.7vw] z-10 flex flex-col items-center">
+                                            {yearFilter.map((item, index) => (
+                                                <li key={index}>
+                                                    <Link href="#" onClick={() => filterByYear(item)} className={selectedYear === item ? "font-roboto-mono bg-utmist-pink block px-4 py-2" : "font-roboto-mono block px-4 py-2"}>
+                                                        {item}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </li>
                             </ul>
-                        )}
+                        </div>
                         <div className="mt-[10vh] text-white font-roboto-mono">
                             <div className="flex flex-col gap-[13vh]">
                                 {programCards}

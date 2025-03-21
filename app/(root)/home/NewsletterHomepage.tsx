@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function NewsletterHomepage() {
     return (
-        <div className="relative flex justify-center items-center w-screen h-[60vh] bg-[#001128] py-12">
+        <div className="relative flex justify-center items-center w-full h-[60vh] bg-[#001128] py-12">
             <div className="absolute inset-0">
                 <Image 
                     src="/assets/Rectangle45.svg" 
@@ -22,7 +22,6 @@ export default function NewsletterHomepage() {
                     Stay up to date on all things UTMIST
                 </p>
 
-                {/* Email Input and Subscribe Button */}
                 <form className="mt-6 flex w-full max-w-lg">
                     <input 
                         type="email" 

@@ -9,63 +9,39 @@ import PageHeader from "@app/components/PageHeader";
 const sampleWWeDoData: WWeDoMetaData[] = [
     {
         slug: "community-events",
-        title: "Community Events",
+        title: "Annual Milestone",
         imgPath: "/images/community-events.jpg",
-        buttonHref: "/events",
+        buttonHref: "/milestone/milestone4",
         publishDate: new Date().toISOString(),
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula, mauris et egestas tristique, risus nunc tincidunt libero, in varius justo elit ac metus.",
     },
     {
         slug: "projects",
-        title: "Projects",
+        title: "Annual Milestone",
         imgPath: "/images/projects.jpg",
-        buttonHref: "/projects",
+        buttonHref: "/milestone/milestone2",
         publishDate: new Date().toISOString(),
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula, mauris et egestas tristique, risus nunc tincidunt libero, in varius justo elit ac metus.",
     },
     {
         slug: "academic-programs",
-        title: "Academic and Career Programs",
+        title: "Annual Milestones",
         imgPath: "/images/academic-career.jpg",
-        buttonHref: "/programs",
+        buttonHref: "/milestone/milestone3",
         publishDate: new Date().toISOString(),
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula, mauris et egestas tristique, risus nunc tincidunt libero, in varius justo elit ac metus.",
     },
     {
-        slug: "milestone-events",
-        title: "Annual Milestone Events",
+        slug: "milestone",
+        title: "Annual Milestone",
         imgPath: "/images/milestone-events.jpg",
-        buttonHref: "/milestone",
+        buttonHref: "/milestone/milestone4",
         publishDate: new Date().toISOString(),
         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula, mauris et egestas tristique, risus nunc tincidunt libero, in varius justo elit ac metus.",
     },
-    {
-        slug: "demistify",
-        title: "deMISTify",
-        imgPath: "/images/demistify.jpg",
-        buttonHref: "/demistify",
-        publishDate: new Date().toISOString(),
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula, mauris et egestas tristique, risus nunc tincidunt libero, in varius justo elit ac metus.",
-    },
-    {
-        slug: "competition",
-        title: "International Competition",
-        imgPath: "/images/competition.jpg",
-        buttonHref: "/international-competition",
-        publishDate: new Date().toISOString(),
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula, mauris et egestas tristique, risus nunc tincidunt libero, in varius justo elit ac metus.",
-    },
-    {
-        slug: "campus-engagement",
-        title: "Campus Engagement",
-        imgPath: "/images/campus-engagement.jpg",
-        buttonHref: "/campus-engagement",
-        publishDate: new Date().toISOString(),
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vehicula, mauris et egestas tristique, risus nunc tincidunt libero, in varius justo elit ac metus.",
-    }
 ];
 
-const WhatWeDo = () => {
+const AnnualMilestone = () => {
     const infoCards = sampleWWeDoData.map((item) => {
         return (
             <div key={item.slug} className="mb-[10vh]">
@@ -81,7 +57,7 @@ const WhatWeDo = () => {
     return (
         <>
             <div className="relative w-screen h-auto"> 
-                <PageHeader title="What We Do" />
+                <PageHeader title="Annual Milestone Events" />
 
                 <div className="relative w-screen h-auto bg-gradient-to-b from-[#131B6B] via-[#00349F] to-[#4B3EE0] py-[10vh]">
                     <div className="flex flex-col justify-around items-center text-white">
@@ -93,4 +69,4 @@ const WhatWeDo = () => {
     );
 };
 
-export default WhatWeDo;
+export default AnnualMilestone;
