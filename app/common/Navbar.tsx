@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -28,6 +28,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const { data: session } = useSession();
+  const profileMenuRef = useRef<HTMLDivElement>(null);
 
   const handleNav = () => {
     setMenuOpen(!menuOpen);
@@ -42,7 +43,20 @@ export default function Navbar() {
       callbackUrl: window.location.origin + '/'
     });
   };
-
+  
+  // Close dropdown when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setProfileMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -88,9 +102,15 @@ export default function Navbar() {
                     onClick={handleProfileMenu}
                   />
                   {profileMenuOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                      <Link href="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Dashboard
+                    <div 
+                      ref={profileMenuRef}
+                      className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 overflow-hidden"
+                    >
+                      <Link 
+                        href={`/user/${session.user.firestoreid}`} 
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Profile
                       </Link>
                       <button
                         onClick={() => signOut()}
@@ -147,7 +167,7 @@ export default function Navbar() {
               {session ? (
                 <>
                   <li className="text-white mt-2">
-                    <Link href="/">Dashboard</Link>
+                    <Link href={`/user/${session.user.firestoreid}`}>Profile</Link>
                   </li>
                   <li className="text-white mt-2">
                     <button onClick={() => signOut()}>Sign out</button>
