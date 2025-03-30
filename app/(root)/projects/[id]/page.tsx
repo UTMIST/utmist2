@@ -184,8 +184,6 @@ const IndividualProject = () => {
                         path = `publicUsers/${userId}`;
                     }
 
-                    console.log(path, userId)
-                    
                     if (path) {
                         try {
                             const memberDocRef = doc(db as any, path);
@@ -202,8 +200,6 @@ const IndividualProject = () => {
                                     socials: userData.socials || {}
                                 };
                                 
-                                console.log(userData);
-
                                 successfulFetches++;
                                 
                                 membersArray.push({
