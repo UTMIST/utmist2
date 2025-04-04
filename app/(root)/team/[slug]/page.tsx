@@ -99,7 +99,6 @@ export default function DepartmentTeamPage({ params }: { params: { slug: string 
           if (err.code === 'permission-denied') {
             permissionError = true;
             
-            // Create placeholder members if we have permission issues
             fetchedMembers = [
               {
                 id: "member-1",
