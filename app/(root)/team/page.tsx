@@ -36,7 +36,7 @@ export default function TeamPage() {
   const departments = [
     { name: "ACADEMICS", slug: "academics", subtitle: "Department of Academics", image: "/imgs/team/academics-team.png" },
     { name: "ENGINEERING", slug: "engineering", subtitle: "Department of Engineering", image: "/imgs/team/eng-team.png" },
-    { name: "ADMINISTRATION", slug: "admin", subtitle: "UTMIST admin", image: "/imgs/team/admin-team.png" },
+    { name: "ADMINISTRATION", slug: "admin", subtitle: "UTMIST Admin", image: "/imgs/team/admin-team.png" },
     { name: "EXTERNAL RELATIONS", slug: "external", subtitle: "Department of External Relations", image: "/imgs/team/external-team.png" },
     { name: "INFRASTRUCTURE", slug: "infrastructure", subtitle: "Department of Infrastructure", image: "/imgs/team/infra-team.png" },
     { name: "MARKETING", slug: "marketing", subtitle: "Department of Marketing", image: "/imgs/team/marketing-team.png" },
